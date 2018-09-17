@@ -12,6 +12,8 @@
       "no-backbone-get-set-outside-model": false,
       "no-implicit-dependencies": false,
       "no-submodule-imports": false,
-      "mocha-no-side-effect-code": false
+      "mocha-no-side-effect-code": false,
+      "react-a11y-role-has-required-aria-props": false,
+      "react-a11y-event-has-role": false
     }
 }
