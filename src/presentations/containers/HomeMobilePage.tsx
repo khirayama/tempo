@@ -2,16 +2,12 @@
 import * as React from 'react';
 
 import { updateItem } from 'action-creators/actionCreators';
-import { EditableText } from 'presentations/components/EditableText';
+import { CommandText } from 'presentations/components/CommandText';
 import { Container, IContainerProps } from 'presentations/containers/Container';
 import { Link } from 'router/Link';
 import { IItem, IPage, IState, ITextItem } from 'state/state';
 
 export class HomeMobilePage extends Container<{}, IState> {
-  private onClickIncrementButton: any;
-
-  private onClickDecrementButton: any;
-
   constructor(props: IContainerProps) {
     super(props);
 
@@ -22,6 +18,8 @@ export class HomeMobilePage extends Container<{}, IState> {
         return updateItem(this.dispatch, item);
       },
     };
+
+    this.onChange = this.onChange.bind(this);
   }
 
   // tslint:disable-next-line:max-func-body-length
@@ -36,14 +34,7 @@ export class HomeMobilePage extends Container<{}, IState> {
 
         return (
           <div className="Item" key={item.id}>
-            <EditableText
-              value={item.text}
-              onChange={(event: React.FormEvent<HTMLInputElement>): void => {
-                const value: string = event.currentTarget.value;
-
-                this.actions.updateItem({ id: item.id, text: value });
-              }}
-            />
+            <CommandText item={item} onChange={this.onChange} />
             {children}
           </div>
         );
@@ -147,5 +138,11 @@ export class HomeMobilePage extends Container<{}, IState> {
         {page.items.map(this.renderItem.bind(this))}
       </section>
     );
+  }
+
+  private onChange(event: React.FormEvent<HTMLInputElement>, props: any): void {
+    const value: string = event.currentTarget.value;
+
+    this.actions.updateItem({ id: props.item.id, text: value });
   }
 }
