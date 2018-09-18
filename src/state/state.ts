@@ -1,15 +1,16 @@
 // NOTE:
 // traverse prev, next, parent
 
-export type IItem =
+export type IItem = ITextableItem | IDividerItem;
+
+export type ITextableItem =
   | ITextItem
   | IBulletedItem
   | INumberedItem
   | ITaskItem
   | IToggleItem
   | IHeaderItem
-  | IQuateItem
-  | IDividerItem;
+  | IQuateItem;
 
 export interface ITextItem {
   id: string;
