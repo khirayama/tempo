@@ -15,7 +15,10 @@ function findItem(id: string, items: IItem[]): IItem | null {
         item.style === 'TASK' ||
         item.style === 'TOGGLE'
       ) {
-        return findItem(id, item.children);
+        const result: IItem | null = findItem(id, item.children);
+        if (result !== null) {
+          return result;
+        }
       }
     }
   }
