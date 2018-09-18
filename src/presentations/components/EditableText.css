@@ -1,0 +1,4 @@
+.EditableText {
+  display: inline-block;
+  user-select: text !important;
+}

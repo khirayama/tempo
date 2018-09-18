@@ -1,8 +1,14 @@
-// tslint:disable:no-any
 import * as React from 'react';
 
-export class EditableText extends React.Component<any, any> {
-  constructor(props: any) {
+interface IProps {
+  value: string;
+  onBlur?(event: React.FormEvent<HTMLElement>): void;
+  onChange?(event: React.FormEvent<HTMLElement>): void;
+  onKeyUp?(event: React.KeyboardEvent<HTMLElement>): void;
+}
+
+export class EditableText extends React.Component<IProps> {
+  constructor(props: IProps) {
     super(props);
 
     this.onBlur = this.onBlur.bind(this);
@@ -10,18 +16,13 @@ export class EditableText extends React.Component<any, any> {
   }
 
   public render(): JSX.Element {
-    const style: any = {
-      userSelect: 'text',
-      WebkitUserSelect: 'text',
-    };
-
     return (
       <div
+        {...this.props}
         className="EditableText"
-        style={style}
         contentEditable
         suppressContentEditableWarning={true}
-        onBlur={this.props.Blur || this.onBlur}
+        onBlur={this.props.onBlur || this.onBlur}
         onInput={this.onInput}
       >
         {this.props.value}
