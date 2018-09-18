@@ -10,20 +10,10 @@ export interface IAction {
 
 export type IDispatch = (action: IAction) => void;
 
-export async function increaseCount(dispatch: IDispatch, num: number): Promise<IAction> {
+export async function updateItem(dispatch: IDispatch, item: { id: string; text?: string }): Promise<IAction> {
   const action: IAction = {
-    actionType: actionTypes.INCREASE_COUNT,
-    payload: num,
-  };
-  dispatch(action);
-
-  return action;
-}
-
-export async function decreaseCount(dispatch: IDispatch, num: number): Promise<IAction> {
-  const action: IAction = {
-    actionType: actionTypes.DECREASE_COUNT,
-    payload: num,
+    actionType: actionTypes.UPDATE_ITEM,
+    payload: item,
   };
   dispatch(action);
 
