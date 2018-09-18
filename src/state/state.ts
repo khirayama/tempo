@@ -1,15 +1,52 @@
 // NOTE:
 // traverse prev, next, parent
 
-type Item =
+export type IItem =
   | ITextItem
-  | INumberedItem
   | IBulletedItem
-  | IHeaderItem
-  | IQuateItem
+  | INumberedItem
   | ITaskItem
   | IToggleItem
+  | IHeaderItem
+  | IQuateItem
   | IDividerItem;
+
+export interface ITextItem {
+  id: string;
+  style: 'TEXT';
+  text: string;
+  children: IItem[];
+}
+
+export interface IBulletedItem {
+  id: string;
+  style: 'BULLETED';
+  text: string;
+  children: IItem[];
+}
+
+export interface INumberedItem {
+  id: string;
+  style: 'NUMBERED';
+  text: string;
+  children: IItem[];
+}
+
+export interface ITaskItem {
+  id: string;
+  style: 'TASK';
+  text: string;
+  completed: boolean;
+  children: IItem[];
+}
+
+export interface IToggleItem {
+  id: string;
+  style: 'TOGGLE';
+  text: string;
+  opened: boolean;
+  children: IItem[];
+}
 
 export interface IHeaderItem {
   id: string;
@@ -23,52 +60,15 @@ export interface IQuateItem {
   text: string;
 }
 
-export interface ITextItem {
-  id: string;
-  style: 'TEXT';
-  text: string;
-  children: Item[];
-}
-
-export interface INumberedItem {
-  id: string;
-  style: 'NUMBERED';
-  text: string;
-  children: Item[];
-}
-
-export interface IBulletedItem {
-  id: string;
-  style: 'BULLETED';
-  text: string;
-  children: Item[];
-}
-
 export interface IDividerItem {
   id: string;
   style: 'DIVIDER';
 }
 
-export interface ITaskItem {
-  id: string;
-  style: 'TASK';
-  text: string;
-  completed: boolean;
-  children: Item[];
-}
-
-export interface IToggleItem {
-  id: string;
-  style: 'TOGGLE';
-  text: string;
-  opened: boolean;
-  children: Item[];
-}
-
 export interface IPage {
   id: string;
   title: string;
-  items: Item[];
+  items: IItem[];
 }
 
 export interface IState {
@@ -186,6 +186,16 @@ const sampleState: IState = {
               text: 'numbered 4',
               children: [],
             },
+            {
+              id: '31',
+              style: 'DIVIDER',
+            },
+            {
+              id: '32',
+              style: 'NUMBERED',
+              text: 'numbered 1',
+              children: [],
+            },
           ],
         },
         {
@@ -221,13 +231,13 @@ const sampleState: IState = {
               opened: true,
               children: [
                 {
-                  id: '24',
+                  id: '33',
                   style: 'TEXT',
                   text: 'toggle child 1',
                   children: [],
                 },
                 {
-                  id: '24',
+                  id: '34',
                   style: 'TEXT',
                   text: 'toggle child 2',
                   children: [],
