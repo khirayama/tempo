@@ -72,11 +72,19 @@ export interface IPage {
   items: IItem[];
 }
 
+export interface IUI {
+  focusedId: null | string;
+}
+
 export interface IState {
+  ui: IUI;
   pages: IPage[];
 }
 
 const sampleState: IState = {
+  ui: {
+    focusedId: null,
+  },
   pages: [
     {
       id: '1',
