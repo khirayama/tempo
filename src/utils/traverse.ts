@@ -73,9 +73,7 @@ export const traverse: {
       const item: IItem = items[i];
       if (item.id === id) {
         const prevItem: IItem | null = items[i - 1] || null;
-        if (prevItem === null /* If prev item is nothing, ignore */) {
-          // Noop
-        } else {
+        if (prevItem) {
           if (hasChildren(prevItem)) {
             items.splice(i, 1);
             prevItem.children.push(item);
@@ -84,8 +82,6 @@ export const traverse: {
               prevItem.children = prevItem.children.concat(item.children);
               item.children = [];
             }
-          } else {
-            // Noop
           }
         }
       } else {
