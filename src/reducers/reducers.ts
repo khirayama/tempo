@@ -2,29 +2,7 @@
 import { IAction } from 'action-creators/actionCreators';
 import { actionTypes } from 'constants/actionTypes';
 import { IItem, IState } from 'state/state';
-
-function findItem(id: string, items: IItem[]): IItem | null {
-  for (const item of items) {
-    if (item.id === id) {
-      return item;
-    } else {
-      if (
-        item.style === 'TEXT' ||
-        item.style === 'BULLETED' ||
-        item.style === 'NUMBERED' ||
-        item.style === 'TASK' ||
-        item.style === 'TOGGLE'
-      ) {
-        const result: IItem | null = findItem(id, item.children);
-        if (result !== null) {
-          return result;
-        }
-      }
-    }
-  }
-
-  return null;
-}
+import { traverse } from 'utils/traverse';
 
 export function reducers(state: IState, action: IAction): IState {
   const newState: IState = JSON.parse(JSON.stringify(state));
@@ -32,7 +10,7 @@ export function reducers(state: IState, action: IAction): IState {
 
   switch (action.actionType) {
     case actionTypes.UPDATE_ITEM: {
-      const item: IItem | null = findItem(payload.id, newState.pages[0].items);
+      const item: IItem | null = traverse.find(newState.pages[0].items, payload.id);
       Object.assign(item, payload);
     }
     default:
