@@ -86,11 +86,11 @@ export class CommandText extends React.Component<IProps> {
         break;
       }
       case keyCode === keyCodes.TAB && !meta && !shift: {
-        logger.info('onMoveItemToChild');
+        logger.info('onShift');
         break;
       }
       case keyCode === keyCodes.TAB && !meta && shift: {
-        logger.info('onMoveItemToParent');
+        logger.info('onUnshift');
         break;
       }
       case keyCode === keyCodes.DELETE && meta && !shift: {
@@ -98,7 +98,7 @@ export class CommandText extends React.Component<IProps> {
         break;
       }
       case keyCode === keyCodes.ESCAPE && !meta && !shift: {
-        logger.info('onSelectBlock');
+        logger.info('onSelect');
         break;
       }
       case keyCode === keyCodes.P && meta && !shift: {
