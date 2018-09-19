@@ -1,5 +1,16 @@
 import { IItem } from 'state/state';
 
+/*
+ * find
+ * addItem
+ * shiftItem
+ * shiftGroup
+ * unshiftItem
+ * unshiftGroup
+ * deleteItem
+ * deleteGroup
+ * turnInto
+*/
 export const traverse: {
   find(items: IItem[], id: string): IItem | null;
 } = {
