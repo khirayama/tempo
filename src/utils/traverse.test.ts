@@ -270,4 +270,72 @@ describe('traverse', () => {
       expect(items[1].id).toEqual('6');
     });
   });
+
+  describe('unshiftItem', () => {
+    it('unshift id: 1', () => {
+      const items: any = copyItems(sampleItems);
+      traverse.unshiftItem(items, '1');
+      expect(items[0].id).toEqual('1');
+      expect(items[0].children[0].id).toEqual('2');
+      expect(items[0].children[1].id).toEqual('3');
+      expect(items[0].children[1].children[0].id).toEqual('4');
+      expect(items[0].children[1].children[1].id).toEqual('5');
+      expect(items[1].id).toEqual('6');
+    });
+
+    it('unshift id: 2', () => {
+      const items: any = copyItems(sampleItems);
+      traverse.unshiftItem(items, '2');
+      expect(items[0].id).toEqual('1');
+      expect(items[1].id).toEqual('2');
+      expect(items[1].children[0].id).toEqual('3');
+      expect(items[1].children[0].children[0].id).toEqual('4');
+      expect(items[1].children[0].children[1].id).toEqual('5');
+      expect(items[2].id).toEqual('6');
+    });
+
+    it('unshift id: 3', () => {
+      const items: any = copyItems(sampleItems);
+      traverse.unshiftItem(items, '3');
+      expect(items[0].id).toEqual('1');
+      expect(items[0].children[0].id).toEqual('2');
+      expect(items[1].id).toEqual('3');
+      expect(items[1].children[0].id).toEqual('4');
+      expect(items[1].children[1].id).toEqual('5');
+      expect(items[2].id).toEqual('6');
+    });
+
+    it('unshift id: 4', () => {
+      const items: any = copyItems(sampleItems);
+      traverse.unshiftItem(items, '4');
+      expect(items[0].id).toEqual('1');
+      expect(items[0].children[0].id).toEqual('2');
+      expect(items[0].children[1].id).toEqual('3');
+      expect(items[0].children[2].id).toEqual('4');
+      expect(items[0].children[2].children[0].id).toEqual('5');
+      expect(items[1].id).toEqual('6');
+    });
+
+    it('unshift id: 5', () => {
+      const items: any = copyItems(sampleItems);
+      traverse.unshiftItem(items, '5');
+      expect(items[0].id).toEqual('1');
+      expect(items[0].children[0].id).toEqual('2');
+      expect(items[0].children[1].id).toEqual('3');
+      expect(items[0].children[1].children[0].id).toEqual('4');
+      expect(items[0].children[2].id).toEqual('5');
+      expect(items[1].id).toEqual('6');
+    });
+
+    it('unshift id: 6', () => {
+      const items: any = copyItems(sampleItems);
+      traverse.unshiftItem(items, '6');
+      expect(items[0].id).toEqual('1');
+      expect(items[0].children[0].id).toEqual('2');
+      expect(items[0].children[1].id).toEqual('3');
+      expect(items[0].children[1].children[0].id).toEqual('4');
+      expect(items[0].children[1].children[1].id).toEqual('5');
+      expect(items[1].id).toEqual('6');
+    });
+  });
 });
