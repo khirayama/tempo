@@ -15,6 +15,8 @@ const keyCodes: { [key: string]: number } = {
   DELETE: 8,
   TAB: 9,
   ENTER: 13,
+  ESCAPE: 27,
+  P: 80,
 };
 
 export class CommandText extends React.Component<IProps> {
@@ -69,25 +71,39 @@ export class CommandText extends React.Component<IProps> {
     // "1. " -> Numbered
     // "[ ] " -> Task
     logger.info(keyCode, meta, shift, value);
-    this.handleKey(keyCode, meta, shift);
+    this.handleKey(keyCode, meta, shift, event);
   }
 
-  private handleKey(keyCode: number, meta: boolean, shift: boolean): void {
+  private handleKey(
+    keyCode: number,
+    meta: boolean,
+    shift: boolean,
+    event: React.KeyboardEvent<HTMLInputElement>,
+  ): void {
     switch (true) {
       case keyCode === keyCodes.ENTER && !meta && !shift: {
         logger.info('onSubmit');
         break;
       }
       case keyCode === keyCodes.TAB && !meta && !shift: {
-        logger.info('onChildren');
+        logger.info('onMoveItemToChild');
         break;
       }
       case keyCode === keyCodes.TAB && !meta && shift: {
-        logger.info('onParent');
+        logger.info('onMoveItemToParent');
         break;
       }
       case keyCode === keyCodes.DELETE && meta && !shift: {
         logger.info('onDelete');
+        break;
+      }
+      case keyCode === keyCodes.ESCAPE && !meta && !shift: {
+        logger.info('onSelectBlock');
+        break;
+      }
+      case keyCode === keyCodes.P && meta && !shift: {
+        event.preventDefault();
+        logger.info('onQuickFind');
         break;
       }
       default:
