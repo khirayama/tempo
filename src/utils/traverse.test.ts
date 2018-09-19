@@ -338,4 +338,60 @@ describe('traverse', () => {
       expect(items[1].id).toEqual('6');
     });
   });
+
+  describe('deleteItem', () => {
+    it('delete id: 1', () => {
+      const items: any = copyItems(sampleItems);
+      traverse.deleteItem(items, '1');
+      expect(items[0].id).toEqual('6');
+    });
+
+    it('delete id: 2', () => {
+      const items: any = copyItems(sampleItems);
+      traverse.deleteItem(items, '2');
+      expect(items[0].id).toEqual('1');
+      expect(items[0].children[0].id).toEqual('3');
+      expect(items[0].children[0].children[0].id).toEqual('4');
+      expect(items[0].children[0].children[1].id).toEqual('5');
+      expect(items[1].id).toEqual('6');
+    });
+
+    it('delete id: 3', () => {
+      const items: any = copyItems(sampleItems);
+      traverse.deleteItem(items, '3');
+      expect(items[0].id).toEqual('1');
+      expect(items[0].children[0].id).toEqual('2');
+      expect(items[1].id).toEqual('6');
+    });
+
+    it('delete id: 4', () => {
+      const items: any = copyItems(sampleItems);
+      traverse.deleteItem(items, '4');
+      expect(items[0].id).toEqual('1');
+      expect(items[0].children[0].id).toEqual('2');
+      expect(items[0].children[1].id).toEqual('3');
+      expect(items[0].children[1].children[0].id).toEqual('5');
+      expect(items[1].id).toEqual('6');
+    });
+
+    it('delete id: 5', () => {
+      const items: any = copyItems(sampleItems);
+      traverse.deleteItem(items, '5');
+      expect(items[0].id).toEqual('1');
+      expect(items[0].children[0].id).toEqual('2');
+      expect(items[0].children[1].id).toEqual('3');
+      expect(items[0].children[1].children[0].id).toEqual('4');
+      expect(items[1].id).toEqual('6');
+    });
+
+    it('delete id: 6', () => {
+      const items: any = copyItems(sampleItems);
+      traverse.deleteItem(items, '6');
+      expect(items[0].id).toEqual('1');
+      expect(items[0].children[0].id).toEqual('2');
+      expect(items[0].children[1].id).toEqual('3');
+      expect(items[0].children[1].children[0].id).toEqual('4');
+      expect(items[0].children[1].children[1].id).toEqual('5');
+    });
+  });
 });
