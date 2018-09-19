@@ -18,7 +18,7 @@ declare global {
   }
 }
 
-const store: Store<IState, IAction> = new Store<IState, IAction>(initialState, reducers, { session: true });
+const store: Store<IState, IAction> = new Store<IState, IAction>(initialState, reducers, { session: false });
 const router: Router = new Router(routes);
 const tracker: Tracker = new Tracker({
   code: process.env.GA_CODE || '',
