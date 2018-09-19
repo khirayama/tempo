@@ -26,6 +26,7 @@ export const traverse: {
   find(items: IItem[], id: string): IItem | null;
   addItem(items: IItem[], prevId: string, newId?: string): void;
   shiftItem(items: IItem[], id: string): void;
+  shiftGroup(items: IItem[], id: string): void;
   unshiftItem(items: IItem[], id: string): void;
 } = {
   find: (items: IItem[], id: string): IItem | null => {
@@ -87,6 +88,22 @@ export const traverse: {
       } else {
         if (hasChildren(item)) {
           traverse.shiftItem(item.children, id);
+        }
+      }
+    }
+  },
+  shiftGroup(items: IItem[], id: string): void {
+    for (let i: number = 0; i < items.length; i += 1) {
+      const item: IItem = items[i];
+      if (item.id === id) {
+        const prevItem: IItem | null = items[i - 1] || null;
+        if (prevItem && hasChildren(prevItem)) {
+          items.splice(i, 1);
+          prevItem.children.push(item);
+        }
+      } else {
+        if (hasChildren(item)) {
+          traverse.shiftGroup(item.children, id);
         }
       }
     }
