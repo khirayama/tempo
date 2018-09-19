@@ -3,9 +3,10 @@ import * as React from 'react';
 
 import { updateItem } from 'action-creators/actionCreators';
 import { CommandText } from 'presentations/components/CommandText';
+import { TextItem } from 'presentations/components/TextItem';
 import { Container, IContainerProps } from 'presentations/containers/Container';
 import { Link } from 'router/Link';
-import { IItem, IPage, IState, ITextItem } from 'state/state';
+import { IItem, IPage, IState, ITextItem, IUI } from 'state/state';
 
 export class HomeMobilePage extends Container<{}, IState> {
   constructor(props: IContainerProps) {
@@ -25,6 +26,7 @@ export class HomeMobilePage extends Container<{}, IState> {
   // tslint:disable-next-line:max-func-body-length
   public renderItem(item: IItem): JSX.Element {
     let children: JSX.Element[] = [];
+    const ui: IUI = this.state.ui;
 
     switch (item.style) {
       case 'TEXT': {
@@ -33,10 +35,9 @@ export class HomeMobilePage extends Container<{}, IState> {
         }
 
         return (
-          <div className="Item" key={item.id}>
-            <CommandText item={item} onChange={this.onChange} />
+          <TextItem key={item.id} focus={ui.focusedId === item.id} onChange={this.onChange} item={item}>
             {children}
-          </div>
+          </TextItem>
         );
       }
 
