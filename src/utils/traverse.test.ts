@@ -326,4 +326,201 @@ describe('traverse', () => {
       ]);
     });
   });
+
+  describe('shiftItem', () => {
+    it('shift id: 1', () => {
+      const items: IItem[] = copyItems(sampleItems);
+      traverse.shiftItem(items, '1');
+      expect(items).toEqual([
+        {
+          id: '1',
+          style: 'TEXT',
+          text: 'text 1',
+          children: [
+            {
+              id: '2',
+              style: 'TEXT',
+              text: 'text 2',
+              children: [],
+            },
+            {
+              id: '3',
+              style: 'TEXT',
+              text: 'text 3',
+              children: [
+                {
+                  id: '4',
+                  style: 'TEXT',
+                  text: 'text 4',
+                  children: [],
+                },
+              ],
+            },
+          ],
+        },
+        {
+          id: '5',
+          style: 'TEXT',
+          text: 'text 5',
+          children: [],
+        },
+      ]);
+    });
+
+    it('shift id: 2', () => {
+      const items: IItem[] = copyItems(sampleItems);
+      traverse.shiftItem(items, '2');
+      expect(items).toEqual([
+        {
+          id: '1',
+          style: 'TEXT',
+          text: 'text 1',
+          children: [
+            {
+              id: '2',
+              style: 'TEXT',
+              text: 'text 2',
+              children: [],
+            },
+            {
+              id: '3',
+              style: 'TEXT',
+              text: 'text 3',
+              children: [
+                {
+                  id: '4',
+                  style: 'TEXT',
+                  text: 'text 4',
+                  children: [],
+                },
+              ],
+            },
+          ],
+        },
+        {
+          id: '5',
+          style: 'TEXT',
+          text: 'text 5',
+          children: [],
+        },
+      ]);
+    });
+
+    it('shift id: 3', () => {
+      const items: IItem[] = copyItems(sampleItems);
+      traverse.shiftItem(items, '3');
+      expect(items).toEqual([
+        {
+          id: '1',
+          style: 'TEXT',
+          text: 'text 1',
+          children: [
+            {
+              id: '2',
+              style: 'TEXT',
+              text: 'text 2',
+              children: [
+                {
+                  id: '3',
+                  style: 'TEXT',
+                  text: 'text 3',
+                  children: [],
+                },
+                {
+                  id: '4',
+                  style: 'TEXT',
+                  text: 'text 4',
+                  children: [],
+                },
+              ],
+            },
+          ],
+        },
+        {
+          id: '5',
+          style: 'TEXT',
+          text: 'text 5',
+          children: [],
+        },
+      ]);
+    });
+
+    it('shift id: 4', () => {
+      const items: IItem[] = copyItems(sampleItems);
+      traverse.shiftItem(items, '4');
+      expect(items).toEqual([
+        {
+          id: '1',
+          style: 'TEXT',
+          text: 'text 1',
+          children: [
+            {
+              id: '2',
+              style: 'TEXT',
+              text: 'text 2',
+              children: [],
+            },
+            {
+              id: '3',
+              style: 'TEXT',
+              text: 'text 3',
+              children: [
+                {
+                  id: '4',
+                  style: 'TEXT',
+                  text: 'text 4',
+                  children: [],
+                },
+              ],
+            },
+          ],
+        },
+        {
+          id: '5',
+          style: 'TEXT',
+          text: 'text 5',
+          children: [],
+        },
+      ]);
+    });
+
+    it('shift id: 5', () => {
+      const items: IItem[] = copyItems(sampleItems);
+      traverse.shiftItem(items, '5');
+      expect(items).toEqual([
+        {
+          id: '1',
+          style: 'TEXT',
+          text: 'text 1',
+          children: [
+            {
+              id: '2',
+              style: 'TEXT',
+              text: 'text 2',
+              children: [],
+            },
+            {
+              id: '3',
+              style: 'TEXT',
+              text: 'text 3',
+              children: [
+                {
+                  id: '4',
+                  style: 'TEXT',
+                  text: 'text 4',
+                  children: [],
+                },
+              ],
+            },
+            {
+              id: '5',
+              style: 'TEXT',
+              text: 'text 5',
+              children: [],
+            },
+          ],
+        },
+      ]);
+    });
+  });
 });
