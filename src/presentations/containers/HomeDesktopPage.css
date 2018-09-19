@@ -1,17 +1,2 @@
 .HomeDesktopPage {
 }
-
-.Item {
-  padding: 4px 0;
-
-  .Item {
-    padding-left: 24px;
-  }
-
-  /* Styles */
-  .Item__Text {
-  }
-
-  .Item--Text {
-  }
-}
