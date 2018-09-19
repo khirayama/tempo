@@ -24,6 +24,7 @@ export const traverse: {
   addItem(items: IItem[], prevId: string, newId?: string): void;
   shiftItem(items: IItem[], id: string): void;
   unshiftItem(items: IItem[], id: string): void;
+  deleteItem(items: IItem[], id: string): void;
 } = {
   find: (items: IItem[], id: string): IItem | null => {
     for (const item of items) {
@@ -96,6 +97,18 @@ export const traverse: {
           }
         }
         traverse.unshiftItem(item.children, id);
+      }
+    }
+  },
+  deleteItem(items: IItem[], id: string): void {
+    for (let i: number = 0; i < items.length; i += 1) {
+      const item: IItem = items[i];
+      if (item.id === id) {
+        items.splice(i, 1);
+      } else {
+        if (hasChildren(item)) {
+          traverse.deleteItem(item.children, id);
+        }
       }
     }
   },
