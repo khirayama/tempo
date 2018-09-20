@@ -7,6 +7,7 @@ import { IBulletedItem, IItem, INumberedItem, ITaskItem, ITextItem, IToggleItem 
  * unshiftItem
  * deleteItem
  * cancelItem
+ * sortItem
  * turnInto
 */
 
