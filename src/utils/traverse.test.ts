@@ -8,7 +8,18 @@ import { traverse } from 'utils/traverse';
   - id: 3
     - id: 4
     - id: 5
-- id: 6
+  - id: 6
+  - id: 7
+- id: 8
+
+expect(items[0].id).toEqual('1');
+expect(items[0].children[0].id).toEqual('2');
+expect(items[0].children[1].id).toEqual('3');
+expect(items[0].children[1].children[0].id).toEqual('4');
+expect(items[0].children[1].children[1].id).toEqual('5');
+expect(items[0].children[2].id).toEqual('6');
+expect(items[0].children[3].id).toEqual('7');
+expect(items[1].id).toEqual('8');
 */
 
 const sampleItems: IItem[] = [
@@ -42,12 +53,24 @@ const sampleItems: IItem[] = [
           },
         ],
       },
+      {
+        id: '6',
+        style: 'TEXT',
+        text: 'text 6',
+        children: [],
+      },
+      {
+        id: '7',
+        style: 'TEXT',
+        text: 'text 7',
+        children: [],
+      },
     ],
   },
   {
-    id: '6',
+    id: '8',
     style: 'TEXT',
-    text: 'text 6',
+    text: 'text 8',
     children: [],
   },
 ];
@@ -112,8 +135,26 @@ describe('traverse', () => {
       }
     });
 
-    it('id: 7 is null', () => {
+    it('id: 7 is an item', () => {
       const actual: IItem | null = traverse.find(sampleItems, '7');
+      if (actual !== null) {
+        expect(actual.id).toEqual('7');
+      } else {
+        throw new Error('null');
+      }
+    });
+
+    it('id: 8 is an item', () => {
+      const actual: IItem | null = traverse.find(sampleItems, '8');
+      if (actual !== null) {
+        expect(actual.id).toEqual('8');
+      } else {
+        throw new Error('null');
+      }
+    });
+
+    it('id: 9 is null', () => {
+      const actual: IItem | null = traverse.find(sampleItems, '9');
       expect(actual).toEqual(null);
     });
   });
@@ -121,74 +162,114 @@ describe('traverse', () => {
   describe('addItem', () => {
     it('add an item after id: 1', () => {
       const items: any = copyItems(sampleItems);
-      traverse.addItem(items, '1', '7');
+      traverse.addItem(items, '1', '9');
       expect(items[0].id).toEqual('1');
-      expect(items[1].id).toEqual('7');
+      expect(items[1].id).toEqual('9');
       expect(items[1].children[0].id).toEqual('2');
       expect(items[1].children[1].id).toEqual('3');
       expect(items[1].children[1].children[0].id).toEqual('4');
       expect(items[1].children[1].children[1].id).toEqual('5');
-      expect(items[2].id).toEqual('6');
+      expect(items[1].children[2].id).toEqual('6');
+      expect(items[1].children[3].id).toEqual('7');
+      expect(items[2].id).toEqual('8');
     });
 
     it('add an item after id: 2', () => {
       const items: any = copyItems(sampleItems);
-      traverse.addItem(items, '2', '7');
+      traverse.addItem(items, '2', '9');
       expect(items[0].id).toEqual('1');
       expect(items[0].children[0].id).toEqual('2');
-      expect(items[0].children[1].id).toEqual('7');
+      expect(items[0].children[1].id).toEqual('9');
       expect(items[0].children[2].id).toEqual('3');
       expect(items[0].children[2].children[0].id).toEqual('4');
       expect(items[0].children[2].children[1].id).toEqual('5');
-      expect(items[1].id).toEqual('6');
+      expect(items[0].children[3].id).toEqual('6');
+      expect(items[0].children[4].id).toEqual('7');
+      expect(items[1].id).toEqual('8');
     });
 
     it('add an item after id: 3', () => {
       const items: any = copyItems(sampleItems);
-      traverse.addItem(items, '3', '7');
+      traverse.addItem(items, '3', '9');
       expect(items[0].id).toEqual('1');
       expect(items[0].children[0].id).toEqual('2');
       expect(items[0].children[1].id).toEqual('3');
-      expect(items[0].children[2].id).toEqual('7');
+      expect(items[0].children[2].id).toEqual('9');
       expect(items[0].children[2].children[0].id).toEqual('4');
       expect(items[0].children[2].children[1].id).toEqual('5');
-      expect(items[1].id).toEqual('6');
+      expect(items[0].children[3].id).toEqual('6');
+      expect(items[0].children[4].id).toEqual('7');
+      expect(items[1].id).toEqual('8');
     });
 
     it('add an item after id: 4', () => {
       const items: any = copyItems(sampleItems);
-      traverse.addItem(items, '4', '7');
+      traverse.addItem(items, '4', '9');
       expect(items[0].id).toEqual('1');
       expect(items[0].children[0].id).toEqual('2');
       expect(items[0].children[1].id).toEqual('3');
       expect(items[0].children[1].children[0].id).toEqual('4');
-      expect(items[0].children[1].children[1].id).toEqual('7');
+      expect(items[0].children[1].children[1].id).toEqual('9');
       expect(items[0].children[1].children[2].id).toEqual('5');
-      expect(items[1].id).toEqual('6');
+      expect(items[0].children[2].id).toEqual('6');
+      expect(items[0].children[3].id).toEqual('7');
+      expect(items[1].id).toEqual('8');
     });
 
     it('add an item after id: 5', () => {
       const items: any = copyItems(sampleItems);
-      traverse.addItem(items, '5', '7');
+      traverse.addItem(items, '5', '9');
       expect(items[0].id).toEqual('1');
       expect(items[0].children[0].id).toEqual('2');
       expect(items[0].children[1].id).toEqual('3');
       expect(items[0].children[1].children[0].id).toEqual('4');
       expect(items[0].children[1].children[1].id).toEqual('5');
-      expect(items[0].children[1].children[2].id).toEqual('7');
-      expect(items[1].id).toEqual('6');
+      expect(items[0].children[1].children[2].id).toEqual('9');
+      expect(items[0].children[2].id).toEqual('6');
+      expect(items[0].children[3].id).toEqual('7');
+      expect(items[1].id).toEqual('8');
     });
 
     it('add an item after id: 6', () => {
       const items: any = copyItems(sampleItems);
-      traverse.addItem(items, '6', '7');
+      traverse.addItem(items, '6', '9');
       expect(items[0].id).toEqual('1');
       expect(items[0].children[0].id).toEqual('2');
       expect(items[0].children[1].id).toEqual('3');
       expect(items[0].children[1].children[0].id).toEqual('4');
       expect(items[0].children[1].children[1].id).toEqual('5');
-      expect(items[1].id).toEqual('6');
-      expect(items[2].id).toEqual('7');
+      expect(items[0].children[2].id).toEqual('6');
+      expect(items[0].children[3].id).toEqual('9');
+      expect(items[0].children[4].id).toEqual('7');
+      expect(items[1].id).toEqual('8');
+    });
+
+    it('add an item after id: 7', () => {
+      const items: any = copyItems(sampleItems);
+      traverse.addItem(items, '7', '9');
+      expect(items[0].id).toEqual('1');
+      expect(items[0].children[0].id).toEqual('2');
+      expect(items[0].children[1].id).toEqual('3');
+      expect(items[0].children[1].children[0].id).toEqual('4');
+      expect(items[0].children[1].children[1].id).toEqual('5');
+      expect(items[0].children[2].id).toEqual('6');
+      expect(items[0].children[3].id).toEqual('7');
+      expect(items[0].children[4].id).toEqual('9');
+      expect(items[1].id).toEqual('8');
+    });
+
+    it('add an item after id: 8', () => {
+      const items: any = copyItems(sampleItems);
+      traverse.addItem(items, '8', '9');
+      expect(items[0].id).toEqual('1');
+      expect(items[0].children[0].id).toEqual('2');
+      expect(items[0].children[1].id).toEqual('3');
+      expect(items[0].children[1].children[0].id).toEqual('4');
+      expect(items[0].children[1].children[1].id).toEqual('5');
+      expect(items[0].children[2].id).toEqual('6');
+      expect(items[0].children[3].id).toEqual('7');
+      expect(items[1].id).toEqual('8');
+      expect(items[2].id).toEqual('9');
     });
   });
 
@@ -201,7 +282,9 @@ describe('traverse', () => {
       expect(items[0].children[1].id).toEqual('3');
       expect(items[0].children[1].children[0].id).toEqual('4');
       expect(items[0].children[1].children[1].id).toEqual('5');
-      expect(items[1].id).toEqual('6');
+      expect(items[0].children[2].id).toEqual('6');
+      expect(items[0].children[3].id).toEqual('7');
+      expect(items[1].id).toEqual('8');
     });
 
     it('shift id: 2', () => {
@@ -212,7 +295,9 @@ describe('traverse', () => {
       expect(items[0].children[1].id).toEqual('3');
       expect(items[0].children[1].children[0].id).toEqual('4');
       expect(items[0].children[1].children[1].id).toEqual('5');
-      expect(items[1].id).toEqual('6');
+      expect(items[0].children[2].id).toEqual('6');
+      expect(items[0].children[3].id).toEqual('7');
+      expect(items[1].id).toEqual('8');
     });
 
     it('shift id: 3', () => {
@@ -223,7 +308,9 @@ describe('traverse', () => {
       expect(items[0].children[0].children[0].id).toEqual('3');
       expect(items[0].children[0].children[0].children[0].id).toEqual('4');
       expect(items[0].children[0].children[0].children[1].id).toEqual('5');
-      expect(items[1].id).toEqual('6');
+      expect(items[0].children[1].id).toEqual('6');
+      expect(items[0].children[2].id).toEqual('7');
+      expect(items[1].id).toEqual('8');
     });
 
     it('shift id: 4', () => {
@@ -234,7 +321,9 @@ describe('traverse', () => {
       expect(items[0].children[1].id).toEqual('3');
       expect(items[0].children[1].children[0].id).toEqual('4');
       expect(items[0].children[1].children[1].id).toEqual('5');
-      expect(items[1].id).toEqual('6');
+      expect(items[0].children[2].id).toEqual('6');
+      expect(items[0].children[3].id).toEqual('7');
+      expect(items[1].id).toEqual('8');
     });
 
     it('shift id: 5', () => {
@@ -245,7 +334,9 @@ describe('traverse', () => {
       expect(items[0].children[1].id).toEqual('3');
       expect(items[0].children[1].children[0].id).toEqual('4');
       expect(items[0].children[1].children[0].children[0].id).toEqual('5');
-      expect(items[1].id).toEqual('6');
+      expect(items[0].children[2].id).toEqual('6');
+      expect(items[0].children[3].id).toEqual('7');
+      expect(items[1].id).toEqual('8');
     });
 
     it('shift id: 6', () => {
@@ -256,10 +347,12 @@ describe('traverse', () => {
       expect(items[0].children[1].id).toEqual('3');
       expect(items[0].children[1].children[0].id).toEqual('4');
       expect(items[0].children[1].children[1].id).toEqual('5');
-      expect(items[0].children[2].id).toEqual('6');
+      expect(items[0].children[1].children[2].id).toEqual('6');
+      expect(items[0].children[2].id).toEqual('7');
+      expect(items[1].id).toEqual('8');
     });
 
-    it('shift id: 7(nothing)', () => {
+    it('shift id: 7', () => {
       const items: any = copyItems(sampleItems);
       traverse.shiftItem(items, '7');
       expect(items[0].id).toEqual('1');
@@ -267,7 +360,22 @@ describe('traverse', () => {
       expect(items[0].children[1].id).toEqual('3');
       expect(items[0].children[1].children[0].id).toEqual('4');
       expect(items[0].children[1].children[1].id).toEqual('5');
-      expect(items[1].id).toEqual('6');
+      expect(items[0].children[2].id).toEqual('6');
+      expect(items[0].children[2].children[0].id).toEqual('7');
+      expect(items[1].id).toEqual('8');
+    });
+
+    it('shift id: 8', () => {
+      const items: any = copyItems(sampleItems);
+      traverse.shiftItem(items, '8');
+      expect(items[0].id).toEqual('1');
+      expect(items[0].children[0].id).toEqual('2');
+      expect(items[0].children[1].id).toEqual('3');
+      expect(items[0].children[1].children[0].id).toEqual('4');
+      expect(items[0].children[1].children[1].id).toEqual('5');
+      expect(items[0].children[2].id).toEqual('6');
+      expect(items[0].children[3].id).toEqual('7');
+      expect(items[0].children[4].id).toEqual('8');
     });
   });
 
@@ -280,7 +388,9 @@ describe('traverse', () => {
       expect(items[0].children[1].id).toEqual('3');
       expect(items[0].children[1].children[0].id).toEqual('4');
       expect(items[0].children[1].children[1].id).toEqual('5');
-      expect(items[1].id).toEqual('6');
+      expect(items[0].children[2].id).toEqual('6');
+      expect(items[0].children[3].id).toEqual('7');
+      expect(items[1].id).toEqual('8');
     });
 
     it('unshift id: 2', () => {
@@ -290,8 +400,10 @@ describe('traverse', () => {
       expect(items[0].children[0].id).toEqual('3');
       expect(items[0].children[0].children[0].id).toEqual('4');
       expect(items[0].children[0].children[1].id).toEqual('5');
+      expect(items[0].children[1].id).toEqual('6');
+      expect(items[0].children[2].id).toEqual('7');
       expect(items[1].id).toEqual('2');
-      expect(items[2].id).toEqual('6');
+      expect(items[2].id).toEqual('8');
     });
 
     it('unshift id: 3', () => {
@@ -299,10 +411,12 @@ describe('traverse', () => {
       traverse.unshiftItem(items, '3');
       expect(items[0].id).toEqual('1');
       expect(items[0].children[0].id).toEqual('2');
+      expect(items[0].children[1].id).toEqual('6');
+      expect(items[0].children[2].id).toEqual('7');
       expect(items[1].id).toEqual('3');
       expect(items[1].children[0].id).toEqual('4');
       expect(items[1].children[1].id).toEqual('5');
-      expect(items[2].id).toEqual('6');
+      expect(items[2].id).toEqual('8');
     });
 
     it('unshift id: 4', () => {
@@ -313,7 +427,9 @@ describe('traverse', () => {
       expect(items[0].children[1].id).toEqual('3');
       expect(items[0].children[1].children[0].id).toEqual('5');
       expect(items[0].children[2].id).toEqual('4');
-      expect(items[1].id).toEqual('6');
+      expect(items[0].children[3].id).toEqual('6');
+      expect(items[0].children[4].id).toEqual('7');
+      expect(items[1].id).toEqual('8');
     });
 
     it('unshift id: 5', () => {
@@ -324,7 +440,9 @@ describe('traverse', () => {
       expect(items[0].children[1].id).toEqual('3');
       expect(items[0].children[1].children[0].id).toEqual('4');
       expect(items[0].children[2].id).toEqual('5');
-      expect(items[1].id).toEqual('6');
+      expect(items[0].children[3].id).toEqual('6');
+      expect(items[0].children[4].id).toEqual('7');
+      expect(items[1].id).toEqual('8');
     });
 
     it('unshift id: 6', () => {
@@ -335,7 +453,35 @@ describe('traverse', () => {
       expect(items[0].children[1].id).toEqual('3');
       expect(items[0].children[1].children[0].id).toEqual('4');
       expect(items[0].children[1].children[1].id).toEqual('5');
+      expect(items[0].children[2].id).toEqual('7');
       expect(items[1].id).toEqual('6');
+      expect(items[2].id).toEqual('8');
+    });
+
+    it('unshift id: 7', () => {
+      const items: any = copyItems(sampleItems);
+      traverse.unshiftItem(items, '7');
+      expect(items[0].id).toEqual('1');
+      expect(items[0].children[0].id).toEqual('2');
+      expect(items[0].children[1].id).toEqual('3');
+      expect(items[0].children[1].children[0].id).toEqual('4');
+      expect(items[0].children[1].children[1].id).toEqual('5');
+      expect(items[0].children[2].id).toEqual('6');
+      expect(items[1].id).toEqual('7');
+      expect(items[2].id).toEqual('8');
+    });
+
+    it('unshift id: 8', () => {
+      const items: any = copyItems(sampleItems);
+      traverse.unshiftItem(items, '8');
+      expect(items[0].id).toEqual('1');
+      expect(items[0].children[0].id).toEqual('2');
+      expect(items[0].children[1].id).toEqual('3');
+      expect(items[0].children[1].children[0].id).toEqual('4');
+      expect(items[0].children[1].children[1].id).toEqual('5');
+      expect(items[0].children[2].id).toEqual('6');
+      expect(items[0].children[3].id).toEqual('7');
+      expect(items[1].id).toEqual('8');
     });
   });
 
@@ -343,7 +489,7 @@ describe('traverse', () => {
     it('delete id: 1', () => {
       const items: any = copyItems(sampleItems);
       traverse.deleteItem(items, '1');
-      expect(items[0].id).toEqual('6');
+      expect(items[0].id).toEqual('8');
     });
 
     it('delete id: 2', () => {
@@ -353,7 +499,9 @@ describe('traverse', () => {
       expect(items[0].children[0].id).toEqual('3');
       expect(items[0].children[0].children[0].id).toEqual('4');
       expect(items[0].children[0].children[1].id).toEqual('5');
-      expect(items[1].id).toEqual('6');
+      expect(items[0].children[1].id).toEqual('6');
+      expect(items[0].children[2].id).toEqual('7');
+      expect(items[1].id).toEqual('8');
     });
 
     it('delete id: 3', () => {
@@ -361,7 +509,9 @@ describe('traverse', () => {
       traverse.deleteItem(items, '3');
       expect(items[0].id).toEqual('1');
       expect(items[0].children[0].id).toEqual('2');
-      expect(items[1].id).toEqual('6');
+      expect(items[0].children[1].id).toEqual('6');
+      expect(items[0].children[2].id).toEqual('7');
+      expect(items[1].id).toEqual('8');
     });
 
     it('delete id: 4', () => {
@@ -371,7 +521,9 @@ describe('traverse', () => {
       expect(items[0].children[0].id).toEqual('2');
       expect(items[0].children[1].id).toEqual('3');
       expect(items[0].children[1].children[0].id).toEqual('5');
-      expect(items[1].id).toEqual('6');
+      expect(items[0].children[2].id).toEqual('6');
+      expect(items[0].children[3].id).toEqual('7');
+      expect(items[1].id).toEqual('8');
     });
 
     it('delete id: 5', () => {
@@ -381,7 +533,9 @@ describe('traverse', () => {
       expect(items[0].children[0].id).toEqual('2');
       expect(items[0].children[1].id).toEqual('3');
       expect(items[0].children[1].children[0].id).toEqual('4');
-      expect(items[1].id).toEqual('6');
+      expect(items[0].children[2].id).toEqual('6');
+      expect(items[0].children[3].id).toEqual('7');
+      expect(items[1].id).toEqual('8');
     });
 
     it('delete id: 6', () => {
@@ -392,6 +546,32 @@ describe('traverse', () => {
       expect(items[0].children[1].id).toEqual('3');
       expect(items[0].children[1].children[0].id).toEqual('4');
       expect(items[0].children[1].children[1].id).toEqual('5');
+      expect(items[0].children[2].id).toEqual('7');
+      expect(items[1].id).toEqual('8');
+    });
+
+    it('delete id: 7', () => {
+      const items: any = copyItems(sampleItems);
+      traverse.deleteItem(items, '7');
+      expect(items[0].id).toEqual('1');
+      expect(items[0].children[0].id).toEqual('2');
+      expect(items[0].children[1].id).toEqual('3');
+      expect(items[0].children[1].children[0].id).toEqual('4');
+      expect(items[0].children[1].children[1].id).toEqual('5');
+      expect(items[0].children[2].id).toEqual('6');
+      expect(items[1].id).toEqual('8');
+    });
+
+    it('delete id: 8', () => {
+      const items: any = copyItems(sampleItems);
+      traverse.deleteItem(items, '8');
+      expect(items[0].id).toEqual('1');
+      expect(items[0].children[0].id).toEqual('2');
+      expect(items[0].children[1].id).toEqual('3');
+      expect(items[0].children[1].children[0].id).toEqual('4');
+      expect(items[0].children[1].children[1].id).toEqual('5');
+      expect(items[0].children[2].id).toEqual('6');
+      expect(items[0].children[3].id).toEqual('7');
     });
   });
 });
