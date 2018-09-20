@@ -28,6 +28,7 @@ export const traverse: {
   unshiftItem(items: IItem[], id: string): void;
   deleteItem(items: IItem[], id: string): void;
   cancelItem(items: IItem[], id: string, depth: number): void;
+  after(items: IItem[], id: string, toId: string, context?: { item: IItem | null }): void;
 } = {
   find: (items: IItem[], id: string): IItem | null => {
     for (const item of items) {
@@ -173,6 +174,35 @@ export const traverse: {
 
       if (hasChildren(item)) {
         traverse.cancelItem(item.children, id, depth + 1);
+      }
+    }
+  },
+  after: (items: IItem[], id: string, toId: string, context?: { item: IItem | null }): void => {
+    // 子がいれば子の先頭に
+    // 子がいなければ次に
+    const ctx: { item: IItem | null } = context ? context : { item: null };
+    const item: IItem | null = traverse.find(items, id);
+    if (item) {
+      ctx.item = item;
+      traverse.deleteItem(items, id);
+    }
+
+    if (ctx.item) {
+      for (let i: number = 0; i < items.length; i += 1) {
+        const targetItem: IItem = items[i];
+        if (targetItem.id === toId) {
+          if (targetItem !== null && hasChildren(targetItem) && targetItem.children.length > 0) {
+            targetItem.children.unshift(ctx.item);
+          } else {
+            items.splice(i + 1, 0, ctx.item);
+          }
+
+          return;
+        } else {
+          if (hasChildren(targetItem)) {
+            traverse.after(targetItem.children, id, toId, ctx);
+          }
+        }
       }
     }
   },
