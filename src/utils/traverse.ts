@@ -7,7 +7,8 @@ import { IBulletedItem, IItem, INumberedItem, ITaskItem, ITextItem, IToggleItem 
  * unshiftItem
  * deleteItem
  * cancelItem
- * sortItem
+ * befor
+ * after
  * turnInto
 */
 
@@ -28,6 +29,7 @@ export const traverse: {
   unshiftItem(items: IItem[], id: string): void;
   deleteItem(items: IItem[], id: string): void;
   cancelItem(items: IItem[], id: string, depth: number): void;
+  before(items: IItem[], id: string, toId: string, context?: { item: IItem | null }): void;
   after(items: IItem[], id: string, toId: string, context?: { item: IItem | null }): void;
 } = {
   find: (items: IItem[], id: string): IItem | null => {
@@ -174,6 +176,36 @@ export const traverse: {
 
       if (hasChildren(item)) {
         traverse.cancelItem(item.children, id, depth + 1);
+      }
+    }
+  },
+  before: (items: IItem[], id: string, toId: string, context?: { item: IItem | null }): void => {
+    // 一つ前のアイテムに子がいればこの末尾に
+    // 子がいなければ前に
+    const ctx: { item: IItem | null } = context ? context : { item: null };
+    const item: IItem | null = traverse.find(items, id);
+    if (item) {
+      ctx.item = item;
+      traverse.deleteItem(items, id);
+    }
+
+    if (ctx.item) {
+      for (let i: number = 0; i < items.length; i += 1) {
+        const targetItem: IItem = items[i];
+        const prevItem: IItem | null = items[i - 1] || null;
+        if (targetItem.id === toId) {
+          if (prevItem && hasChildren(prevItem) && prevItem.children.length > 0) {
+            prevItem.children.push(ctx.item);
+          } else {
+            items.splice(i, 0, ctx.item);
+          }
+
+          return;
+        } else {
+          if (hasChildren(targetItem)) {
+            traverse.before(targetItem.children, id, toId, ctx);
+          }
+        }
       }
     }
   },
