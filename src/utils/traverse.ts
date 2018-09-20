@@ -6,6 +6,7 @@ import { IBulletedItem, IItem, INumberedItem, ITaskItem, ITextItem, IToggleItem 
  * shiftItem
  * unshiftItem
  * deleteItem
+ * cancelItem
  * turnInto
 */
 
@@ -25,6 +26,7 @@ export const traverse: {
   shiftItem(items: IItem[], id: string): void;
   unshiftItem(items: IItem[], id: string): void;
   deleteItem(items: IItem[], id: string): void;
+  cancelItem(items: IItem[], id: string, depth: number): void;
 } = {
   find: (items: IItem[], id: string): IItem | null => {
     for (const item of items) {
@@ -109,6 +111,59 @@ export const traverse: {
         if (hasChildren(item)) {
           traverse.deleteItem(item.children, id);
         }
+      }
+    }
+  },
+  cancelItem(items: IItem[], id: string, depth: number): void {
+    // 親がいない
+    //  childrenをunshiftしてdeleteItem
+    // 親がいる & 兄がいる & 弟がいる
+    //  childrenをunshiftしてdeleteItem
+    // 親がいる & 兄がいる & 弟がいない
+    //  unshiftItem
+
+    const hasParent: boolean = depth !== 0;
+
+    for (const item of items) {
+      if (!hasParent && item.id === id) {
+        if (hasChildren(item)) {
+          for (let j: number = item.children.length - 1; j >= 0; j -= 1) {
+            traverse.unshiftItem(items, item.children[j].id);
+          }
+        }
+        traverse.deleteItem(items, id);
+
+        return;
+      }
+
+      if (hasChildren(item)) {
+        for (let j: number = 0; j < item.children.length; j += 1) {
+          const childItem: IItem = item.children[j];
+
+          if (childItem.id === id) {
+            const hasPreItem: boolean = !!item.children[j - 1];
+            const hasSufItem: boolean = !!item.children[j + 1];
+
+            if (hasPreItem && hasSufItem) {
+              if (hasChildren(childItem)) {
+                for (let k: number = childItem.children.length - 1; k >= 0; k -= 1) {
+                  traverse.unshiftItem(items, childItem.children[k].id);
+                }
+              }
+              traverse.deleteItem(items, id);
+
+              return;
+            } else if (hasPreItem && !hasSufItem) {
+              traverse.unshiftItem(items, id);
+
+              return;
+            }
+          }
+        }
+      }
+
+      if (hasChildren(item)) {
+        traverse.cancelItem(item.children, id, depth + 1);
       }
     }
   },
