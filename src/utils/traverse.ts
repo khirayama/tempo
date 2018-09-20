@@ -61,6 +61,8 @@ export const traverse: {
         }
 
         items.splice(i + 1, 0, newItem);
+
+        return;
       } else {
         if (hasChildren(item)) {
           traverse.addItem(item.children, prevId, newId);
@@ -77,6 +79,8 @@ export const traverse: {
           if (hasChildren(prevItem)) {
             items.splice(i, 1);
             prevItem.children.push(item);
+
+            return;
           }
         }
       } else {
@@ -96,6 +100,8 @@ export const traverse: {
           if (childItem.id === id) {
             item.children.splice(j, 1);
             items.splice(i + 1, 0, childItem);
+
+            return;
           }
         }
         traverse.unshiftItem(item.children, id);
@@ -107,6 +113,8 @@ export const traverse: {
       const item: IItem = items[i];
       if (item.id === id) {
         items.splice(i, 1);
+
+        return;
       } else {
         if (hasChildren(item)) {
           traverse.deleteItem(item.children, id);
