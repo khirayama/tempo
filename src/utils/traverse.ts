@@ -7,8 +7,8 @@ import { IBulletedItem, IItem, INumberedItem, ITaskItem, ITextItem, IToggleItem 
  * unshiftItem
  * deleteItem
  * cancelItem
- * befor
- * after
+ * prependItem
+ * appendItem
  * turnInto
 */
 
@@ -29,8 +29,8 @@ export const traverse: {
   unshiftItem(items: IItem[], id: string): void;
   deleteItem(items: IItem[], id: string): void;
   cancelItem(items: IItem[], id: string, context?: { depth: number }): void;
-  before(items: IItem[], id: string, toId: string, context?: { item: IItem | null }): void;
-  after(items: IItem[], id: string, toId: string, context?: { item: IItem | null }): void;
+  prependItem(items: IItem[], id: string, toId: string, context?: { item: IItem | null }): void;
+  appendItem(items: IItem[], id: string, toId: string, context?: { item: IItem | null }): void;
 } = {
   find: (items: IItem[], id: string): IItem | null => {
     for (const item of items) {
@@ -180,7 +180,7 @@ export const traverse: {
       }
     }
   },
-  before: (items: IItem[], id: string, toId: string, context?: { item: IItem | null }): void => {
+  prependItem: (items: IItem[], id: string, toId: string, context?: { item: IItem | null }): void => {
     // 一つ前のアイテムに子がいればこの末尾に
     // 子がいなければ前に
     const ctx: { item: IItem | null } = context ? context : { item: null };
@@ -204,13 +204,13 @@ export const traverse: {
           return;
         } else {
           if (hasChildren(targetItem)) {
-            traverse.before(targetItem.children, id, toId, ctx);
+            traverse.prependItem(targetItem.children, id, toId, ctx);
           }
         }
       }
     }
   },
-  after: (items: IItem[], id: string, toId: string, context?: { item: IItem | null }): void => {
+  appendItem: (items: IItem[], id: string, toId: string, context?: { item: IItem | null }): void => {
     // 子がいれば子の先頭に
     // 子がいなければ次に
     const ctx: { item: IItem | null } = context ? context : { item: null };
@@ -233,7 +233,7 @@ export const traverse: {
           return;
         } else {
           if (hasChildren(targetItem)) {
-            traverse.after(targetItem.children, id, toId, ctx);
+            traverse.appendItem(targetItem.children, id, toId, ctx);
           }
         }
       }

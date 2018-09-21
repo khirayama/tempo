@@ -711,10 +711,10 @@ describe('traverse', () => {
     });
   });
 
-  describe('before', () => {
+  describe('prependItem', () => {
     it('move id: 8 before id: 1', () => {
       const items: any = copyItems(sampleItems);
-      traverse.before(items, '8', '1');
+      traverse.prependItem(items, '8', '1');
 
       expect(items[0].id).toEqual('8');
       expect(items[1].id).toEqual('1');
@@ -728,7 +728,7 @@ describe('traverse', () => {
 
     it('move id: 8 before id: 2', () => {
       const items: any = copyItems(sampleItems);
-      traverse.before(items, '8', '2');
+      traverse.prependItem(items, '8', '2');
 
       expect(items[0].id).toEqual('1');
       expect(items[0].children[0].id).toEqual('8');
@@ -742,7 +742,7 @@ describe('traverse', () => {
 
     it('move id: 8 before id: 3', () => {
       const items: any = copyItems(sampleItems);
-      traverse.before(items, '8', '3');
+      traverse.prependItem(items, '8', '3');
 
       expect(items[0].id).toEqual('1');
       expect(items[0].children[0].id).toEqual('2');
@@ -756,7 +756,7 @@ describe('traverse', () => {
 
     it('move id: 8 before id: 4', () => {
       const items: any = copyItems(sampleItems);
-      traverse.before(items, '8', '4');
+      traverse.prependItem(items, '8', '4');
 
       expect(items[0].id).toEqual('1');
       expect(items[0].children[0].id).toEqual('2');
@@ -770,7 +770,7 @@ describe('traverse', () => {
 
     it('move id: 8 before id: 5', () => {
       const items: any = copyItems(sampleItems);
-      traverse.before(items, '8', '5');
+      traverse.prependItem(items, '8', '5');
 
       expect(items[0].id).toEqual('1');
       expect(items[0].children[0].id).toEqual('2');
@@ -784,7 +784,7 @@ describe('traverse', () => {
 
     it('move id: 8 before id: 6', () => {
       const items: any = copyItems(sampleItems);
-      traverse.before(items, '8', '6');
+      traverse.prependItem(items, '8', '6');
 
       expect(items[0].id).toEqual('1');
       expect(items[0].children[0].id).toEqual('2');
@@ -798,7 +798,7 @@ describe('traverse', () => {
 
     it('move id: 8 before id: 7', () => {
       const items: any = copyItems(sampleItems);
-      traverse.before(items, '8', '7');
+      traverse.prependItem(items, '8', '7');
 
       expect(items[0].id).toEqual('1');
       expect(items[0].children[0].id).toEqual('2');
@@ -812,7 +812,7 @@ describe('traverse', () => {
 
     it('move id: 1 before id: 8', () => {
       const items: any = copyItems(sampleItems);
-      traverse.before(items, '1', '8');
+      traverse.prependItem(items, '1', '8');
 
       expect(items[0].id).toEqual('1');
       expect(items[0].children[0].id).toEqual('2');
@@ -825,10 +825,10 @@ describe('traverse', () => {
     });
   });
 
-  describe('after', () => {
+  describe('appendItem', () => {
     it('move id: 8 after id: 1', () => {
       const items: any = copyItems(sampleItems);
-      traverse.after(items, '8', '1');
+      traverse.appendItem(items, '8', '1');
       expect(items[0].id).toEqual('1');
       expect(items[0].children[0].id).toEqual('8');
       expect(items[0].children[1].id).toEqual('2');
@@ -841,7 +841,7 @@ describe('traverse', () => {
 
     it('move id: 8 after id: 2', () => {
       const items: any = copyItems(sampleItems);
-      traverse.after(items, '8', '2');
+      traverse.appendItem(items, '8', '2');
       expect(items[0].id).toEqual('1');
       expect(items[0].children[0].id).toEqual('2');
       expect(items[0].children[1].id).toEqual('8');
@@ -854,7 +854,7 @@ describe('traverse', () => {
 
     it('move id: 8 after id: 3', () => {
       const items: any = copyItems(sampleItems);
-      traverse.after(items, '8', '3');
+      traverse.appendItem(items, '8', '3');
       expect(items[0].id).toEqual('1');
       expect(items[0].children[0].id).toEqual('2');
       expect(items[0].children[1].id).toEqual('3');
@@ -867,7 +867,7 @@ describe('traverse', () => {
 
     it('move id: 8 after id: 4', () => {
       const items: any = copyItems(sampleItems);
-      traverse.after(items, '8', '4');
+      traverse.appendItem(items, '8', '4');
       expect(items[0].id).toEqual('1');
       expect(items[0].children[0].id).toEqual('2');
       expect(items[0].children[1].id).toEqual('3');
@@ -880,7 +880,7 @@ describe('traverse', () => {
 
     it('move id: 8 after id: 5', () => {
       const items: any = copyItems(sampleItems);
-      traverse.after(items, '8', '5');
+      traverse.appendItem(items, '8', '5');
 
       expect(items[0].id).toEqual('1');
       expect(items[0].children[0].id).toEqual('2');
@@ -894,7 +894,7 @@ describe('traverse', () => {
 
     it('move id: 8 after id: 6', () => {
       const items: any = copyItems(sampleItems);
-      traverse.after(items, '8', '6');
+      traverse.appendItem(items, '8', '6');
 
       expect(items[0].id).toEqual('1');
       expect(items[0].children[0].id).toEqual('2');
@@ -908,7 +908,7 @@ describe('traverse', () => {
 
     it('move id: 8 after id: 7', () => {
       const items: any = copyItems(sampleItems);
-      traverse.after(items, '8', '7');
+      traverse.appendItem(items, '8', '7');
 
       expect(items[0].id).toEqual('1');
       expect(items[0].children[0].id).toEqual('2');
@@ -922,7 +922,7 @@ describe('traverse', () => {
 
     it('move id: 1 after id: 8', () => {
       const items: any = copyItems(sampleItems);
-      traverse.after(items, '1', '8');
+      traverse.appendItem(items, '1', '8');
 
       expect(items[0].id).toEqual('8');
       expect(items[1].id).toEqual('1');
