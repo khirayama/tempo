@@ -28,7 +28,7 @@ export const traverse: {
   shiftItem(items: IItem[], id: string): void;
   unshiftItem(items: IItem[], id: string): void;
   deleteItem(items: IItem[], id: string): void;
-  cancelItem(items: IItem[], id: string, depth: number): void;
+  cancelItem(items: IItem[], id: string, context?: { depth: number }): void;
   before(items: IItem[], id: string, toId: string, context?: { item: IItem | null }): void;
   after(items: IItem[], id: string, toId: string, context?: { item: IItem | null }): void;
 } = {
@@ -126,7 +126,7 @@ export const traverse: {
       }
     }
   },
-  cancelItem(items: IItem[], id: string, depth: number): void {
+  cancelItem(items: IItem[], id: string, context?: { depth: number }): void {
     // 親がいない
     //  childrenをunshiftしてdeleteItem
     // 親がいる & 兄がいる & 弟がいる
@@ -134,7 +134,8 @@ export const traverse: {
     // 親がいる & 兄がいる & 弟がいない
     //  unshiftItem
 
-    const hasParent: boolean = depth !== 0;
+    const ctx: { depth: number } = context ? context : { depth: 0 };
+    const hasParent: boolean = ctx.depth !== 0;
 
     for (const item of items) {
       if (!hasParent && item.id === id) {
@@ -175,7 +176,7 @@ export const traverse: {
       }
 
       if (hasChildren(item)) {
-        traverse.cancelItem(item.children, id, depth + 1);
+        traverse.cancelItem(item.children, id, { depth: ctx.depth + 1 });
       }
     }
   },

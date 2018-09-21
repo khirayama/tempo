@@ -579,7 +579,7 @@ describe('traverse', () => {
     it('add id: 9 after id: 1 and cancel id: 9', () => {
       const items: any = copyItems(sampleItems);
       traverse.addItem(items, '1', '9');
-      traverse.cancelItem(items, '9', 0);
+      traverse.cancelItem(items, '9');
       expect(items[0].id).toEqual('1');
       expect(items[1].id).toEqual('2');
       expect(items[2].id).toEqual('3');
@@ -593,7 +593,7 @@ describe('traverse', () => {
     it('add id: 9 after id: 2 and cancel id: 9', () => {
       const items: any = copyItems(sampleItems);
       traverse.addItem(items, '2', '9');
-      traverse.cancelItem(items, '9', 0);
+      traverse.cancelItem(items, '9');
       expect(items[0].id).toEqual('1');
       expect(items[0].children[0].id).toEqual('2');
       expect(items[0].children[1].id).toEqual('3');
@@ -607,7 +607,7 @@ describe('traverse', () => {
     it('add id: 9 after id: 3 and cancel id: 9', () => {
       const items: any = copyItems(sampleItems);
       traverse.addItem(items, '3', '9');
-      traverse.cancelItem(items, '9', 0);
+      traverse.cancelItem(items, '9');
       expect(items[0].id).toEqual('1');
       expect(items[0].children[0].id).toEqual('2');
       expect(items[0].children[1].id).toEqual('3');
@@ -621,7 +621,7 @@ describe('traverse', () => {
     it('add id: 9 after id: 4 and cancel id: 9', () => {
       const items: any = copyItems(sampleItems);
       traverse.addItem(items, '4', '9');
-      traverse.cancelItem(items, '9', 0);
+      traverse.cancelItem(items, '9');
       expect(items[0].id).toEqual('1');
       expect(items[0].children[0].id).toEqual('2');
       expect(items[0].children[1].id).toEqual('3');
@@ -635,7 +635,7 @@ describe('traverse', () => {
     it('add id: 9 after id: 5 and cancel id: 9', () => {
       const items: any = copyItems(sampleItems);
       traverse.addItem(items, '5', '9');
-      traverse.cancelItem(items, '9', 0);
+      traverse.cancelItem(items, '9');
       expect(items[0].id).toEqual('1');
       expect(items[0].children[0].id).toEqual('2');
       expect(items[0].children[1].id).toEqual('3');
@@ -646,7 +646,7 @@ describe('traverse', () => {
       expect(items[0].children[4].id).toEqual('7');
       expect(items[1].id).toEqual('8');
 
-      traverse.cancelItem(items, '9', 0);
+      traverse.cancelItem(items, '9');
       expect(items[0].id).toEqual('1');
       expect(items[0].children[0].id).toEqual('2');
       expect(items[0].children[1].id).toEqual('3');
@@ -660,7 +660,7 @@ describe('traverse', () => {
     it('add id: 9 after id: 6 and cancel id: 9', () => {
       const items: any = copyItems(sampleItems);
       traverse.addItem(items, '6', '9');
-      traverse.cancelItem(items, '9', 0);
+      traverse.cancelItem(items, '9');
       expect(items[0].id).toEqual('1');
       expect(items[0].children[0].id).toEqual('2');
       expect(items[0].children[1].id).toEqual('3');
@@ -674,7 +674,7 @@ describe('traverse', () => {
     it('add id: 9 after id: 7 and cancel id: 9', () => {
       const items: any = copyItems(sampleItems);
       traverse.addItem(items, '7', '9');
-      traverse.cancelItem(items, '9', 0);
+      traverse.cancelItem(items, '9');
       expect(items[0].id).toEqual('1');
       expect(items[0].children[0].id).toEqual('2');
       expect(items[0].children[1].id).toEqual('3');
@@ -685,7 +685,7 @@ describe('traverse', () => {
       expect(items[1].id).toEqual('9');
       expect(items[2].id).toEqual('8');
 
-      traverse.cancelItem(items, '9', 0);
+      traverse.cancelItem(items, '9');
       expect(items[0].id).toEqual('1');
       expect(items[0].children[0].id).toEqual('2');
       expect(items[0].children[1].id).toEqual('3');
@@ -699,7 +699,7 @@ describe('traverse', () => {
     it('add id: 9 after id: 8 and cancel id: 9', () => {
       const items: any = copyItems(sampleItems);
       traverse.addItem(items, '8', '9');
-      traverse.cancelItem(items, '9', 0);
+      traverse.cancelItem(items, '9');
       expect(items[0].id).toEqual('1');
       expect(items[0].children[0].id).toEqual('2');
       expect(items[0].children[1].id).toEqual('3');
