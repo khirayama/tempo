@@ -3,6 +3,7 @@ import { IItem } from 'state/state';
 import { traverse } from 'utils/traverse';
 
 /*
+sampleItems
 - id: 1
   - id: 2
   - id: 3
@@ -20,6 +21,17 @@ expect(items[0].children[1].children[1].id).toEqual('5');
 expect(items[0].children[2].id).toEqual('6');
 expect(items[0].children[3].id).toEqual('7');
 expect(items[1].id).toEqual('8');
+
+- - -
+
+sampleItems2
+- id: 1
+  - id: 2
+    - id: 3
+
+expect(items[0].id).toEqual('1');
+expect(items[0].children[0].id).toEqual('2');
+expect(items[0].children[0].children[0].id).toEqual('3');
 */
 
 const sampleItems: IItem[] = [
@@ -72,6 +84,29 @@ const sampleItems: IItem[] = [
     style: 'TEXT',
     text: 'text 8',
     children: [],
+  },
+];
+
+const sampleItems2: IItem[] = [
+  {
+    id: '1',
+    style: 'TEXT',
+    text: 'text 1',
+    children: [
+      {
+        id: '2',
+        style: 'TEXT',
+        text: 'text 2',
+        children: [
+          {
+            id: '3',
+            style: 'TEXT',
+            text: 'text 3',
+            children: [],
+          },
+        ],
+      },
+    ],
   },
 ];
 
@@ -708,6 +743,14 @@ describe('traverse', () => {
       expect(items[0].children[2].id).toEqual('6');
       expect(items[0].children[3].id).toEqual('7');
       expect(items[1].id).toEqual('8');
+    });
+
+    it('sample2: cancel id: 3', () => {
+      const items: any = copyItems(sampleItems2);
+      traverse.cancelItem(items, '3');
+      expect(items[0].id).toEqual('1');
+      expect(items[0].children[0].id).toEqual('2');
+      expect(items[0].children[1].id).toEqual('3');
     });
   });
 
