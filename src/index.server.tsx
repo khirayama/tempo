@@ -24,7 +24,7 @@ interface IStaticFilePathWithHashOptions {
 
 const app: any = fastify();
 
-const APP_SERVER_PORT: number = Number(process.env.PORT || '3000');
+const APP_SERVER_PORT: number = Number(process.env.PORT || '3030');
 
 function minifyHTML(htmlString: string): string {
   const parts: string[] = htmlString.split('\n');
@@ -146,5 +146,7 @@ app.get(
   },
 );
 
-logger.info(`Start app at ${new Date().toString()}.`);
-app.listen(APP_SERVER_PORT);
+app.listen(APP_SERVER_PORT, () => {
+  logger.info(`Start app at ${new Date().toString()}.`);
+  logger.info(`You can access to http://localhost:${APP_SERVER_PORT}`);
+});
