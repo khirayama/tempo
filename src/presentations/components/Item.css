@@ -1,7 +1,49 @@
 .Item {
-  padding: 4px 0;
-
   .Item {
-    padding-left: 24px;
+    padding-left: 2rem;
+  }
+
+  .CommandText {
+    padding: 4px 0;
+  }
+
+  &.TextItem {
+  }
+
+  &.BulletedItem {
+    &.BulletedItem > .CommandText {
+      padding-left: 1rem;
+      position: relative;
+
+      &::before {
+        position: absolute;
+        top: 0.8rem;
+        left: 0.3rem;
+        display: inline-block;
+        width: 0.4rem;
+        height: 0.4rem;
+        border-radius: 50%;
+        content: '';
+        background: $color-text;
+      }
+    }
+  }
+
+  &.NumberedItem {
+    counter-reset: number 0;
+
+    &.NumberedItem > .CommandText {
+      &::before {
+        display: inline-block;
+        width: 1rem;
+        text-align: center;
+        counter-increment: number 1;
+        content: counter(number) '.';
+      }
+    }
+
+    & + .NumberedItem {
+      counter-reset: none;
+    }
   }
 }
