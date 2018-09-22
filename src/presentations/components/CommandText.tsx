@@ -9,6 +9,13 @@ interface IProps {
   item: ITextableItem;
   focus?: boolean;
   onChange?(event: React.FormEvent<HTMLInputElement>, props: IProps): void;
+  onSubmit?(event: React.KeyboardEvent<HTMLInputElement>, props: IProps): void;
+  onShift?(event: React.KeyboardEvent<HTMLInputElement>, props: IProps): void;
+  onUnshift?(event: React.KeyboardEvent<HTMLInputElement>, props: IProps): void;
+  onDelete?(event: React.KeyboardEvent<HTMLInputElement>, props: IProps): void;
+  onCancel?(event: React.KeyboardEvent<HTMLInputElement>, props: IProps): void;
+  onSelect?(event: React.KeyboardEvent<HTMLInputElement>, props: IProps): void;
+  onQuickfind?(event: React.KeyboardEvent<HTMLInputElement>, props: IProps): void;
 }
 
 const keyCodes: { [key: string]: number } = {
@@ -62,19 +69,21 @@ export class CommandText extends React.Component<IProps> {
   }
 
   private onKeyDown(event: React.KeyboardEvent<HTMLInputElement>): void {
+    const value: string = event.currentTarget.value;
     const keyCode: number = event.keyCode;
     const meta: boolean = event.metaKey;
     const shift: boolean = event.shiftKey;
-    const value: string = event.currentTarget.value;
     // Value
     // "- " -> Bulleted
     // "1. " -> Numbered
     // "[ ] " -> Task
     logger.info(keyCode, meta, shift, value);
-    this.handleKey(keyCode, meta, shift, event);
+    this.handleKey(value, keyCode, meta, shift, event);
   }
 
+  // tslint:disable:cyclomatic-complexity
   private handleKey(
+    value: string,
     keyCode: number,
     meta: boolean,
     shift: boolean,
@@ -82,28 +91,54 @@ export class CommandText extends React.Component<IProps> {
   ): void {
     switch (true) {
       case keyCode === keyCodes.ENTER && !meta && !shift: {
+        event.preventDefault();
         logger.info('onSubmit');
+        if (this.props.onSubmit) {
+          this.props.onSubmit(event, this.props);
+        }
         break;
       }
       case keyCode === keyCodes.TAB && !meta && !shift: {
         logger.info('onShift');
+        if (this.props.onShift) {
+          this.props.onShift(event, this.props);
+        }
         break;
       }
       case keyCode === keyCodes.TAB && !meta && shift: {
         logger.info('onUnshift');
+        if (this.props.onUnshift) {
+          this.props.onUnshift(event, this.props);
+        }
         break;
       }
       case keyCode === keyCodes.DELETE && meta && !shift: {
         logger.info('onDelete');
+        if (this.props.onDelete) {
+          this.props.onDelete(event, this.props);
+        }
+        break;
+      }
+      case keyCode === keyCodes.DELETE && !meta && !shift && !value: {
+        logger.info('onCancel');
+        if (this.props.onCancel) {
+          this.props.onCancel(event, this.props);
+        }
         break;
       }
       case keyCode === keyCodes.ESCAPE && !meta && !shift: {
         logger.info('onSelect');
+        if (this.props.onSelect) {
+          this.props.onSelect(event, this.props);
+        }
         break;
       }
       case keyCode === keyCodes.P && meta && !shift: {
         event.preventDefault();
-        logger.info('onQuickFind');
+        logger.info('onQuickfind');
+        if (this.props.onQuickfind) {
+          this.props.onQuickfind(event, this.props);
+        }
         break;
       }
       default:
