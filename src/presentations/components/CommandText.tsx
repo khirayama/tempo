@@ -83,7 +83,7 @@ export class CommandText extends React.Component<IProps> {
   }
 
   private onKeyDown(event: React.KeyboardEvent<HTMLInputElement>): void {
-    const value: string = event.currentTarget.value;
+    const value: string = event.currentTarget.value || event.currentTarget.innerHTML;
     const keyCode: number = event.keyCode;
     const meta: boolean = event.metaKey;
     const shift: boolean = event.shiftKey;
