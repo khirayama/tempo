@@ -12,6 +12,9 @@ export class EditableText extends React.Component<IProps> {
   constructor(props: IProps) {
     super(props);
 
+    this.setValueToEvent = this.setValueToEvent.bind(this);
+    this.onKeyDown = this.onKeyDown.bind(this);
+    this.onKeyUp = this.onKeyUp.bind(this);
     this.onBlur = this.onBlur.bind(this);
     this.onInput = this.onInput.bind(this);
   }
@@ -23,6 +26,8 @@ export class EditableText extends React.Component<IProps> {
         className="EditableText"
         contentEditable
         suppressContentEditableWarning={true}
+        onKeyDown={this.onKeyDown}
+        onKeyUp={this.onKeyUp}
         onBlur={this.props.onBlur || this.onBlur}
         onInput={this.onInput}
       >
@@ -35,9 +40,24 @@ export class EditableText extends React.Component<IProps> {
     return false;
   }
 
+  private onKeyDown(event: React.KeyboardEvent<HTMLElement>): void {
+    this.setValueToEvent(event);
+    if (this.props.onKeyDown) {
+      this.props.onKeyDown(event);
+    }
+  }
+
+  private onKeyUp(event: React.KeyboardEvent<HTMLElement>): void {
+    this.setValueToEvent(event);
+    if (this.props.onKeyUp) {
+      this.props.onKeyUp(event);
+    }
+  }
+
   private onBlur(event: React.FormEvent<HTMLElement>): void {
     const value: string = event.currentTarget.innerText;
     if (value !== this.props.value) {
+      this.setValueToEvent(event);
       this.emitChange(event);
     }
   }
@@ -45,17 +65,20 @@ export class EditableText extends React.Component<IProps> {
   private onInput(event: React.FormEvent<HTMLElement>): void {
     const value: string = event.currentTarget.innerText;
     if (value !== this.props.value) {
+      this.setValueToEvent(event);
       this.emitChange(event);
     }
   }
 
   private emitChange(event: React.FormEvent<HTMLElement>): void {
-    const value: string = event.currentTarget.innerText;
-
     if (this.props.onChange) {
-      (event.target as HTMLInputElement).value = value;
-      (event.currentTarget as HTMLInputElement).value = value;
       this.props.onChange(event);
     }
+  }
+
+  private setValueToEvent(event: React.SyntheticEvent<HTMLElement>): void {
+    const value: string = event.currentTarget.innerText;
+    (event.target as HTMLInputElement).value = value;
+    (event.currentTarget as HTMLInputElement).value = value;
   }
 }
