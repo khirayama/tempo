@@ -1,0 +1,14 @@
+.CommandText {
+  position: relative;
+
+  .EditableText {
+    min-width: 1rem;
+  }
+
+  .CommandText--Placeholder {
+    position: absolute;
+    top: 0;
+    left: 0;
+    color: $color-text-hint;
+  }
+}

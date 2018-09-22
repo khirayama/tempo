@@ -34,32 +34,43 @@ export class CommandText extends React.Component<IProps> {
 
     this.ref = React.createRef();
 
+    this.onClick = this.onClick.bind(this);
     this.onChange = this.onChange.bind(this);
     this.onKeyDown = this.onKeyDown.bind(this);
   }
 
   public componentDidMount(): void {
     if (this.props.focus) {
-      setTimeout(() => {
-        const el: HTMLInputElement = ReactDOM.findDOMNode(this) as HTMLInputElement;
-        el.focus();
-      }, 0);
+      this.focus();
     }
   }
 
   public componentDidUpdate(): void {
     if (this.props.focus) {
-      setTimeout(() => {
-        const el: HTMLInputElement = ReactDOM.findDOMNode(this) as HTMLInputElement;
-        el.focus();
-      }, 0);
+      this.focus();
     }
   }
 
   public render(): JSX.Element {
     const item: ITextableItem = this.props.item;
 
-    return <EditableText ref={this.ref} value={item.text} onChange={this.onChange} onKeyDown={this.onKeyDown} />;
+    return (
+      <div className="CommandText" onClick={this.onClick}>
+        <EditableText ref={this.ref} value={item.text} onChange={this.onChange} onKeyDown={this.onKeyDown} />
+        {!item.text ? <div className="CommandText--Placeholder">Type '/' for commands</div> : null}
+      </div>
+    );
+  }
+
+  private focus(): void {
+    setTimeout(() => {
+      const el: HTMLInputElement = ReactDOM.findDOMNode(this) as HTMLInputElement;
+      (el.querySelector('.EditableText') as HTMLInputElement).focus();
+    }, 0);
+  }
+
+  private onClick(event: React.MouseEvent<HTMLElement>): void {
+    this.focus();
   }
 
   private onChange(event: React.FormEvent<HTMLInputElement>): void {
@@ -99,6 +110,7 @@ export class CommandText extends React.Component<IProps> {
         break;
       }
       case keyCode === keyCodes.TAB && !meta && !shift: {
+        event.preventDefault();
         logger.info('onShift');
         if (this.props.onShift) {
           this.props.onShift(event, this.props);
@@ -106,6 +118,7 @@ export class CommandText extends React.Component<IProps> {
         break;
       }
       case keyCode === keyCodes.TAB && !meta && shift: {
+        event.preventDefault();
         logger.info('onUnshift');
         if (this.props.onUnshift) {
           this.props.onUnshift(event, this.props);
@@ -113,6 +126,7 @@ export class CommandText extends React.Component<IProps> {
         break;
       }
       case keyCode === keyCodes.DELETE && meta && !shift: {
+        event.preventDefault();
         logger.info('onDelete');
         if (this.props.onDelete) {
           this.props.onDelete(event, this.props);
@@ -120,6 +134,7 @@ export class CommandText extends React.Component<IProps> {
         break;
       }
       case keyCode === keyCodes.DELETE && !meta && !shift && !value: {
+        event.preventDefault();
         logger.info('onCancel');
         if (this.props.onCancel) {
           this.props.onCancel(event, this.props);
@@ -127,6 +142,7 @@ export class CommandText extends React.Component<IProps> {
         break;
       }
       case keyCode === keyCodes.ESCAPE && !meta && !shift: {
+        event.preventDefault();
         logger.info('onSelect');
         if (this.props.onSelect) {
           this.props.onSelect(event, this.props);
