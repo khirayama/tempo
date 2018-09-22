@@ -1,9 +1,8 @@
 // tslint:disable:no-any react-this-binding-issue
 import * as React from 'react';
 
-import { updateItem } from 'action-creators/actionCreators';
+import { addItem, cancelItem, deleteItem, shiftItem, unshiftItem, updateItem } from 'action-creators/actionCreators';
 import { CommandText } from 'presentations/components/CommandText';
-import { TextItem } from 'presentations/components/TextItem';
 import { Container, IContainerProps } from 'presentations/containers/Container';
 import { Link } from 'router/Link';
 import { IItem, IPage, IState, ITextItem, IUI } from 'state/state';
@@ -14,19 +13,47 @@ export class HomeMobilePage extends Container<{}, IState> {
 
     this.state = { ...this.getState() };
 
-    this.actions = {
-      updateItem: (item: { id: string; text?: string }): Promise<{}> => {
-        return updateItem(this.dispatch, item);
-      },
-    };
-
     this.onChange = this.onChange.bind(this);
+  }
+
+  public renderCommandText(item: any): JSX.Element {
+    const ui: IUI = this.state.ui;
+
+    return (
+      <CommandText
+        item={item}
+        focus={ui.focusedId === item.id}
+        onChange={this.onChange}
+        onSubmit={(): void => {
+          addItem(this.dispatch, { prevId: item.id });
+        }}
+        onShift={(): void => {
+          shiftItem(this.dispatch, { id: item.id });
+        }}
+        onUnshift={(): void => {
+          unshiftItem(this.dispatch, { id: item.id });
+        }}
+        onDelete={(): void => {
+          deleteItem(this.dispatch, { id: item.id });
+        }}
+        onCancel={(): void => {
+          cancelItem(this.dispatch, { id: item.id });
+        }}
+        onSelect={(): void => {
+          // Nothing
+        }}
+        onQuickfind={(): void => {
+          // Nothing
+        }}
+      />
+    );
   }
 
   // tslint:disable-next-line:max-func-body-length
   public renderItem(item: IItem): JSX.Element {
     let children: JSX.Element[] = [];
-    const ui: IUI = this.state.ui;
+
+    const commandTextElement: JSX.Element = this.renderCommandText(item);
 
     switch (item.style) {
       case 'TEXT': {
@@ -35,9 +62,10 @@ export class HomeMobilePage extends Container<{}, IState> {
         }
 
         return (
-          <TextItem key={item.id} focus={ui.focusedId === item.id} onChange={this.onChange} item={item}>
+          <div key={item.id} className="Item TextItem">
+            {commandTextElement}
             {children}
-          </TextItem>
+          </div>
         );
       }
 
@@ -144,6 +172,6 @@ export class HomeMobilePage extends Container<{}, IState> {
   private onChange(event: React.FormEvent<HTMLInputElement>, props: any): void {
     const value: string = event.currentTarget.value;
 
-    this.actions.updateItem({ id: props.item.id, text: value });
+    updateItem(this.dispatch, { id: props.item.id, text: value });
   }
 }
