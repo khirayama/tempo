@@ -133,6 +133,8 @@ export const traverse: {
     //  childrenをunshiftしてdeleteItem
     // 親がいる & 兄がいる & 弟がいない
     //  unshiftItem
+    //
+    // typeがTEXTじゃない場合はtextに変更
 
     const ctx: { depth: number } = context ? context : { depth: 0 };
     const hasParent: boolean = ctx.depth !== 0;
@@ -166,7 +168,7 @@ export const traverse: {
               traverse.deleteItem(items, id);
 
               return;
-            } else if (hasPreItem && !hasSufItem) {
+            } else {
               traverse.unshiftItem(items, id);
 
               return;
