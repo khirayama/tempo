@@ -8,6 +8,7 @@ import { ITextableItem } from 'state/state';
 interface IProps {
   item: ITextableItem;
   focus?: boolean;
+  onClick?(event: React.MouseEvent<HTMLElement>, props: IProps): void;
   onChange?(event: React.FormEvent<HTMLInputElement>, props: IProps): void;
   onSubmit?(event: React.KeyboardEvent<HTMLInputElement>, props: IProps): void;
   onShift?(event: React.KeyboardEvent<HTMLInputElement>, props: IProps): void;
@@ -70,7 +71,9 @@ export class CommandText extends React.Component<IProps> {
   }
 
   private onClick(event: React.MouseEvent<HTMLElement>): void {
-    this.focus();
+    if (this.props.onClick) {
+      this.props.onClick(event, this.props);
+    }
   }
 
   private onChange(event: React.FormEvent<HTMLInputElement>): void {

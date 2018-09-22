@@ -1,7 +1,15 @@
 // tslint:disable:no-any react-this-binding-issue
 import * as React from 'react';
 
-import { addItem, cancelItem, deleteItem, shiftItem, unshiftItem, updateItem } from 'action-creators/actionCreators';
+import {
+  addItem,
+  cancelItem,
+  deleteItem,
+  focusItem,
+  shiftItem,
+  unshiftItem,
+  updateItem,
+} from 'action-creators/actionCreators';
 import { CommandText } from 'presentations/components/CommandText';
 import { Container, IContainerProps } from 'presentations/containers/Container';
 import { Link } from 'router/Link';
@@ -23,6 +31,9 @@ export class HomeMobilePage extends Container<{}, IState> {
       <CommandText
         item={item}
         focus={ui.focusedId === item.id}
+        onClick={(): void => {
+          focusItem(this.dispatch, { id: item.id });
+        }}
         onChange={this.onChange}
         onSubmit={(): void => {
           addItem(this.dispatch, { prevId: item.id });
@@ -75,26 +86,21 @@ export class HomeMobilePage extends Container<{}, IState> {
         }
 
         return (
-          <div className="Item" key={item.id}>
-            <div>・ {item.text}</div>
+          <div className="Item BulletedItem" key={item.id}>
+            {commandTextElement}
             {children}
           </div>
         );
       }
 
       case 'NUMBERED': {
-        // FYI: Consider index increment
-        const index: number = 1;
-
         if (item.children.length) {
           children = item.children.map(this.renderItem.bind(this));
         }
 
         return (
-          <div className="Item" key={item.id}>
-            <div>
-              {index} {item.text}
-            </div>
+          <div className="Item NumberedItem" key={item.id}>
+            {commandTextElement}
             {children}
           </div>
         );

@@ -10,6 +10,10 @@ export function reducers(state: IState, action: IAction): IState {
 
   const page: IPage = newState.pages[0];
   switch (action.actionType) {
+    case actionTypes.FOCUS_ITEM: {
+      newState.ui.focusedId = payload.id;
+      break;
+    }
     case actionTypes.ADD_ITEM: {
       const id: string = new Date().toString();
       traverse.addItem(page.items, payload.prevId, id);
