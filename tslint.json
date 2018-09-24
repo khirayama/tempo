@@ -14,6 +14,7 @@
       "no-submodule-imports": false,
       "mocha-no-side-effect-code": false,
       "react-a11y-role-has-required-aria-props": false,
-      "react-a11y-event-has-role": false
+      "react-a11y-event-has-role": false,
+      "no-suspicious-comment": false
     }
 }
