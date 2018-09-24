@@ -29,6 +29,7 @@ export class HomeMobilePage extends Container<{}, IState> {
 
     return (
       <CommandText
+        key={item.id}
         item={item}
         focus={ui.focusedId === item.id}
         onClick={(): void => {

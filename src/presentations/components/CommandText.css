@@ -1,15 +1,13 @@
 .CommandText {
-  position: relative;
   display: inline-block;
+  width: 100%;
 
   .EditableText {
-    min-width: 1rem;
+    min-width: 1px;
   }
 
   .CommandText--Placeholder {
-    position: absolute;
-    top: 0;
-    left: 0;
+    display: inline-block;
     color: $color-text-hint;
   }
 }

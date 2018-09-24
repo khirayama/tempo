@@ -58,15 +58,17 @@ export class CommandText extends React.Component<IProps> {
     return (
       <div className="CommandText" onClick={this.onClick}>
         <EditableText ref={this.ref} value={item.text} onChange={this.onChange} onKeyDown={this.onKeyDown} />
-        {!item.text ? <div className="CommandText--Placeholder">Type '/' for commands</div> : null}
+        {this.props.focus && !item.text ? <div className="CommandText--Placeholder">Type '/' for commands</div> : null}
       </div>
     );
   }
 
   private focus(): void {
+    // TODO: Tab移動時にblur - focusしていて、選択位置がずれるので直す
     setTimeout(() => {
       const el: HTMLInputElement = ReactDOM.findDOMNode(this) as HTMLInputElement;
-      (el.querySelector('.EditableText') as HTMLInputElement).focus();
+      const targetElement: HTMLInputElement = el.querySelector('.EditableText') as HTMLInputElement;
+      targetElement.focus();
     }, 0);
   }
 
