@@ -330,6 +330,76 @@ describe('traverse', () => {
     });
   });
 
+  describe('findNext', () => {
+    it('find next of id: 1', () => {
+      const actual: IItem | null = traverse.findNext(sampleItems, '1');
+      if (actual !== null) {
+        expect(actual.id).toEqual('2');
+      } else {
+        throw new Error('null');
+      }
+    });
+
+    it('find next of id: 2', () => {
+      const actual: IItem | null = traverse.findNext(sampleItems, '2');
+      if (actual !== null) {
+        expect(actual.id).toEqual('3');
+      } else {
+        throw new Error('null');
+      }
+    });
+
+    it('find next of id: 3', () => {
+      const actual: IItem | null = traverse.findNext(sampleItems, '3');
+      if (actual !== null) {
+        expect(actual.id).toEqual('4');
+      } else {
+        throw new Error('null');
+      }
+    });
+
+    it('find next of id: 4', () => {
+      const actual: IItem | null = traverse.findNext(sampleItems, '4');
+      if (actual !== null) {
+        expect(actual.id).toEqual('5');
+      } else {
+        throw new Error('null');
+      }
+    });
+
+    it('find next of id: 5', () => {
+      const actual: IItem | null = traverse.findNext(sampleItems, '5');
+      if (actual !== null) {
+        expect(actual.id).toEqual('6');
+      } else {
+        throw new Error('null');
+      }
+    });
+
+    it('find next of id: 6', () => {
+      const actual: IItem | null = traverse.findNext(sampleItems, '6');
+      if (actual !== null) {
+        expect(actual.id).toEqual('7');
+      } else {
+        throw new Error('null');
+      }
+    });
+
+    it('find next of id: 7', () => {
+      const actual: IItem | null = traverse.findNext(sampleItems, '7');
+      if (actual !== null) {
+        expect(actual.id).toEqual('8');
+      } else {
+        throw new Error('null');
+      }
+    });
+
+    it('find next of id: 8', () => {
+      const actual: IItem | null = traverse.findNext(sampleItems, '8');
+      expect(actual).toEqual(null);
+    });
+  });
+
   describe('addItem', () => {
     it('add an item after id: 1', () => {
       const items: any = copyItems(sampleItems);
