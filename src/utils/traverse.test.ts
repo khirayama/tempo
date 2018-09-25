@@ -28,6 +28,7 @@ sampleItems2
 - id: 1
   - id: 2
     - id: 3
+- id: 4
 
 expect(items[0].id).toEqual('1');
 expect(items[0].children[0].id).toEqual('2');
@@ -107,6 +108,12 @@ const sampleItems2: IItem[] = [
         ],
       },
     ],
+  },
+  {
+    id: '4',
+    style: 'TEXT',
+    text: 'text 4',
+    children: [],
   },
 ];
 
@@ -260,14 +267,14 @@ describe('traverse', () => {
     });
   });
 
-  describe('findPrev', () => {
-    it('find prev of id: 1', () => {
-      const actual: IItem | null = traverse.findPrev(sampleItems, '1');
+  describe('findUpperItem', () => {
+    it('find upper of id: 1', () => {
+      const actual: IItem | null = traverse.findUpperItem(sampleItems, '1');
       expect(actual).toEqual(null);
     });
 
-    it('find prev of id: 2', () => {
-      const actual: IItem | null = traverse.findPrev(sampleItems, '2');
+    it('find upper of id: 2', () => {
+      const actual: IItem | null = traverse.findUpperItem(sampleItems, '2');
       if (actual !== null) {
         expect(actual.id).toEqual('1');
       } else {
@@ -275,8 +282,8 @@ describe('traverse', () => {
       }
     });
 
-    it('find prev of id: 3', () => {
-      const actual: IItem | null = traverse.findPrev(sampleItems, '3');
+    it('find upper of id: 3', () => {
+      const actual: IItem | null = traverse.findUpperItem(sampleItems, '3');
       if (actual !== null) {
         expect(actual.id).toEqual('2');
       } else {
@@ -284,8 +291,8 @@ describe('traverse', () => {
       }
     });
 
-    it('find prev of id: 4', () => {
-      const actual: IItem | null = traverse.findPrev(sampleItems, '4');
+    it('find upper of id: 4', () => {
+      const actual: IItem | null = traverse.findUpperItem(sampleItems, '4');
       if (actual !== null) {
         expect(actual.id).toEqual('3');
       } else {
@@ -293,8 +300,8 @@ describe('traverse', () => {
       }
     });
 
-    it('find prev of id: 5', () => {
-      const actual: IItem | null = traverse.findPrev(sampleItems, '5');
+    it('find upper of id: 5', () => {
+      const actual: IItem | null = traverse.findUpperItem(sampleItems, '5');
       if (actual !== null) {
         expect(actual.id).toEqual('4');
       } else {
@@ -302,8 +309,8 @@ describe('traverse', () => {
       }
     });
 
-    it('find prev of id: 6', () => {
-      const actual: IItem | null = traverse.findPrev(sampleItems, '6');
+    it('find upper of id: 6', () => {
+      const actual: IItem | null = traverse.findUpperItem(sampleItems, '6');
       if (actual !== null) {
         expect(actual.id).toEqual('5');
       } else {
@@ -311,8 +318,8 @@ describe('traverse', () => {
       }
     });
 
-    it('find prev of id: 7', () => {
-      const actual: IItem | null = traverse.findPrev(sampleItems, '7');
+    it('find upper of id: 7', () => {
+      const actual: IItem | null = traverse.findUpperItem(sampleItems, '7');
       if (actual !== null) {
         expect(actual.id).toEqual('6');
       } else {
@@ -320,19 +327,28 @@ describe('traverse', () => {
       }
     });
 
-    it('find prev of id: 8', () => {
-      const actual: IItem | null = traverse.findPrev(sampleItems, '8');
+    it('find upper of id: 8', () => {
+      const actual: IItem | null = traverse.findUpperItem(sampleItems, '8');
       if (actual !== null) {
         expect(actual.id).toEqual('7');
+      } else {
+        throw new Error('null');
+      }
+    });
+
+    it('sampleItems2: find upper of id: 4', () => {
+      const actual: IItem | null = traverse.findUpperItem(sampleItems2, '4');
+      if (actual !== null) {
+        expect(actual.id).toEqual('3');
       } else {
         throw new Error('null');
       }
     });
   });
 
-  describe('findNext', () => {
-    it('find next of id: 1', () => {
-      const actual: IItem | null = traverse.findNext(sampleItems, '1');
+  describe('findDownerItem', () => {
+    it('find downer of id: 1', () => {
+      const actual: IItem | null = traverse.findDownerItem(sampleItems, '1');
       if (actual !== null) {
         expect(actual.id).toEqual('2');
       } else {
@@ -340,8 +356,8 @@ describe('traverse', () => {
       }
     });
 
-    it('find next of id: 2', () => {
-      const actual: IItem | null = traverse.findNext(sampleItems, '2');
+    it('find downer of id: 2', () => {
+      const actual: IItem | null = traverse.findDownerItem(sampleItems, '2');
       if (actual !== null) {
         expect(actual.id).toEqual('3');
       } else {
@@ -349,8 +365,8 @@ describe('traverse', () => {
       }
     });
 
-    it('find next of id: 3', () => {
-      const actual: IItem | null = traverse.findNext(sampleItems, '3');
+    it('find downer of id: 3', () => {
+      const actual: IItem | null = traverse.findDownerItem(sampleItems, '3');
       if (actual !== null) {
         expect(actual.id).toEqual('4');
       } else {
@@ -358,8 +374,8 @@ describe('traverse', () => {
       }
     });
 
-    it('find next of id: 4', () => {
-      const actual: IItem | null = traverse.findNext(sampleItems, '4');
+    it('find downer of id: 4', () => {
+      const actual: IItem | null = traverse.findDownerItem(sampleItems, '4');
       if (actual !== null) {
         expect(actual.id).toEqual('5');
       } else {
@@ -367,8 +383,8 @@ describe('traverse', () => {
       }
     });
 
-    it('find next of id: 5', () => {
-      const actual: IItem | null = traverse.findNext(sampleItems, '5');
+    it('find downer of id: 5', () => {
+      const actual: IItem | null = traverse.findDownerItem(sampleItems, '5');
       if (actual !== null) {
         expect(actual.id).toEqual('6');
       } else {
@@ -376,8 +392,8 @@ describe('traverse', () => {
       }
     });
 
-    it('find next of id: 6', () => {
-      const actual: IItem | null = traverse.findNext(sampleItems, '6');
+    it('find downer of id: 6', () => {
+      const actual: IItem | null = traverse.findDownerItem(sampleItems, '6');
       if (actual !== null) {
         expect(actual.id).toEqual('7');
       } else {
@@ -385,8 +401,8 @@ describe('traverse', () => {
       }
     });
 
-    it('find next of id: 7', () => {
-      const actual: IItem | null = traverse.findNext(sampleItems, '7');
+    it('find downer of id: 7', () => {
+      const actual: IItem | null = traverse.findDownerItem(sampleItems, '7');
       if (actual !== null) {
         expect(actual.id).toEqual('8');
       } else {
@@ -394,9 +410,18 @@ describe('traverse', () => {
       }
     });
 
-    it('find next of id: 8', () => {
-      const actual: IItem | null = traverse.findNext(sampleItems, '8');
+    it('find downer of id: 8', () => {
+      const actual: IItem | null = traverse.findDownerItem(sampleItems, '8');
       expect(actual).toEqual(null);
+    });
+
+    it('sampleItems2: find downer of id: 3', () => {
+      const actual: IItem | null = traverse.findDownerItem(sampleItems2, '3');
+      if (actual !== null) {
+        expect(actual.id).toEqual('4');
+      } else {
+        throw new Error('null');
+      }
     });
   });
 
@@ -957,6 +982,7 @@ describe('traverse', () => {
       expect(items[0].id).toEqual('1');
       expect(items[0].children[0].id).toEqual('2');
       expect(items[0].children[1].id).toEqual('3');
+      expect(items[1].id).toEqual('4');
     });
   });
 

@@ -3,8 +3,8 @@ import { IBulletedItem, IItem, INumberedItem, ITaskItem, ITextItem, IToggleItem 
 /*
  * find
  * findParent
- * findPrev
- * findNext
+ * findUpperItem
+ * findDownerItem
  * addItem
  * shiftItem
  * unshiftItem
@@ -28,8 +28,8 @@ function hasChildren(item: IItem): item is ITextItem | IBulletedItem | INumbered
 export const traverse: {
   find(items: IItem[], id: string): IItem | null;
   findParent(items: IItem[], id: string): IItem | null;
-  findPrev(items: IItem[], id: string): IItem | null;
-  findNext(items: IItem[], id: string): IItem | null;
+  findUpperItem(items: IItem[], id: string): IItem | null;
+  findDownerItem(items: IItem[], id: string): IItem | null;
   addItem(items: IItem[], prevId: string, newId?: string): void;
   shiftItem(items: IItem[], id: string): void;
   unshiftItem(items: IItem[], id: string): void;
@@ -72,7 +72,8 @@ export const traverse: {
 
     return null;
   },
-  findPrev: (items: IItem[], id: string): IItem | null => {
+  findUpperItem: (items: IItem[], id: string): IItem | null => {
+    // TODO: textがないItemの場合、飛ばす
     function findLastChild(item: IItem): IItem | null {
       if (hasChildren(item) && item.children.length) {
         const lastChild: IItem = item.children[item.children.length - 1];
@@ -129,7 +130,7 @@ export const traverse: {
       }
 
       if (hasChildren(item)) {
-        const result: IItem | null = traverse.findPrev(item.children, id);
+        const result: IItem | null = traverse.findUpperItem(item.children, id);
         if (result !== null) {
           return result;
         }
@@ -138,7 +139,8 @@ export const traverse: {
 
     return null;
   },
-  findNext: (items: IItem[], id: string): IItem | null => {
+  findDownerItem: (items: IItem[], id: string): IItem | null => {
+    // TODO: textがないItemの場合、飛ばす
     // 子要素があれば、その一番目
     // 子要素がなければ、弟要素
     // 子要素も弟もなければ、親要素の弟
@@ -169,7 +171,7 @@ export const traverse: {
       }
 
       if (hasChildren(item)) {
-        const result: IItem | null = traverse.findNext(item.children, id);
+        const result: IItem | null = traverse.findDownerItem(item.children, id);
         if (result !== null) {
           return result;
         }
