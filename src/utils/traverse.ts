@@ -3,6 +3,7 @@ import { IBulletedItem, IItem, INumberedItem, ITaskItem, ITextItem, IToggleItem 
 /*
  * find
  * findParent
+ * findPrev
  * addItem
  * shiftItem
  * unshiftItem
@@ -26,6 +27,7 @@ function hasChildren(item: IItem): item is ITextItem | IBulletedItem | INumbered
 export const traverse: {
   find(items: IItem[], id: string): IItem | null;
   findParent(items: IItem[], id: string): IItem | null;
+  findPrev(items: IItem[], id: string): IItem | null;
   addItem(items: IItem[], prevId: string, newId?: string): void;
   shiftItem(items: IItem[], id: string): void;
   unshiftItem(items: IItem[], id: string): void;
@@ -60,6 +62,72 @@ export const traverse: {
         }
 
         const result: IItem | null = traverse.findParent(item.children, id);
+        if (result !== null) {
+          return result;
+        }
+      }
+    }
+
+    return null;
+  },
+  findPrev: (items: IItem[], id: string): IItem | null => {
+    function findLastChild(item: IItem): IItem | null {
+      if (hasChildren(item) && item.children.length) {
+        const lastChild: IItem = item.children[item.children.length - 1];
+        if (hasChildren(lastChild) && lastChild.children.length) {
+          return findLastChild(lastChild);
+        } else {
+          return lastChild;
+        }
+      }
+
+      return null;
+    }
+
+    for (let i: number = 0; i < items.length; i += 1) {
+      const item: IItem = items[i];
+
+      if (item.id === id) {
+        const prevItem: IItem | null = items[i - 1] || null;
+
+        if (prevItem === null || !hasChildren(prevItem)) {
+          return null;
+        } else if (hasChildren(prevItem) && !prevItem.children.length) {
+          return prevItem;
+        }
+
+        const result: IItem | null = findLastChild(prevItem);
+        if (result !== null) {
+          return result;
+        }
+      } else if (hasChildren(item)) {
+        // 次に行く前に子供のチェック
+        for (let j: number = 0; j < item.children.length; j += 1) {
+          const childItem: IItem = item.children[j];
+
+          if (childItem.id === id) {
+            if (j === 0) {
+              return item;
+            } else {
+              const prevItem: IItem = item.children[j - 1];
+
+              if (!hasChildren(prevItem)) {
+                return null;
+              } else if (hasChildren(prevItem) && !prevItem.children.length) {
+                return prevItem;
+              }
+
+              const result: IItem | null = findLastChild(prevItem);
+              if (result !== null) {
+                return result;
+              }
+            }
+          }
+        }
+      }
+
+      if (hasChildren(item)) {
+        const result: IItem | null = traverse.findPrev(item.children, id);
         if (result !== null) {
           return result;
         }
