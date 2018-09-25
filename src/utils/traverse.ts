@@ -2,6 +2,7 @@ import { IBulletedItem, IItem, INumberedItem, ITaskItem, ITextItem, IToggleItem 
 
 /*
  * find
+ * findParent
  * addItem
  * shiftItem
  * unshiftItem
@@ -24,6 +25,7 @@ function hasChildren(item: IItem): item is ITextItem | IBulletedItem | INumbered
 
 export const traverse: {
   find(items: IItem[], id: string): IItem | null;
+  findParent(items: IItem[], id: string): IItem | null;
   addItem(items: IItem[], prevId: string, newId?: string): void;
   shiftItem(items: IItem[], id: string): void;
   unshiftItem(items: IItem[], id: string): void;
@@ -42,6 +44,24 @@ export const traverse: {
           if (result !== null) {
             return result;
           }
+        }
+      }
+    }
+
+    return null;
+  },
+  findParent: (items: IItem[], id: string): IItem | null => {
+    for (const item of items) {
+      if (hasChildren(item)) {
+        for (const childItem of item.children) {
+          if (childItem.id === id) {
+            return item;
+          }
+        }
+
+        const result: IItem | null = traverse.findParent(item.children, id);
+        if (result !== null) {
+          return result;
         }
       }
     }
