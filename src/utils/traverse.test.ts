@@ -194,6 +194,72 @@ describe('traverse', () => {
     });
   });
 
+  describe('findParent', () => {
+    it('find parent of id: 1', () => {
+      const actual: IItem | null = traverse.findParent(sampleItems, '1');
+      expect(actual).toEqual(null);
+    });
+
+    it('find parent of id: 2', () => {
+      const actual: IItem | null = traverse.findParent(sampleItems, '2');
+      if (actual !== null) {
+        expect(actual.id).toEqual('1');
+      } else {
+        throw new Error('null');
+      }
+    });
+
+    it('find parent of id: 3', () => {
+      const actual: IItem | null = traverse.findParent(sampleItems, '3');
+      if (actual !== null) {
+        expect(actual.id).toEqual('1');
+      } else {
+        throw new Error('null');
+      }
+    });
+
+    it('find parent of id: 4', () => {
+      const actual: IItem | null = traverse.findParent(sampleItems, '4');
+      if (actual !== null) {
+        expect(actual.id).toEqual('3');
+      } else {
+        throw new Error('null');
+      }
+    });
+
+    it('find parent of id: 5', () => {
+      const actual: IItem | null = traverse.findParent(sampleItems, '5');
+      if (actual !== null) {
+        expect(actual.id).toEqual('3');
+      } else {
+        throw new Error('null');
+      }
+    });
+
+    it('find parent of id: 6', () => {
+      const actual: IItem | null = traverse.findParent(sampleItems, '6');
+      if (actual !== null) {
+        expect(actual.id).toEqual('1');
+      } else {
+        throw new Error('null');
+      }
+    });
+
+    it('find parent of id: 7', () => {
+      const actual: IItem | null = traverse.findParent(sampleItems, '7');
+      if (actual !== null) {
+        expect(actual.id).toEqual('1');
+      } else {
+        throw new Error('null');
+      }
+    });
+
+    it('find parent of id: 8', () => {
+      const actual: IItem | null = traverse.findParent(sampleItems, '8');
+      expect(actual).toEqual(null);
+    });
+  });
+
   describe('addItem', () => {
     it('add an item after id: 1', () => {
       const items: any = copyItems(sampleItems);
