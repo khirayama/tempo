@@ -4,6 +4,7 @@ import { IBulletedItem, IItem, INumberedItem, ITaskItem, ITextItem, IToggleItem 
  * find
  * findParent
  * findPrev
+ * findNext
  * addItem
  * shiftItem
  * unshiftItem
@@ -28,6 +29,7 @@ export const traverse: {
   find(items: IItem[], id: string): IItem | null;
   findParent(items: IItem[], id: string): IItem | null;
   findPrev(items: IItem[], id: string): IItem | null;
+  findNext(items: IItem[], id: string): IItem | null;
   addItem(items: IItem[], prevId: string, newId?: string): void;
   shiftItem(items: IItem[], id: string): void;
   unshiftItem(items: IItem[], id: string): void;
@@ -128,6 +130,46 @@ export const traverse: {
 
       if (hasChildren(item)) {
         const result: IItem | null = traverse.findPrev(item.children, id);
+        if (result !== null) {
+          return result;
+        }
+      }
+    }
+
+    return null;
+  },
+  findNext: (items: IItem[], id: string): IItem | null => {
+    // 子要素があれば、その一番目
+    // 子要素がなければ、弟要素
+    // 子要素も弟もなければ、親要素の弟
+    for (let i: number = 0; i < items.length; i += 1) {
+      const item: IItem = items[i];
+      if (item.id === id) {
+        if (hasChildren(item) && item.children.length) {
+          return item.children[0];
+        } else if (items[i + 1]) {
+          return items[i + 1];
+        }
+      }
+
+      if (hasChildren(item)) {
+        for (let j: number = 0; j < item.children.length; j += 1) {
+          const childItem: IItem = item.children[j];
+
+          if (childItem.id === id) {
+            if (hasChildren(childItem) && childItem.children.length) {
+              return childItem.children[0];
+            } else if (item.children[j + 1]) {
+              return item.children[j + 1];
+            } else if (items[i + 1]) {
+              return items[i + 1];
+            }
+          }
+        }
+      }
+
+      if (hasChildren(item)) {
+        const result: IItem | null = traverse.findNext(item.children, id);
         if (result !== null) {
           return result;
         }
