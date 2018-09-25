@@ -122,9 +122,9 @@ function copyItems(items: IItem[]): IItem[] {
 }
 
 describe('traverse', () => {
-  describe('find', () => {
+  describe('findItem', () => {
     it('id: 1 is an item', () => {
-      const actual: IItem | null = traverse.find(sampleItems, '1');
+      const actual: IItem | null = traverse.findItem(sampleItems, '1');
       if (actual !== null) {
         expect(actual.id).toEqual('1');
       } else {
@@ -133,7 +133,7 @@ describe('traverse', () => {
     });
 
     it('id: 2 is an item', () => {
-      const actual: IItem | null = traverse.find(sampleItems, '2');
+      const actual: IItem | null = traverse.findItem(sampleItems, '2');
       if (actual !== null) {
         expect(actual.id).toEqual('2');
       } else {
@@ -142,7 +142,7 @@ describe('traverse', () => {
     });
 
     it('id: 3 is an item', () => {
-      const actual: IItem | null = traverse.find(sampleItems, '3');
+      const actual: IItem | null = traverse.findItem(sampleItems, '3');
       if (actual !== null) {
         expect(actual.id).toEqual('3');
       } else {
@@ -151,7 +151,7 @@ describe('traverse', () => {
     });
 
     it('id: 4 is an item', () => {
-      const actual: IItem | null = traverse.find(sampleItems, '4');
+      const actual: IItem | null = traverse.findItem(sampleItems, '4');
       if (actual !== null) {
         expect(actual.id).toEqual('4');
       } else {
@@ -160,7 +160,7 @@ describe('traverse', () => {
     });
 
     it('id: 5 is an item', () => {
-      const actual: IItem | null = traverse.find(sampleItems, '5');
+      const actual: IItem | null = traverse.findItem(sampleItems, '5');
       if (actual !== null) {
         expect(actual.id).toEqual('5');
       } else {
@@ -169,7 +169,7 @@ describe('traverse', () => {
     });
 
     it('id: 6 is an item', () => {
-      const actual: IItem | null = traverse.find(sampleItems, '6');
+      const actual: IItem | null = traverse.findItem(sampleItems, '6');
       if (actual !== null) {
         expect(actual.id).toEqual('6');
       } else {
@@ -178,7 +178,7 @@ describe('traverse', () => {
     });
 
     it('id: 7 is an item', () => {
-      const actual: IItem | null = traverse.find(sampleItems, '7');
+      const actual: IItem | null = traverse.findItem(sampleItems, '7');
       if (actual !== null) {
         expect(actual.id).toEqual('7');
       } else {
@@ -187,7 +187,7 @@ describe('traverse', () => {
     });
 
     it('id: 8 is an item', () => {
-      const actual: IItem | null = traverse.find(sampleItems, '8');
+      const actual: IItem | null = traverse.findItem(sampleItems, '8');
       if (actual !== null) {
         expect(actual.id).toEqual('8');
       } else {
@@ -196,19 +196,19 @@ describe('traverse', () => {
     });
 
     it('id: 9 is null', () => {
-      const actual: IItem | null = traverse.find(sampleItems, '9');
+      const actual: IItem | null = traverse.findItem(sampleItems, '9');
       expect(actual).toEqual(null);
     });
   });
 
-  describe('findParent', () => {
+  describe('findParentItem', () => {
     it('find parent of id: 1', () => {
-      const actual: IItem | null = traverse.findParent(sampleItems, '1');
+      const actual: IItem | null = traverse.findParentItem(sampleItems, '1');
       expect(actual).toEqual(null);
     });
 
     it('find parent of id: 2', () => {
-      const actual: IItem | null = traverse.findParent(sampleItems, '2');
+      const actual: IItem | null = traverse.findParentItem(sampleItems, '2');
       if (actual !== null) {
         expect(actual.id).toEqual('1');
       } else {
@@ -217,7 +217,7 @@ describe('traverse', () => {
     });
 
     it('find parent of id: 3', () => {
-      const actual: IItem | null = traverse.findParent(sampleItems, '3');
+      const actual: IItem | null = traverse.findParentItem(sampleItems, '3');
       if (actual !== null) {
         expect(actual.id).toEqual('1');
       } else {
@@ -226,7 +226,7 @@ describe('traverse', () => {
     });
 
     it('find parent of id: 4', () => {
-      const actual: IItem | null = traverse.findParent(sampleItems, '4');
+      const actual: IItem | null = traverse.findParentItem(sampleItems, '4');
       if (actual !== null) {
         expect(actual.id).toEqual('3');
       } else {
@@ -235,7 +235,7 @@ describe('traverse', () => {
     });
 
     it('find parent of id: 5', () => {
-      const actual: IItem | null = traverse.findParent(sampleItems, '5');
+      const actual: IItem | null = traverse.findParentItem(sampleItems, '5');
       if (actual !== null) {
         expect(actual.id).toEqual('3');
       } else {
@@ -244,7 +244,7 @@ describe('traverse', () => {
     });
 
     it('find parent of id: 6', () => {
-      const actual: IItem | null = traverse.findParent(sampleItems, '6');
+      const actual: IItem | null = traverse.findParentItem(sampleItems, '6');
       if (actual !== null) {
         expect(actual.id).toEqual('1');
       } else {
@@ -253,7 +253,7 @@ describe('traverse', () => {
     });
 
     it('find parent of id: 7', () => {
-      const actual: IItem | null = traverse.findParent(sampleItems, '7');
+      const actual: IItem | null = traverse.findParentItem(sampleItems, '7');
       if (actual !== null) {
         expect(actual.id).toEqual('1');
       } else {
@@ -262,7 +262,7 @@ describe('traverse', () => {
     });
 
     it('find parent of id: 8', () => {
-      const actual: IItem | null = traverse.findParent(sampleItems, '8');
+      const actual: IItem | null = traverse.findParentItem(sampleItems, '8');
       expect(actual).toEqual(null);
     });
   });
