@@ -71,6 +71,7 @@ export const traverse: {
   findUpperItem(items: IItem[], id: string): IItem | null;
   findUpperItemSkipNoTextItem(items: IItem[], id: string): IItem | null;
   findDownerItem(items: IItem[], id: string, context?: { rootItems: IItem[] }): IItem | null;
+  findDownerItemSkipNoTextItem(items: IItem[], id: string): IItem | null;
   addItem(items: IItem[], prevId: string, newId?: string): IItem | null;
   shiftItem(items: IItem[], id: string): void;
   unshiftItem(items: IItem[], id: string): void;
@@ -234,6 +235,14 @@ export const traverse: {
     }
 
     return null;
+  },
+  findDownerItemSkipNoTextItem: (items: IItem[], id: string): IItem | null => {
+    const item: IItem | null = traverse.findDownerItem(items, id);
+    if (item !== null && item.style === 'DIVIDER') {
+      return traverse.findDownerItemSkipNoTextItem(items, item.id);
+    }
+
+    return item;
   },
   addItem: (items: IItem[], prevId: string, newId?: string): IItem | null => {
     for (let i: number = 0; i < items.length; i += 1) {
