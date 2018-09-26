@@ -233,17 +233,19 @@ export const traverse: {
     return null;
   },
   addItem: (items: IItem[], prevId: string, newId?: string): IItem | null => {
-    // TODO: prevIdのstyleを引き継ぐ
     for (let i: number = 0; i < items.length; i += 1) {
       const item: IItem = items[i];
       if (item.id === prevId) {
         const prevItem: IItem | null = traverse.findItem(items, prevId);
-        const newItem: ITextItem = {
+        const newItem: IItem = {
           id: newId || uuid(),
           style: 'TEXT',
           text: '',
           children: [],
         };
+        if (prevItem) {
+          traverse.turnInto(newItem, prevItem.style);
+        }
         if (prevItem !== null && hasChildren(prevItem)) {
           newItem.children = prevItem.children;
           prevItem.children = [];
