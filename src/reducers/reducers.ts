@@ -14,6 +14,20 @@ export function reducers(state: IState, action: IAction): IState {
       newState.ui.focusedId = payload.id;
       break;
     }
+    case actionTypes.FOCUS_UPPER_ITEM: {
+      const upperItem: IItem | null = traverse.findUpperItem(page.items, payload.id);
+      if (upperItem !== null) {
+        newState.ui.focusedId = upperItem.id;
+      }
+      break;
+    }
+    case actionTypes.FOCUS_DOWNER_ITEM: {
+      const downerItem: IItem | null = traverse.findDownerItem(page.items, payload.id);
+      if (downerItem !== null) {
+        newState.ui.focusedId = downerItem.id;
+      }
+      break;
+    }
     case actionTypes.ADD_ITEM: {
       const id: string = new Date().toString();
       traverse.addItem(page.items, payload.prevId, id);
@@ -45,7 +59,7 @@ export function reducers(state: IState, action: IAction): IState {
       break;
     }
     case actionTypes.UPDATE_ITEM: {
-      const item: IItem | null = traverse.find(page.items, payload.id);
+      const item: IItem | null = traverse.findItem(page.items, payload.id);
       Object.assign(item, payload);
       break;
     }
