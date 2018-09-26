@@ -2,6 +2,8 @@ export const actionTypes: {
   [key: string]: string;
 } = {
   FOCUS_ITEM: '__FOCUS_ITEM',
+  FOCUS_UPPER_ITEM: '__FOCUS_UPPER_ITEM',
+  FOCUS_DOWNER_ITEM: '__FOCUS_DOWNER_ITEM',
   ADD_ITEM: '__ADD_ITEM',
   UPDATE_ITEM: '__UPDATE_ITEM',
   SHIFT_ITEM: '__SHIFT_ITEM',

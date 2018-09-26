@@ -20,6 +20,26 @@ export async function focusItem(dispatch: IDispatch, item: { id: string }): Prom
   return action;
 }
 
+export async function focusUpperItem(dispatch: IDispatch, item: { id: string }): Promise<IAction> {
+  const action: IAction = {
+    actionType: actionTypes.FOCUS_UPPER_ITEM,
+    payload: item,
+  };
+  dispatch(action);
+
+  return action;
+}
+
+export async function focusDownerItem(dispatch: IDispatch, item: { id: string }): Promise<IAction> {
+  const action: IAction = {
+    actionType: actionTypes.FOCUS_DOWNER_ITEM,
+    payload: item,
+  };
+  dispatch(action);
+
+  return action;
+}
+
 export async function addItem(dispatch: IDispatch, item: { prevId: string }): Promise<IAction> {
   const action: IAction = {
     actionType: actionTypes.ADD_ITEM,
