@@ -1,3 +1,5 @@
+import * as uuid from 'uuid/v4';
+
 import { IBulletedItem, IItem, INumberedItem, ITaskItem, ITextItem, IToggleItem } from 'state/state';
 
 /*
@@ -45,7 +47,7 @@ export const traverse: {
   findParentBrotherItem(items: IItem[], id: string): IItem | null;
   findUpperItem(items: IItem[], id: string): IItem | null;
   findDownerItem(items: IItem[], id: string, context?: { rootItems: IItem[] }): IItem | null;
-  addItem(items: IItem[], prevId: string, newId?: string): void;
+  addItem(items: IItem[], prevId: string, newId?: string): IItem | null;
   shiftItem(items: IItem[], id: string): void;
   unshiftItem(items: IItem[], id: string): void;
   deleteItem(items: IItem[], id: string): void;
@@ -206,13 +208,13 @@ export const traverse: {
 
     return null;
   },
-  addItem: (items: IItem[], prevId: string, newId?: string): void => {
+  addItem: (items: IItem[], prevId: string, newId?: string): IItem | null => {
     for (let i: number = 0; i < items.length; i += 1) {
       const item: IItem = items[i];
       if (item.id === prevId) {
         const prevItem: IItem | null = traverse.findItem(items, prevId);
         const newItem: ITextItem = {
-          id: newId || '', // Add id
+          id: newId || uuid(),
           style: 'TEXT',
           text: '',
           children: [],
@@ -224,13 +226,18 @@ export const traverse: {
 
         items.splice(i + 1, 0, newItem);
 
-        return;
+        return newItem;
       } else {
         if (hasChildren(item)) {
-          traverse.addItem(item.children, prevId, newId);
+          const result: IItem | null = traverse.addItem(item.children, prevId, newId);
+          if (result !== null) {
+            return result;
+          }
         }
       }
     }
+
+    return null;
   },
   shiftItem(items: IItem[], id: string): void {
     for (let i: number = 0; i < items.length; i += 1) {

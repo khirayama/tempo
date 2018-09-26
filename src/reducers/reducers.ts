@@ -29,9 +29,10 @@ export function reducers(state: IState, action: IAction): IState {
       break;
     }
     case actionTypes.ADD_ITEM: {
-      const id: string = new Date().toString();
-      traverse.addItem(page.items, payload.prevId, id);
-      newState.ui.focusedId = id;
+      const item: IItem | null = traverse.addItem(page.items, payload.prevId);
+      if (item !== null) {
+        newState.ui.focusedId = item.id;
+      }
       break;
     }
     case actionTypes.SHIFT_ITEM: {
