@@ -267,6 +267,72 @@ describe('traverse', () => {
     });
   });
 
+  describe('findParentBrotherItem', () => {
+    it('find parent brother of id: 1', () => {
+      const actual: IItem | null = traverse.findParentBrotherItem(sampleItems, '1');
+      expect(actual).toEqual(null);
+    });
+
+    it('find parent brother of id: 2', () => {
+      const actual: IItem | null = traverse.findParentBrotherItem(sampleItems, '2');
+      if (actual !== null) {
+        expect(actual.id).toEqual('8');
+      } else {
+        throw new Error('null');
+      }
+    });
+
+    it('find parent brother of id: 3', () => {
+      const actual: IItem | null = traverse.findParentBrotherItem(sampleItems, '3');
+      if (actual !== null) {
+        expect(actual.id).toEqual('8');
+      } else {
+        throw new Error('null');
+      }
+    });
+
+    it('find parent brother of id: 4', () => {
+      const actual: IItem | null = traverse.findParentBrotherItem(sampleItems, '4');
+      if (actual !== null) {
+        expect(actual.id).toEqual('6');
+      } else {
+        throw new Error('null');
+      }
+    });
+
+    it('find parent brother of id: 5', () => {
+      const actual: IItem | null = traverse.findParentBrotherItem(sampleItems, '5');
+      if (actual !== null) {
+        expect(actual.id).toEqual('6');
+      } else {
+        throw new Error('null');
+      }
+    });
+
+    it('find parent brother of id: 6', () => {
+      const actual: IItem | null = traverse.findParentBrotherItem(sampleItems, '6');
+      if (actual !== null) {
+        expect(actual.id).toEqual('8');
+      } else {
+        throw new Error('null');
+      }
+    });
+
+    it('find parent brother of id: 7', () => {
+      const actual: IItem | null = traverse.findParentBrotherItem(sampleItems, '7');
+      if (actual !== null) {
+        expect(actual.id).toEqual('8');
+      } else {
+        throw new Error('null');
+      }
+    });
+
+    it('find parent brother of id: 8', () => {
+      const actual: IItem | null = traverse.findParentBrotherItem(sampleItems, '8');
+      expect(actual).toEqual(null);
+    });
+  });
+
   describe('findUpperItem', () => {
     it('find upper of id: 1', () => {
       const actual: IItem | null = traverse.findUpperItem(sampleItems, '1');
