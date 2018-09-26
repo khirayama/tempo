@@ -5,7 +5,9 @@ import {
   addItem,
   cancelItem,
   deleteItem,
+  focusDownerItem,
   focusItem,
+  focusUpperItem,
   shiftItem,
   unshiftItem,
   updateItem,
@@ -44,6 +46,12 @@ export class HomeMobilePage extends Container<{}, IState> {
         }}
         onUnshift={(): void => {
           unshiftItem(this.dispatch, { id: item.id });
+        }}
+        onUp={(): void => {
+          focusUpperItem(this.dispatch, { id: item.id });
+        }}
+        onDown={(): void => {
+          focusDownerItem(this.dispatch, { id: item.id });
         }}
         onDelete={(): void => {
           deleteItem(this.dispatch, { id: item.id });
