@@ -44,13 +44,20 @@ export function reducers(state: IState, action: IAction): IState {
       break;
     }
     case actionTypes.DELETE_ITEM: {
-      // TODO: Update focusedId
+      const upperItem: IItem | null = traverse.findUpperItem(page.items, payload.id);
+      if (upperItem) {
+        newState.ui.focusedId = upperItem.id;
+      }
       traverse.deleteItem(page.items, payload.id);
       break;
     }
     case actionTypes.CANCEL_ITEM: {
-      // TODO: Update focusedId not to find newState.ui.focusedId
+      const upperItem: IItem | null = traverse.findUpperItem(page.items, payload.id);
       traverse.cancelItem(page.items, payload.id);
+      const item: IItem | null = traverse.findItem(page.items, payload.id);
+      if (item === null && upperItem !== null) {
+        newState.ui.focusedId = upperItem.id;
+      }
       break;
     }
     case actionTypes.PREPEND_ITEM: {
