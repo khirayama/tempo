@@ -3,6 +3,7 @@ import { IBulletedItem, IItem, INumberedItem, ITaskItem, ITextItem, IToggleItem 
 /*
  * findItem
  * findParentItem
+ * findParentBrotherItem
  * findUpperItem
  * findDownerItem
  * addItem
@@ -25,11 +26,25 @@ function hasChildren(item: IItem): item is ITextItem | IBulletedItem | INumbered
   );
 }
 
+function findLastChild(item: IItem): IItem | null {
+  if (hasChildren(item) && item.children.length) {
+    const lastChild: IItem = item.children[item.children.length - 1];
+    if (hasChildren(lastChild) && lastChild.children.length) {
+      return findLastChild(lastChild);
+    } else {
+      return lastChild;
+    }
+  }
+
+  return null;
+}
+
 export const traverse: {
   findItem(items: IItem[], id: string): IItem | null;
   findParentItem(items: IItem[], id: string): IItem | null;
+  findParentBrotherItem(items: IItem[], id: string): IItem | null;
   findUpperItem(items: IItem[], id: string): IItem | null;
-  findDownerItem(items: IItem[], id: string): IItem | null;
+  findDownerItem(items: IItem[], id: string, context?: { rootItems: IItem[] }): IItem | null;
   addItem(items: IItem[], prevId: string, newId?: string): void;
   shiftItem(items: IItem[], id: string): void;
   unshiftItem(items: IItem[], id: string): void;
@@ -72,21 +87,27 @@ export const traverse: {
 
     return null;
   },
-  findUpperItem: (items: IItem[], id: string): IItem | null => {
-    // TODO: textがないItemの場合、飛ばす
-    function findLastChild(item: IItem): IItem | null {
-      if (hasChildren(item) && item.children.length) {
-        const lastChild: IItem = item.children[item.children.length - 1];
-        if (hasChildren(lastChild) && lastChild.children.length) {
-          return findLastChild(lastChild);
-        } else {
-          return lastChild;
+  findParentBrotherItem: (items: IItem[], id: string): IItem | null => {
+    for (let i: number = 0; i < items.length; i += 1) {
+      const item: IItem = items[i];
+      if (hasChildren(item)) {
+        for (const childItem of item.children) {
+          if (childItem.id === id) {
+            return items[i + 1] || null;
+          }
+        }
+
+        const result: IItem | null = traverse.findParentBrotherItem(item.children, id);
+        if (result !== null) {
+          return result;
         }
       }
-
-      return null;
     }
 
+    return null;
+  },
+  findUpperItem: (items: IItem[], id: string): IItem | null => {
+    // TODO: textがないItemの場合、飛ばす
     for (let i: number = 0; i < items.length; i += 1) {
       const item: IItem = items[i];
 
@@ -139,12 +160,30 @@ export const traverse: {
 
     return null;
   },
-  findDownerItem: (items: IItem[], id: string): IItem | null => {
+  findDownerItem: (items: IItem[], id: string, context?: { rootItems: IItem[] }): IItem | null => {
+    const ctx: { rootItems: IItem[] } = context ? context : { rootItems: items };
+
     // TODO: textがないItemの場合、飛ばす
-    // 子要素があれば、その一番目
-    // 子要素がなければ、弟要素
-    // 子要素も弟もなければ、親要素の弟
-    // 子要素も弟もなく、親要素の弟もない場合、その親の弟
+    // 自分に子がいれば、一番上の子
+    // 子がいなければ、弟
+    // 子も弟もいなければ、親の弟
+    // 親の弟もいなければ、親の親の弟(親なしまで繰り返す)
+    function findParentsBrotherItem(rootItems: IItem[], shadowId: string): IItem | null {
+      const parentBrotherItem: IItem | null = traverse.findParentBrotherItem(rootItems, shadowId);
+      if (parentBrotherItem !== null) {
+        return parentBrotherItem;
+      } else {
+        const parentItem: IItem | null = traverse.findParentItem(rootItems, shadowId);
+        if (parentItem !== null) {
+          return findParentsBrotherItem(rootItems, parentItem.id);
+        } else {
+          return null;
+        }
+      }
+
+      return null;
+    }
+
     for (let i: number = 0; i < items.length; i += 1) {
       const item: IItem = items[i];
       if (item.id === id) {
@@ -152,27 +191,13 @@ export const traverse: {
           return item.children[0];
         } else if (items[i + 1]) {
           return items[i + 1];
+        } else {
+          return findParentsBrotherItem(ctx.rootItems, id);
         }
       }
 
       if (hasChildren(item)) {
-        for (let j: number = 0; j < item.children.length; j += 1) {
-          const childItem: IItem = item.children[j];
-
-          if (childItem.id === id) {
-            if (hasChildren(childItem) && childItem.children.length) {
-              return childItem.children[0];
-            } else if (item.children[j + 1]) {
-              return item.children[j + 1];
-            } else if (items[i + 1]) {
-              return items[i + 1];
-            }
-          }
-        }
-      }
-
-      if (hasChildren(item)) {
-        const result: IItem | null = traverse.findDownerItem(item.children, id);
+        const result: IItem | null = traverse.findDownerItem(item.children, id, ctx);
         if (result !== null) {
           return result;
         }
