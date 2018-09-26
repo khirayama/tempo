@@ -69,6 +69,7 @@ export const traverse: {
   findParentItem(items: IItem[], id: string): IItem | null;
   findParentBrotherItem(items: IItem[], id: string): IItem | null;
   findUpperItem(items: IItem[], id: string): IItem | null;
+  findUpperItemSkipNoTextItem(items: IItem[], id: string): IItem | null;
   findDownerItem(items: IItem[], id: string, context?: { rootItems: IItem[] }): IItem | null;
   addItem(items: IItem[], prevId: string, newId?: string): IItem | null;
   shiftItem(items: IItem[], id: string): void;
@@ -133,23 +134,20 @@ export const traverse: {
     return null;
   },
   findUpperItem: (items: IItem[], id: string): IItem | null => {
-    // TODO: textがないItemの場合、skip
     for (let i: number = 0; i < items.length; i += 1) {
       const item: IItem = items[i];
 
       if (item.id === id) {
         const prevItem: IItem | null = items[i - 1] || null;
 
-        if (prevItem === null || !hasChildren(prevItem)) {
-          return null;
-        } else if (hasChildren(prevItem) && !prevItem.children.length) {
-          return prevItem;
+        if (prevItem !== null && hasChildren(prevItem) && prevItem.children.length) {
+          const result: IItem | null = traverse.findLastChildItem(prevItem);
+          if (result !== null) {
+            return result;
+          }
         }
 
-        const result: IItem | null = findLastChild(prevItem);
-        if (result !== null) {
-          return result;
-        }
+        return prevItem;
       } else if (hasChildren(item)) {
         // 次に行く前に子供のチェック
         for (let j: number = 0; j < item.children.length; j += 1) {
@@ -159,18 +157,16 @@ export const traverse: {
             if (j === 0) {
               return item;
             } else {
-              const prevItem: IItem = item.children[j - 1];
+              const prevItem: IItem | null = item.children[j - 1] || null;
 
-              if (!hasChildren(prevItem)) {
-                return null;
-              } else if (hasChildren(prevItem) && !prevItem.children.length) {
-                return prevItem;
+              if (prevItem !== null && hasChildren(prevItem) && prevItem.children.length) {
+                const result: IItem | null = traverse.findLastChildItem(prevItem);
+                if (result !== null) {
+                  return result;
+                }
               }
 
-              const result: IItem | null = findLastChild(prevItem);
-              if (result !== null) {
-                return result;
-              }
+              return prevItem;
             }
           }
         }
@@ -186,8 +182,15 @@ export const traverse: {
 
     return null;
   },
+  findUpperItemSkipNoTextItem: (items: IItem[], id: string): IItem | null => {
+    const item: IItem | null = traverse.findUpperItem(items, id);
+    if (item !== null && item.style === 'DIVIDER') {
+      return traverse.findUpperItemSkipNoTextItem(items, item.id);
+    }
+
+    return item;
+  },
   findDownerItem: (items: IItem[], id: string, context?: { rootItems: IItem[] }): IItem | null => {
-    // TODO: textがないItemの場合、skip
     // 自分に子がいれば、一番上の子
     // 子がいなければ、弟
     // 子も弟もいなければ、親の弟
