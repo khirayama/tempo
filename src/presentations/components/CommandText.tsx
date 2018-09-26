@@ -24,16 +24,14 @@ const keyCodes: { [key: string]: number } = {
   TAB: 9,
   ENTER: 13,
   ESCAPE: 27,
+  UP: 38,
+  DOWN: 40,
   P: 80,
 };
 
 export class CommandText extends React.Component<IProps> {
-  private ref: React.RefObject<EditableText>;
-
   constructor(props: IProps) {
     super(props);
-
-    this.ref = React.createRef();
 
     this.onClick = this.onClick.bind(this);
     this.onChange = this.onChange.bind(this);
@@ -56,8 +54,8 @@ export class CommandText extends React.Component<IProps> {
     const item: ITextableItem = this.props.item;
 
     return (
-      <div className="CommandText" onClick={this.onClick}>
-        <EditableText ref={this.ref} value={item.text} onChange={this.onChange} onKeyDown={this.onKeyDown} />
+      <div key={item.id} className="CommandText" onClick={this.onClick}>
+        <EditableText value={item.text} onChange={this.onChange} onKeyDown={this.onKeyDown} />
         {this.props.focus && !item.text ? <div className="CommandText--Placeholder">Type '/' for commands</div> : null}
       </div>
     );
