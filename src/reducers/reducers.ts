@@ -44,10 +44,12 @@ export function reducers(state: IState, action: IAction): IState {
       break;
     }
     case actionTypes.DELETE_ITEM: {
+      // TODO: Update focusedId
       traverse.deleteItem(page.items, payload.id);
       break;
     }
     case actionTypes.CANCEL_ITEM: {
+      // TODO: Update focusedId not to find newState.ui.focusedId
       traverse.cancelItem(page.items, payload.id);
       break;
     }

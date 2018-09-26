@@ -109,7 +109,7 @@ export const traverse: {
     return null;
   },
   findUpperItem: (items: IItem[], id: string): IItem | null => {
-    // TODO: textがないItemの場合、飛ばす
+    // TODO: textがないItemの場合、skip
     for (let i: number = 0; i < items.length; i += 1) {
       const item: IItem = items[i];
 
@@ -163,13 +163,13 @@ export const traverse: {
     return null;
   },
   findDownerItem: (items: IItem[], id: string, context?: { rootItems: IItem[] }): IItem | null => {
-    const ctx: { rootItems: IItem[] } = context ? context : { rootItems: items };
-
-    // TODO: textがないItemの場合、飛ばす
+    // TODO: textがないItemの場合、skip
     // 自分に子がいれば、一番上の子
     // 子がいなければ、弟
     // 子も弟もいなければ、親の弟
     // 親の弟もいなければ、親の親の弟(親なしまで繰り返す)
+
+    const ctx: { rootItems: IItem[] } = context ? context : { rootItems: items };
     function findParentsBrotherItem(rootItems: IItem[], shadowId: string): IItem | null {
       const parentBrotherItem: IItem | null = traverse.findParentBrotherItem(rootItems, shadowId);
       if (parentBrotherItem !== null) {
@@ -209,6 +209,7 @@ export const traverse: {
     return null;
   },
   addItem: (items: IItem[], prevId: string, newId?: string): IItem | null => {
+    // TODO: prevIdのstyleを引き継ぐ
     for (let i: number = 0; i < items.length; i += 1) {
       const item: IItem = items[i];
       if (item.id === prevId) {
