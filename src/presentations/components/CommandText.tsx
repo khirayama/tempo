@@ -10,9 +10,12 @@ interface IProps {
   focus?: boolean;
   onClick?(event: React.MouseEvent<HTMLElement>, props: IProps): void;
   onChange?(event: React.FormEvent<HTMLInputElement>, props: IProps): void;
+  onKeyDown?(event: React.KeyboardEvent<HTMLInputElement>, props: IProps): void;
   onSubmit?(event: React.KeyboardEvent<HTMLInputElement>, props: IProps): void;
   onShift?(event: React.KeyboardEvent<HTMLInputElement>, props: IProps): void;
   onUnshift?(event: React.KeyboardEvent<HTMLInputElement>, props: IProps): void;
+  onUp?(event: React.KeyboardEvent<HTMLInputElement>, props: IProps): void;
+  onDown?(event: React.KeyboardEvent<HTMLInputElement>, props: IProps): void;
   onDelete?(event: React.KeyboardEvent<HTMLInputElement>, props: IProps): void;
   onCancel?(event: React.KeyboardEvent<HTMLInputElement>, props: IProps): void;
   onSelect?(event: React.KeyboardEvent<HTMLInputElement>, props: IProps): void;
@@ -136,6 +139,22 @@ export class CommandText extends React.Component<IProps> {
         }
         break;
       }
+      case keyCode === keyCodes.UP && !meta && !shift: {
+        event.preventDefault();
+        logger.info('onUp');
+        if (this.props.onUp) {
+          this.props.onUp(event, this.props);
+        }
+        break;
+      }
+      case keyCode === keyCodes.DOWN && !meta && !shift: {
+        event.preventDefault();
+        logger.info('onDown');
+        if (this.props.onDown) {
+          this.props.onDown(event, this.props);
+        }
+        break;
+      }
       case keyCode === keyCodes.DELETE && !meta && !shift && !value: {
         event.preventDefault();
         logger.info('onCancel');
@@ -161,6 +180,10 @@ export class CommandText extends React.Component<IProps> {
         break;
       }
       default:
+    }
+
+    if (this.props.onKeyDown) {
+      this.props.onKeyDown(event, this.props);
     }
   }
 }
