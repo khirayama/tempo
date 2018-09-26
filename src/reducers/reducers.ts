@@ -15,14 +15,14 @@ export function reducers(state: IState, action: IAction): IState {
       break;
     }
     case actionTypes.FOCUS_UPPER_ITEM: {
-      const upperItem: IItem | null = traverse.findUpperItem(page.items, payload.id);
+      const upperItem: IItem | null = traverse.findUpperItemSkipNoTextItem(page.items, payload.id);
       if (upperItem !== null) {
         newState.ui.focusedId = upperItem.id;
       }
       break;
     }
     case actionTypes.FOCUS_DOWNER_ITEM: {
-      const downerItem: IItem | null = traverse.findDownerItem(page.items, payload.id);
+      const downerItem: IItem | null = traverse.findDownerItemSkipNoTextItem(page.items, payload.id);
       if (downerItem !== null) {
         newState.ui.focusedId = downerItem.id;
       }
@@ -44,7 +44,7 @@ export function reducers(state: IState, action: IAction): IState {
       break;
     }
     case actionTypes.DELETE_ITEM: {
-      const upperItem: IItem | null = traverse.findUpperItem(page.items, payload.id);
+      const upperItem: IItem | null = traverse.findUpperItemSkipNoTextItem(page.items, payload.id);
       if (upperItem) {
         newState.ui.focusedId = upperItem.id;
       }
