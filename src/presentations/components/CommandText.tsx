@@ -3,7 +3,26 @@ import * as ReactDOM from 'react-dom';
 
 import { logger } from 'logger';
 import { EditableText } from 'presentations/components/EditableText';
-import { ITextableItem } from 'state/state';
+import {
+  IBulletedItem,
+  IHeaderItem,
+  IItem,
+  INumberedItem,
+  IQuateItem,
+  ITaskItem,
+  ITextItem,
+  IToggleItem,
+} from 'state/state';
+
+type ITextableItem =
+  | ITextItem
+  | IBulletedItem
+  | INumberedItem
+  | ITaskItem
+  | ITaskItem
+  | IToggleItem
+  | IHeaderItem
+  | IQuateItem;
 
 interface IProps {
   item: ITextableItem;

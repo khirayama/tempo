@@ -121,10 +121,9 @@ export class HomeMobilePage extends Container<{}, IState> {
         }
 
         return (
-          <div className="Item" key={item.id}>
-            <div>
-              <input type="checkbox" checked={item.completed} /> {item.text}
-            </div>
+          <div className="Item TaskItem" key={item.id}>
+            <input type="checkbox" checked={item.completed} />
+            {commandTextElement}
             {children}
           </div>
         );
@@ -136,8 +135,8 @@ export class HomeMobilePage extends Container<{}, IState> {
         }
 
         return (
-          <details className="Item" key={item.id} open={item.opened}>
-            <summary>{item.text}</summary>
+          <details className="Item ToggleItem" key={item.id} open={item.opened}>
+            <summary>{commandTextElement}</summary>
             {children}
           </details>
         );
@@ -145,23 +144,23 @@ export class HomeMobilePage extends Container<{}, IState> {
 
       case 'HEADER': {
         return (
-          <div className="Item" key={item.id}>
-            <h2>{item.text}</h2>
+          <div className="Item HeaderItem" key={item.id}>
+            <h2>{commandTextElement}</h2>
           </div>
         );
       }
 
       case 'QUOTE': {
         return (
-          <blockquote className="Item" key={item.id}>
-            {item.text}
+          <blockquote className="Item QuoteItem" key={item.id}>
+            {commandTextElement}
           </blockquote>
         );
       }
 
       case 'DIVIDER': {
         return (
-          <div className="Item" key={item.id}>
+          <div className="Item DividerItem" key={item.id}>
             <hr />
           </div>
         );
