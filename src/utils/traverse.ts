@@ -1,6 +1,15 @@
 import * as uuid from 'uuid/v4';
 
-import { IBulletedItem, IItem, INumberedItem, ITaskItem, ITextItem, IToggleItem } from 'state/state';
+import {
+  IBulletedItem,
+  IHeaderItem,
+  IItem,
+  INumberedItem,
+  IQuateItem,
+  ITaskItem,
+  ITextItem,
+  IToggleItem,
+} from 'state/state';
 
 /*
  * findItem
@@ -25,6 +34,20 @@ function hasChildren(item: IItem): item is ITextItem | IBulletedItem | INumbered
     item.style === 'NUMBERED' ||
     item.style === 'TASK' ||
     item.style === 'TOGGLE'
+  );
+}
+
+function hasText(
+  item: IItem,
+): item is ITextItem | IBulletedItem | INumberedItem | ITaskItem | ITaskItem | IToggleItem | IHeaderItem | IQuateItem {
+  return (
+    item.style === 'TEXT' ||
+    item.style === 'BULLETED' ||
+    item.style === 'NUMBERED' ||
+    item.style === 'TASK' ||
+    item.style === 'TOGGLE' ||
+    item.style === 'HEADER' ||
+    item.style === 'QUOTE'
   );
 }
 
@@ -54,6 +77,7 @@ export const traverse: {
   cancelItem(items: IItem[], id: string, context?: { depth: number }): void;
   prependItem(items: IItem[], id: string, toId: string, context?: { item: IItem | null }): void;
   appendItem(items: IItem[], id: string, toId: string, context?: { item: IItem | null }): void;
+  turnInto(item: IItem, style: string): void;
 } = {
   findItem: (items: IItem[], id: string): IItem | null => {
     for (const item of items) {
@@ -403,6 +427,83 @@ export const traverse: {
             traverse.appendItem(targetItem.children, id, toId, ctx);
           }
         }
+      }
+    }
+  },
+  turnInto: (item: IItem, style: string): void => {
+    if (item.style !== style) {
+      switch (style) {
+        case 'TEXT': {
+          Object.assign(item, {
+            style: 'TEXT',
+            text: hasText(item) ? item.text : '',
+            children: hasChildren(item) ? item.children : [],
+            completed: undefined,
+            opened: undefined,
+          });
+          break;
+        }
+        case 'BULLETED': {
+          Object.assign(item, {
+            style: 'BULLETED',
+            text: hasText(item) ? item.text : '',
+            children: hasChildren(item) ? item.children : [],
+            completed: undefined,
+            opened: undefined,
+          });
+          break;
+        }
+        case 'NUMBERED': {
+          Object.assign(item, {
+            style: 'NUMBERED',
+            text: hasText(item) ? item.text : '',
+            children: hasChildren(item) ? item.children : [],
+            completed: undefined,
+            opened: undefined,
+          });
+          break;
+        }
+        case 'TASK': {
+          Object.assign(item, {
+            style: 'TASK',
+            text: hasText(item) ? item.text : '',
+            children: hasChildren(item) ? item.children : [],
+            completed: false,
+            opened: undefined,
+          });
+          break;
+        }
+        case 'TOGGLE': {
+          Object.assign(item, {
+            style: 'TASK',
+            text: hasText(item) ? item.text : '',
+            children: hasChildren(item) ? item.children : [],
+            completed: undefined,
+            opened: false,
+          });
+          break;
+        }
+        case 'HEADER': {
+          Object.assign(item, {
+            style: 'HEADER',
+            text: hasText(item) ? item.text : '',
+            children: undefined,
+            completed: undefined,
+            opened: undefined,
+          });
+          break;
+        }
+        case 'DIVIDER': {
+          Object.assign(item, {
+            style: 'DIVIDER',
+            text: undefined,
+            children: undefined,
+            completed: undefined,
+            opened: undefined,
+          });
+          break;
+        }
+        default:
       }
     }
   },
