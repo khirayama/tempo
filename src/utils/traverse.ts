@@ -11,29 +11,13 @@ import {
   IToggleItem,
 } from 'state/state';
 
-/*
- * findItem
- * findParentItem
- * findParentBrotherItem
- * findUpperItem
- * findDownerItem
- * addItem
- * shiftItem
- * unshiftItem
- * deleteItem
- * cancelItem
- * prependItem
- * appendItem
- * turnInto
-*/
-
 function hasChildren(item: IItem): item is ITextItem | IBulletedItem | INumberedItem | ITaskItem | IToggleItem {
   return (
     item.style === 'TEXT' ||
     item.style === 'BULLETED' ||
     item.style === 'NUMBERED' ||
     item.style === 'TASK' ||
-    item.style === 'TOGGLE'
+    (item.style === 'TOGGLE' && item.opened)
   );
 }
 
@@ -51,23 +35,11 @@ function hasText(
   );
 }
 
-function findLastChild(item: IItem): IItem | null {
-  if (hasChildren(item) && item.children.length) {
-    const lastChild: IItem = item.children[item.children.length - 1];
-    if (hasChildren(lastChild) && lastChild.children.length) {
-      return findLastChild(lastChild);
-    } else {
-      return lastChild;
-    }
-  }
-
-  return null;
-}
-
 export const traverse: {
   findItem(items: IItem[], id: string): IItem | null;
   findParentItem(items: IItem[], id: string): IItem | null;
   findParentBrotherItem(items: IItem[], id: string): IItem | null;
+  findLastChildItem(item: IItem): IItem | null;
   findUpperItem(items: IItem[], id: string): IItem | null;
   findUpperItemSkipNoTextItem(items: IItem[], id: string): IItem | null;
   findDownerItem(items: IItem[], id: string, context?: { rootItems: IItem[] }): IItem | null;
@@ -110,6 +82,18 @@ export const traverse: {
         if (result !== null) {
           return result;
         }
+      }
+    }
+
+    return null;
+  },
+  findLastChildItem: (item: IItem): IItem | null => {
+    if (hasChildren(item) && item.children.length) {
+      const lastChild: IItem = item.children[item.children.length - 1];
+      if (hasChildren(lastChild) && lastChild.children.length) {
+        return traverse.findLastChildItem(lastChild);
+      } else {
+        return lastChild;
       }
     }
 
