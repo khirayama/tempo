@@ -3,6 +3,7 @@ import * as React from 'react';
 interface IProps {
   value: string;
   onBlur?(event: React.FormEvent<HTMLElement>): void;
+  onFocus?(event: React.FormEvent<HTMLElement>): void;
   onChange?(event: React.FormEvent<HTMLElement>): void;
   onKeyDown?(event: React.KeyboardEvent<HTMLElement>): void;
   onKeyUp?(event: React.KeyboardEvent<HTMLElement>): void;
