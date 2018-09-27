@@ -315,18 +315,25 @@ export const traverse: {
     }
   },
   cancelItem(items: IItem[], id: string, context?: { depth: number }): void {
+    // TEXTじゃない場合
+    //  TEXTに変換
     // 親がいない
     //  childrenをunshiftしてdeleteItem
     // 親がいる & 兄がいる & 弟がいる
     //  childrenをunshiftしてdeleteItem
     // 親がいる & 兄がいる & 弟がいない
     //  unshiftItem
-    // TODO: typeがTEXTじゃない場合はtextに変更
 
     const ctx: { depth: number } = context ? context : { depth: 0 };
     const hasParent: boolean = ctx.depth !== 0;
 
     for (const item of items) {
+      if (item.style !== 'TEXT' && item.id === id) {
+        traverse.turnInto(item, 'TEXT');
+
+        return;
+      }
+
       if (!hasParent && item.id === id) {
         if (hasChildren(item)) {
           for (let j: number = item.children.length - 1; j >= 0; j -= 1) {
@@ -346,7 +353,11 @@ export const traverse: {
             const hasPreItem: boolean = !!item.children[j - 1];
             const hasSufItem: boolean = !!item.children[j + 1];
 
-            if (hasPreItem && hasSufItem) {
+            if (childItem.style !== 'TEXT') {
+              traverse.turnInto(childItem, 'TEXT');
+
+              return;
+            } else if (hasPreItem && hasSufItem) {
               if (hasChildren(childItem)) {
                 for (let k: number = childItem.children.length - 1; k >= 0; k -= 1) {
                   traverse.unshiftItem(items, childItem.children[k].id);
