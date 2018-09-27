@@ -46,8 +46,8 @@ export const traverse: {
   findDowner(items: IItem[], id: string, context?: { rootItems: IItem[] }): IItem | null;
   findDownerSkipNoText(items: IItem[], id: string): IItem | null;
   // command
-  // TODO: addBefore
   // TODO: update
+  addBefore(items: IItem[], prevId: string, newId?: string): IItem | null;
   addAfter(items: IItem[], prevId: string, newId?: string): IItem | null;
   indent(items: IItem[], id: string): void;
   unindent(items: IItem[], id: string): void;
@@ -231,6 +231,34 @@ export const traverse: {
     }
 
     return item;
+  },
+  addBefore: (items: IItem[], prevId: string, newId?: string): IItem | null => {
+    for (let i: number = 0; i < items.length; i += 1) {
+      const item: IItem = items[i];
+      if (item.id === prevId) {
+        const prevItem: IItem | null = traverse.find(items, prevId);
+        const newItem: IItem = {
+          id: newId || uuid(),
+          style: 'TEXT',
+          text: '',
+          children: [],
+        };
+        // FYI: addBeforeの場合、以前のstyleは引き継がず、TEXTで生成する
+
+        items.splice(i, 0, newItem);
+
+        return newItem;
+      } else {
+        if (hasChildren(item)) {
+          const result: IItem | null = traverse.addBefore(item.children, prevId, newId);
+          if (result !== null) {
+            return result;
+          }
+        }
+      }
+    }
+
+    return null;
   },
   addAfter: (items: IItem[], prevId: string, newId?: string): IItem | null => {
     for (let i: number = 0; i < items.length; i += 1) {
