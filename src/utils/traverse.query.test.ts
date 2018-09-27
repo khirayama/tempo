@@ -227,7 +227,7 @@ describe('traverse', () => {
 
   describe('findLastChild', () => {
     it('find last child of id: 1', () => {
-      const targetItem: IItem | null = traverse.find(sampleItems, '1')
+      const targetItem: IItem | null = traverse.find(sampleItems, '1');
       if (targetItem !== null) {
         const actual: IItem | null = traverse.findLastChild(targetItem);
         if (actual !== null) {
@@ -241,7 +241,7 @@ describe('traverse', () => {
     });
 
     it('find last child of id: 2', () => {
-      const targetItem: IItem | null = traverse.find(sampleItems, '2')
+      const targetItem: IItem | null = traverse.find(sampleItems, '2');
       if (targetItem !== null) {
         const actual: IItem | null = traverse.findLastChild(targetItem);
         expect(actual).toEqual(null);
@@ -251,7 +251,7 @@ describe('traverse', () => {
     });
 
     it('find last child of id: 3', () => {
-      const targetItem: IItem | null = traverse.find(sampleItems, '3')
+      const targetItem: IItem | null = traverse.find(sampleItems, '3');
       if (targetItem !== null) {
         const actual: IItem | null = traverse.findLastChild(targetItem);
         if (actual !== null) {
@@ -265,7 +265,7 @@ describe('traverse', () => {
     });
 
     it('find last child of id: 4', () => {
-      const targetItem: IItem | null = traverse.find(sampleItems, '4')
+      const targetItem: IItem | null = traverse.find(sampleItems, '4');
       if (targetItem !== null) {
         const actual: IItem | null = traverse.findLastChild(targetItem);
         expect(actual).toEqual(null);
@@ -275,7 +275,7 @@ describe('traverse', () => {
     });
 
     it('find last child of id: 5', () => {
-      const targetItem: IItem | null = traverse.find(sampleItems, '5')
+      const targetItem: IItem | null = traverse.find(sampleItems, '5');
       if (targetItem !== null) {
         const actual: IItem | null = traverse.findLastChild(targetItem);
         expect(actual).toEqual(null);
@@ -285,7 +285,7 @@ describe('traverse', () => {
     });
 
     it('find last child of id: 6', () => {
-      const targetItem: IItem | null = traverse.find(sampleItems, '6')
+      const targetItem: IItem | null = traverse.find(sampleItems, '6');
       if (targetItem !== null) {
         const actual: IItem | null = traverse.findLastChild(targetItem);
         expect(actual).toEqual(null);
@@ -295,7 +295,7 @@ describe('traverse', () => {
     });
 
     it('find last child of id: 7', () => {
-      const targetItem: IItem | null = traverse.find(sampleItems, '7')
+      const targetItem: IItem | null = traverse.find(sampleItems, '7');
       if (targetItem !== null) {
         const actual: IItem | null = traverse.findLastChild(targetItem);
         expect(actual).toEqual(null);
@@ -305,7 +305,7 @@ describe('traverse', () => {
     });
 
     it('find last child of id: 8', () => {
-      const targetItem: IItem | null = traverse.find(sampleItems, '8')
+      const targetItem: IItem | null = traverse.find(sampleItems, '8');
       if (targetItem !== null) {
         const actual: IItem | null = traverse.findLastChild(targetItem);
         expect(actual).toEqual(null);
