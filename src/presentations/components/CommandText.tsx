@@ -14,6 +14,9 @@ import {
   IToggleItem,
 } from 'state/state';
 
+// TODO: Build UI for turing into
+// TODO: New item with text when user press enter in half of text
+
 type ITextableItem =
   | ITextItem
   | IBulletedItem
