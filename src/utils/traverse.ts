@@ -36,6 +36,7 @@ function hasText(
 }
 
 export const traverse: {
+  // TODO: remove Item
   findItem(items: IItem[], id: string): IItem | null;
   findParentItem(items: IItem[], id: string): IItem | null;
   findParentBrotherItem(items: IItem[], id: string): IItem | null;
@@ -44,6 +45,14 @@ export const traverse: {
   findUpperItemSkipNoTextItem(items: IItem[], id: string): IItem | null;
   findDownerItem(items: IItem[], id: string, context?: { rootItems: IItem[] }): IItem | null;
   findDownerItemSkipNoTextItem(items: IItem[], id: string): IItem | null;
+  // addBefore
+  // addAfter
+  // indent
+  // unindent
+  // delete
+  // cancel
+  // moveBefore
+  // moveAfter
   addItem(items: IItem[], prevId: string, newId?: string): IItem | null;
   shiftItem(items: IItem[], id: string): void;
   unshiftItem(items: IItem[], id: string): void;
