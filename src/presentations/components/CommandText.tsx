@@ -19,6 +19,7 @@ import {
 // TODO: 文章途中でEnterしたときはそこで区切って新規
 // TODO: 文章ありでも先頭でEnterしたときはTEXTを挿入
 // TODO: 空の状態でEnterしたときTEXT以外ならTEXTに変換(cancel相当)
+// TODO: select状態の考慮
 
 type ITextableItem =
   | ITextItem
