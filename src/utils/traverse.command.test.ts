@@ -18,8 +18,8 @@ describe('traverse', () => {
   describe('addAfter', () => {
     it('add an item before id: 1', () => {
       const items: any = copyItems(sampleItems);
-      traverse.addBefore(items, '1', '9');
-      expect(items[0].id).toEqual('9');
+      const newItem: IItem = <IItem>traverse.addBefore(items, '1');
+      expect(items[0].id).toEqual(newItem.id);
       expect(items[1].id).toEqual('1');
       expect(items[1].children[0].id).toEqual('2');
       expect(items[1].children[1].id).toEqual('3');
@@ -32,9 +32,9 @@ describe('traverse', () => {
 
     it('add an item before id: 2', () => {
       const items: any = copyItems(sampleItems);
-      traverse.addBefore(items, '2', '9');
+      const newItem: IItem = <IItem>traverse.addBefore(items, '2');
       expect(items[0].id).toEqual('1');
-      expect(items[0].children[0].id).toEqual('9');
+      expect(items[0].children[0].id).toEqual(newItem.id);
       expect(items[0].children[1].id).toEqual('2');
       expect(items[0].children[2].id).toEqual('3');
       expect(items[0].children[2].children[0].id).toEqual('4');
@@ -46,10 +46,10 @@ describe('traverse', () => {
 
     it('add an item before id: 3', () => {
       const items: any = copyItems(sampleItems);
-      traverse.addBefore(items, '3', '9');
+      const newItem: IItem = <IItem>traverse.addBefore(items, '3');
       expect(items[0].id).toEqual('1');
       expect(items[0].children[0].id).toEqual('2');
-      expect(items[0].children[1].id).toEqual('9');
+      expect(items[0].children[1].id).toEqual(newItem.id);
       expect(items[0].children[2].id).toEqual('3');
       expect(items[0].children[2].children[0].id).toEqual('4');
       expect(items[0].children[2].children[1].id).toEqual('5');
@@ -60,11 +60,11 @@ describe('traverse', () => {
 
     it('add an item before id: 4', () => {
       const items: any = copyItems(sampleItems);
-      traverse.addBefore(items, '4', '9');
+      const newItem: IItem = <IItem>traverse.addBefore(items, '4');
       expect(items[0].id).toEqual('1');
       expect(items[0].children[0].id).toEqual('2');
       expect(items[0].children[1].id).toEqual('3');
-      expect(items[0].children[1].children[0].id).toEqual('9');
+      expect(items[0].children[1].children[0].id).toEqual(newItem.id);
       expect(items[0].children[1].children[1].id).toEqual('4');
       expect(items[0].children[1].children[2].id).toEqual('5');
       expect(items[0].children[2].id).toEqual('6');
@@ -74,12 +74,12 @@ describe('traverse', () => {
 
     it('add an item before id: 5', () => {
       const items: any = copyItems(sampleItems);
-      traverse.addBefore(items, '5', '9');
+      const newItem: IItem = <IItem>traverse.addBefore(items, '5');
       expect(items[0].id).toEqual('1');
       expect(items[0].children[0].id).toEqual('2');
       expect(items[0].children[1].id).toEqual('3');
       expect(items[0].children[1].children[0].id).toEqual('4');
-      expect(items[0].children[1].children[1].id).toEqual('9');
+      expect(items[0].children[1].children[1].id).toEqual(newItem.id);
       expect(items[0].children[1].children[2].id).toEqual('5');
       expect(items[0].children[2].id).toEqual('6');
       expect(items[0].children[3].id).toEqual('7');
@@ -88,13 +88,13 @@ describe('traverse', () => {
 
     it('add an item before id: 6', () => {
       const items: any = copyItems(sampleItems);
-      traverse.addBefore(items, '6', '9');
+      const newItem: IItem = <IItem>traverse.addBefore(items, '6');
       expect(items[0].id).toEqual('1');
       expect(items[0].children[0].id).toEqual('2');
       expect(items[0].children[1].id).toEqual('3');
       expect(items[0].children[1].children[0].id).toEqual('4');
       expect(items[0].children[1].children[1].id).toEqual('5');
-      expect(items[0].children[2].id).toEqual('9');
+      expect(items[0].children[2].id).toEqual(newItem.id);
       expect(items[0].children[3].id).toEqual('6');
       expect(items[0].children[4].id).toEqual('7');
       expect(items[1].id).toEqual('8');
@@ -102,21 +102,21 @@ describe('traverse', () => {
 
     it('add an item before id: 7', () => {
       const items: any = copyItems(sampleItems);
-      traverse.addBefore(items, '7', '9');
+      const newItem: IItem = <IItem>traverse.addBefore(items, '7');
       expect(items[0].id).toEqual('1');
       expect(items[0].children[0].id).toEqual('2');
       expect(items[0].children[1].id).toEqual('3');
       expect(items[0].children[1].children[0].id).toEqual('4');
       expect(items[0].children[1].children[1].id).toEqual('5');
       expect(items[0].children[2].id).toEqual('6');
-      expect(items[0].children[3].id).toEqual('9');
+      expect(items[0].children[3].id).toEqual(newItem.id);
       expect(items[0].children[4].id).toEqual('7');
       expect(items[1].id).toEqual('8');
     });
 
     it('add an item before id: 8', () => {
       const items: any = copyItems(sampleItems);
-      traverse.addBefore(items, '8', '9');
+      const newItem: IItem = <IItem>traverse.addBefore(items, '8');
       expect(items[0].id).toEqual('1');
       expect(items[0].children[0].id).toEqual('2');
       expect(items[0].children[1].id).toEqual('3');
@@ -124,7 +124,7 @@ describe('traverse', () => {
       expect(items[0].children[1].children[1].id).toEqual('5');
       expect(items[0].children[2].id).toEqual('6');
       expect(items[0].children[3].id).toEqual('7');
-      expect(items[1].id).toEqual('9');
+      expect(items[1].id).toEqual(newItem.id);
       expect(items[2].id).toEqual('8');
     });
   });
