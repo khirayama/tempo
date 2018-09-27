@@ -62,7 +62,7 @@ export function reducers(state: IState, action: IAction): IState {
     }
     case actionTypes.UPDATE_ITEM: {
       const item: IItem | null = traverse.find(page.items, payload.id);
-      Object.assign(item, payload);
+      traverse.merge(<IItem>item, payload);
       break;
     }
     default:

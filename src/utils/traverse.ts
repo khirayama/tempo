@@ -46,7 +46,6 @@ export const traverse: {
   findDowner(items: IItem[], id: string, context?: { rootItems: IItem[] }): IItem | null;
   findDownerSkipNoText(items: IItem[], id: string): IItem | null;
   // command
-  // TODO: update
   addBefore(items: IItem[], prevId: string): IItem | null;
   addAfter(items: IItem[], prevId: string): IItem | null;
   indent(items: IItem[], id: string): void;
@@ -55,7 +54,8 @@ export const traverse: {
   cancel(items: IItem[], id: string, context?: { depth: number }): void;
   moveBefore(items: IItem[], id: string, toId: string, context?: { item: IItem | null }): void;
   moveAfter(items: IItem[], id: string, toId: string, context?: { item: IItem | null }): void;
-  turnInto(item: IItem, style: string): void;
+  merge(item: IItem, newItem: IItem): IItem;
+  turnInto(item: IItem, style: string): IItem;
 } = {
   find: (items: IItem[], id: string): IItem | null => {
     for (const item of items) {
@@ -471,41 +471,53 @@ export const traverse: {
       }
     }
   },
-  turnInto: (item: IItem, style: string): void => {
+  merge: (item: IItem, newItem: {
+    id?: string;
+    style: string;
+    text?: string;
+    children?: IItem[];
+    completed?: boolean | undefined;
+    opened?: boolean | undefined;
+  }): IItem => {
+    // tslint:disable-next-line:prefer-object-spread
+    return Object.assign(item, newItem);
+  },
+  turnInto: (item: IItem, style: string): IItem => {
     if (item.style !== style) {
       switch (style) {
         case 'TEXT': {
-          Object.assign(item, {
+          // tslint:disable-next-line:prefer-object-spread
+          return Object.assign(item, {
             style,
             text: hasText(item) ? item.text : '',
             children: hasChildren(item) ? item.children : [],
             completed: undefined,
             opened: undefined,
           });
-          break;
         }
         case 'BULLETED': {
-          Object.assign(item, {
+          // tslint:disable-next-line:prefer-object-spread
+          return Object.assign(item, {
             style,
             text: hasText(item) ? item.text : '',
             children: hasChildren(item) ? item.children : [],
             completed: undefined,
             opened: undefined,
           });
-          break;
         }
         case 'NUMBERED': {
-          Object.assign(item, {
+          // tslint:disable-next-line:prefer-object-spread
+          return Object.assign(item, {
             style,
             text: hasText(item) ? item.text : '',
             children: hasChildren(item) ? item.children : [],
             completed: undefined,
             opened: undefined,
           });
-          break;
         }
         case 'TASK': {
-          Object.assign(item, {
+          // tslint:disable-next-line:prefer-object-spread
+          return Object.assign(item, {
             style,
             text: hasText(item) ? item.text : '',
             children: hasChildren(item) ? item.children : [],
@@ -515,37 +527,39 @@ export const traverse: {
           break;
         }
         case 'TOGGLE': {
-          Object.assign(item, {
+          // tslint:disable-next-line:prefer-object-spread
+          return Object.assign(item, {
             style,
             text: hasText(item) ? item.text : '',
             children: hasChildren(item) ? item.children : [],
             completed: undefined,
             opened: false,
           });
-          break;
         }
         case 'HEADER': {
-          Object.assign(item, {
+          // tslint:disable-next-line:prefer-object-spread
+          return Object.assign(item, {
             style,
             text: hasText(item) ? item.text : '',
             children: undefined,
             completed: undefined,
             opened: undefined,
           });
-          break;
         }
         case 'DIVIDER': {
-          Object.assign(item, {
+          // tslint:disable-next-line:prefer-object-spread
+          return Object.assign(item, {
             style,
             text: undefined,
             children: undefined,
             completed: undefined,
             opened: undefined,
           });
-          break;
         }
         default:
       }
     }
+
+    return item;
   },
 };

@@ -11,6 +11,7 @@ import { copyItems, sampleItems, sampleItems2 } from 'utils/traverse.samples';
   cancel
   moveBefore
   moveAfter
+  merge
   turnInto
 */
 
