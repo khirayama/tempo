@@ -484,7 +484,7 @@ export const traverse: {
         }
         case 'TOGGLE': {
           Object.assign(item, {
-            style: 'TASK',
+            style: 'TOGGLE',
             text: hasText(item) ? item.text : '',
             children: hasChildren(item) ? item.children : [],
             completed: undefined,
