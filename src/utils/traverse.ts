@@ -448,7 +448,7 @@ export const traverse: {
       switch (style) {
         case 'TEXT': {
           Object.assign(item, {
-            style: 'TEXT',
+            style,
             text: hasText(item) ? item.text : '',
             children: hasChildren(item) ? item.children : [],
             completed: undefined,
@@ -458,7 +458,7 @@ export const traverse: {
         }
         case 'BULLETED': {
           Object.assign(item, {
-            style: 'BULLETED',
+            style,
             text: hasText(item) ? item.text : '',
             children: hasChildren(item) ? item.children : [],
             completed: undefined,
@@ -468,7 +468,7 @@ export const traverse: {
         }
         case 'NUMBERED': {
           Object.assign(item, {
-            style: 'NUMBERED',
+            style,
             text: hasText(item) ? item.text : '',
             children: hasChildren(item) ? item.children : [],
             completed: undefined,
@@ -478,7 +478,7 @@ export const traverse: {
         }
         case 'TASK': {
           Object.assign(item, {
-            style: 'TASK',
+            style,
             text: hasText(item) ? item.text : '',
             children: hasChildren(item) ? item.children : [],
             completed: false,
@@ -488,7 +488,7 @@ export const traverse: {
         }
         case 'TOGGLE': {
           Object.assign(item, {
-            style: 'TOGGLE',
+            style,
             text: hasText(item) ? item.text : '',
             children: hasChildren(item) ? item.children : [],
             completed: undefined,
@@ -498,7 +498,7 @@ export const traverse: {
         }
         case 'HEADER': {
           Object.assign(item, {
-            style: 'HEADER',
+            style,
             text: hasText(item) ? item.text : '',
             children: undefined,
             completed: undefined,
@@ -508,7 +508,7 @@ export const traverse: {
         }
         case 'DIVIDER': {
           Object.assign(item, {
-            style: 'DIVIDER',
+            style,
             text: undefined,
             children: undefined,
             completed: undefined,
