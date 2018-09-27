@@ -47,8 +47,8 @@ export const traverse: {
   findDownerSkipNoText(items: IItem[], id: string): IItem | null;
   // command
   // TODO: update
-  addBefore(items: IItem[], prevId: string, newId?: string): IItem | null;
-  addAfter(items: IItem[], prevId: string, newId?: string): IItem | null;
+  addBefore(items: IItem[], prevId: string): IItem | null;
+  addAfter(items: IItem[], prevId: string): IItem | null;
   indent(items: IItem[], id: string): void;
   unindent(items: IItem[], id: string): void;
   destroy(items: IItem[], id: string): void;
@@ -260,13 +260,13 @@ export const traverse: {
 
     return null;
   },
-  addAfter: (items: IItem[], prevId: string, newId?: string): IItem | null => {
+  addAfter: (items: IItem[], prevId: string): IItem | null => {
     for (let i: number = 0; i < items.length; i += 1) {
       const item: IItem = items[i];
       if (item.id === prevId) {
         const prevItem: IItem | null = traverse.find(items, prevId);
         const newItem: IItem = {
-          id: newId || uuid(),
+          id: uuid(),
           style: 'TEXT',
           text: '',
           children: [],
@@ -284,7 +284,7 @@ export const traverse: {
         return newItem;
       } else {
         if (hasChildren(item)) {
-          const result: IItem | null = traverse.addAfter(item.children, prevId, newId);
+          const result: IItem | null = traverse.addAfter(item.children, prevId);
           if (result !== null) {
             return result;
           }
