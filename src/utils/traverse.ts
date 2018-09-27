@@ -471,14 +471,17 @@ export const traverse: {
       }
     }
   },
-  merge: (item: IItem, newItem: {
-    id?: string;
-    style: string;
-    text?: string;
-    children?: IItem[];
-    completed?: boolean | undefined;
-    opened?: boolean | undefined;
-  }): IItem => {
+  merge: (
+    item: IItem,
+    newItem: {
+      id?: string;
+      style: string;
+      text?: string;
+      children?: IItem[];
+      completed?: boolean | undefined;
+      opened?: boolean | undefined;
+    },
+  ): IItem => {
     // tslint:disable-next-line:prefer-object-spread
     return Object.assign(item, newItem);
   },
