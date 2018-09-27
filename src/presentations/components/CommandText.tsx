@@ -90,11 +90,18 @@ export class CommandText extends React.Component<IProps> {
   }
 
   private focus(): void {
-    // TODO: Tab移動時にblur - focusしていて、選択位置がずれるので直す
     setTimeout(() => {
       const el: HTMLInputElement = ReactDOM.findDOMNode(this) as HTMLInputElement;
       const targetElement: HTMLInputElement = el.querySelector('.EditableText') as HTMLInputElement;
+
+      // TODO: Tab移動時にblur - focusしていて、選択位置がずれるので直す
       targetElement.focus();
+      // const range: Range = document.createRange();
+      // range.setStart(targetElement.firstChild as Node, targetElement.innerText.length);
+      // range.setEnd(targetElement.firstChild as Node, targetElement.innerText.length);
+      // const selection: Selection = window.getSelection();
+      // selection.removeAllRanges();
+      // selection.addRange(range);
     }, 0);
   }
 
