@@ -1,9 +1,7 @@
 // tslint:disable:no-any
-import { IItem } from 'state/state';
+import { IBulletedItem, IDividerItem, IHeaderItem, IItem, ITaskItem, ITextItem, IToggleItem } from 'state/state';
 import { traverse } from 'utils/traverse';
 import { copyItems, sampleItems, sampleItems2 } from 'utils/traverse.samples';
-
-// TODO: turnIntoのテスト追加
 
 /*
   addAfter
@@ -799,6 +797,83 @@ describe('traverse', () => {
       expect(items[1].children[1].children[1].id).toEqual('5');
       expect(items[1].children[2].id).toEqual('6');
       expect(items[1].children[3].id).toEqual('7');
+    });
+  });
+
+  describe('turnInto', () => {
+    it('TEXT to BULLETED', () => {
+      const items: IItem[] = copyItems(sampleItems);
+      const item: ITextItem = <ITextItem>traverse.find(items, '1');
+
+      traverse.turnInto(item, 'BULLETED');
+
+      expect(item.id).toEqual('1');
+      expect(item.style).toEqual('BULLETED');
+      expect(item.text).toEqual('text 1');
+      expect(item.children.length).toEqual(4);
+    });
+
+    it('TEXT to NUMBERED', () => {
+      const items: IItem[] = copyItems(sampleItems);
+      const item: ITextItem = <ITextItem>traverse.find(items, '1');
+
+      traverse.turnInto(item, 'NUMBERED');
+
+      expect(item.id).toEqual('1');
+      expect(item.style).toEqual('NUMBERED');
+      expect(item.text).toEqual('text 1');
+      expect(item.children.length).toEqual(4);
+    });
+
+    it('TEXT to TASK', () => {
+      const items: IItem[] = copyItems(sampleItems);
+      const item: ITextItem = <ITextItem>traverse.find(items, '1');
+
+      traverse.turnInto(item, 'TASK');
+      const turnedIntoItem: ITaskItem = <ITaskItem>traverse.find(items, '1');
+
+      expect(turnedIntoItem.id).toEqual('1');
+      expect(turnedIntoItem.style).toEqual('TASK');
+      expect(turnedIntoItem.text).toEqual('text 1');
+      expect(turnedIntoItem.completed).toEqual(false);
+      expect(turnedIntoItem.children.length).toEqual(4);
+    });
+
+    it('TEXT to TOGGLE', () => {
+      const items: IItem[] = copyItems(sampleItems);
+      const item: ITextItem = <ITextItem>traverse.find(items, '1');
+
+      traverse.turnInto(item, 'TOGGLE');
+      const turnedIntoItem: IToggleItem = <IToggleItem>traverse.find(items, '1');
+
+      expect(turnedIntoItem.id).toEqual('1');
+      expect(turnedIntoItem.style).toEqual('TOGGLE');
+      expect(turnedIntoItem.text).toEqual('text 1');
+      expect(turnedIntoItem.opened).toEqual(false);
+      expect(turnedIntoItem.children.length).toEqual(4);
+    });
+
+    it('TEXT to HEADER', () => {
+      const items: IItem[] = copyItems(sampleItems);
+      const item: ITextItem = <ITextItem>traverse.find(items, '1');
+
+      traverse.turnInto(item, 'HEADER');
+      const turnedIntoItem: IHeaderItem = <IHeaderItem>traverse.find(items, '1');
+
+      expect(turnedIntoItem.id).toEqual('1');
+      expect(turnedIntoItem.style).toEqual('HEADER');
+      expect(turnedIntoItem.text).toEqual('text 1');
+    });
+
+    it('TEXT to DIVIDER', () => {
+      const items: IItem[] = copyItems(sampleItems);
+      const item: ITextItem = <ITextItem>traverse.find(items, '1');
+
+      traverse.turnInto(item, 'DIVIDER');
+      const turnedIntoItem: IDividerItem = <IDividerItem>traverse.find(items, '1');
+
+      expect(turnedIntoItem.id).toEqual('1');
+      expect(turnedIntoItem.style).toEqual('DIVIDER');
     });
   });
 });
