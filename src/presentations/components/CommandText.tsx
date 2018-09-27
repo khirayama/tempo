@@ -14,15 +14,11 @@ import {
   IToggleItem,
 } from 'state/state';
 
+// TODO: focusedIdがnullになるときを考える
 // TODO: turnIntoするためのUI
-// TODO: 文章途中でEnterしたときはそこで区切って新規 splitItem
-// TODO: 文章ありでも先頭でEnterしたときはTEXTを挿入 insertItem
-// TODO: 空の状態でEnterしたときはTEXTに変換(cancel相当)
-// TODO: findLastChildItemのテスト追加
-// TODO: findUpperItemSkipNoTextItemのテスト追加
-// TODO: findDownerItemSkipNoTextItemのテスト追加
-// TODO: turnIntoのテスト追加
-// TODO: sampleItems3に対して様々操作
+// TODO: 文章途中でEnterしたときはそこで区切って新規
+// TODO: 文章ありでも先頭でEnterしたときはTEXTを挿入
+// TODO: 空の状態でEnterしたときTEXT以外ならTEXTに変換(cancel相当)
 
 type ITextableItem =
   | ITextItem
