@@ -36,39 +36,34 @@ function hasText(
 }
 
 export const traverse: {
-  // TODO: remove Item
-  findItem(items: IItem[], id: string): IItem | null;
-  findParentItem(items: IItem[], id: string): IItem | null;
-  findParentBrotherItem(items: IItem[], id: string): IItem | null;
-  findLastChildItem(item: IItem): IItem | null;
-  findUpperItem(items: IItem[], id: string): IItem | null;
-  findUpperItemSkipNoTextItem(items: IItem[], id: string): IItem | null;
-  findDownerItem(items: IItem[], id: string, context?: { rootItems: IItem[] }): IItem | null;
-  findDownerItemSkipNoTextItem(items: IItem[], id: string): IItem | null;
-  // addBefore
-  // addAfter
-  // indent
-  // unindent
-  // delete
-  // cancel
-  // moveBefore
-  // moveAfter
-  addItem(items: IItem[], prevId: string, newId?: string): IItem | null;
-  shiftItem(items: IItem[], id: string): void;
-  unshiftItem(items: IItem[], id: string): void;
-  deleteItem(items: IItem[], id: string): void;
-  cancelItem(items: IItem[], id: string, context?: { depth: number }): void;
-  prependItem(items: IItem[], id: string, toId: string, context?: { item: IItem | null }): void;
-  appendItem(items: IItem[], id: string, toId: string, context?: { item: IItem | null }): void;
+  // query
+  find(items: IItem[], id: string): IItem | null;
+  findParent(items: IItem[], id: string): IItem | null;
+  findParentBrother(items: IItem[], id: string): IItem | null;
+  findLastChild(item: IItem): IItem | null;
+  findUpper(items: IItem[], id: string): IItem | null;
+  findUpperSkipNoText(items: IItem[], id: string): IItem | null;
+  findDowner(items: IItem[], id: string, context?: { rootItems: IItem[] }): IItem | null;
+  findDownerSkipNoText(items: IItem[], id: string): IItem | null;
+  // command
+  // TODO: addBefore
+  // TODO: update
+  addAfter(items: IItem[], prevId: string, newId?: string): IItem | null;
+  indent(items: IItem[], id: string): void;
+  unindent(items: IItem[], id: string): void;
+  destroy(items: IItem[], id: string): void;
+  cancel(items: IItem[], id: string, context?: { depth: number }): void;
+  moveBefore(items: IItem[], id: string, toId: string, context?: { item: IItem | null }): void;
+  moveAfter(items: IItem[], id: string, toId: string, context?: { item: IItem | null }): void;
   turnInto(item: IItem, style: string): void;
 } = {
-  findItem: (items: IItem[], id: string): IItem | null => {
+  find: (items: IItem[], id: string): IItem | null => {
     for (const item of items) {
       if (item.id === id) {
         return item;
       } else {
         if (hasChildren(item)) {
-          const result: IItem | null = traverse.findItem(item.children, id);
+          const result: IItem | null = traverse.find(item.children, id);
           if (result !== null) {
             return result;
           }
@@ -78,7 +73,7 @@ export const traverse: {
 
     return null;
   },
-  findParentItem: (items: IItem[], id: string): IItem | null => {
+  findParent: (items: IItem[], id: string): IItem | null => {
     for (const item of items) {
       if (hasChildren(item)) {
         for (const childItem of item.children) {
@@ -87,7 +82,7 @@ export const traverse: {
           }
         }
 
-        const result: IItem | null = traverse.findParentItem(item.children, id);
+        const result: IItem | null = traverse.findParent(item.children, id);
         if (result !== null) {
           return result;
         }
@@ -96,11 +91,11 @@ export const traverse: {
 
     return null;
   },
-  findLastChildItem: (item: IItem): IItem | null => {
+  findLastChild: (item: IItem): IItem | null => {
     if (hasChildren(item) && item.children.length) {
       const lastChild: IItem = item.children[item.children.length - 1];
       if (hasChildren(lastChild) && lastChild.children.length) {
-        return traverse.findLastChildItem(lastChild);
+        return traverse.findLastChild(lastChild);
       } else {
         return lastChild;
       }
@@ -108,7 +103,7 @@ export const traverse: {
 
     return null;
   },
-  findParentBrotherItem: (items: IItem[], id: string): IItem | null => {
+  findParentBrother: (items: IItem[], id: string): IItem | null => {
     for (let i: number = 0; i < items.length; i += 1) {
       const item: IItem = items[i];
       if (hasChildren(item)) {
@@ -118,7 +113,7 @@ export const traverse: {
           }
         }
 
-        const result: IItem | null = traverse.findParentBrotherItem(item.children, id);
+        const result: IItem | null = traverse.findParentBrother(item.children, id);
         if (result !== null) {
           return result;
         }
@@ -127,7 +122,7 @@ export const traverse: {
 
     return null;
   },
-  findUpperItem: (items: IItem[], id: string): IItem | null => {
+  findUpper: (items: IItem[], id: string): IItem | null => {
     for (let i: number = 0; i < items.length; i += 1) {
       const item: IItem = items[i];
 
@@ -135,7 +130,7 @@ export const traverse: {
         const prevItem: IItem | null = items[i - 1] || null;
 
         if (prevItem !== null && hasChildren(prevItem) && prevItem.children.length) {
-          const result: IItem | null = traverse.findLastChildItem(prevItem);
+          const result: IItem | null = traverse.findLastChild(prevItem);
           if (result !== null) {
             return result;
           }
@@ -154,7 +149,7 @@ export const traverse: {
               const prevItem: IItem | null = item.children[j - 1] || null;
 
               if (prevItem !== null && hasChildren(prevItem) && prevItem.children.length) {
-                const result: IItem | null = traverse.findLastChildItem(prevItem);
+                const result: IItem | null = traverse.findLastChild(prevItem);
                 if (result !== null) {
                   return result;
                 }
@@ -167,7 +162,7 @@ export const traverse: {
       }
 
       if (hasChildren(item)) {
-        const result: IItem | null = traverse.findUpperItem(item.children, id);
+        const result: IItem | null = traverse.findUpper(item.children, id);
         if (result !== null) {
           return result;
         }
@@ -176,15 +171,15 @@ export const traverse: {
 
     return null;
   },
-  findUpperItemSkipNoTextItem: (items: IItem[], id: string): IItem | null => {
-    const item: IItem | null = traverse.findUpperItem(items, id);
+  findUpperSkipNoText: (items: IItem[], id: string): IItem | null => {
+    const item: IItem | null = traverse.findUpper(items, id);
     if (item !== null && item.style === 'DIVIDER') {
-      return traverse.findUpperItemSkipNoTextItem(items, item.id);
+      return traverse.findUpperSkipNoText(items, item.id);
     }
 
     return item;
   },
-  findDownerItem: (items: IItem[], id: string, context?: { rootItems: IItem[] }): IItem | null => {
+  findDowner: (items: IItem[], id: string, context?: { rootItems: IItem[] }): IItem | null => {
     // 自分に子がいれば、一番上の子
     // 子がいなければ、弟
     // 子も弟もいなければ、親の弟
@@ -192,11 +187,11 @@ export const traverse: {
 
     const ctx: { rootItems: IItem[] } = context ? context : { rootItems: items };
     function findParentsBrotherItem(rootItems: IItem[], shadowId: string): IItem | null {
-      const parentBrotherItem: IItem | null = traverse.findParentBrotherItem(rootItems, shadowId);
+      const parentBrotherItem: IItem | null = traverse.findParentBrother(rootItems, shadowId);
       if (parentBrotherItem !== null) {
         return parentBrotherItem;
       } else {
-        const parentItem: IItem | null = traverse.findParentItem(rootItems, shadowId);
+        const parentItem: IItem | null = traverse.findParent(rootItems, shadowId);
         if (parentItem !== null) {
           return findParentsBrotherItem(rootItems, parentItem.id);
         } else {
@@ -220,7 +215,7 @@ export const traverse: {
       }
 
       if (hasChildren(item)) {
-        const result: IItem | null = traverse.findDownerItem(item.children, id, ctx);
+        const result: IItem | null = traverse.findDowner(item.children, id, ctx);
         if (result !== null) {
           return result;
         }
@@ -229,19 +224,19 @@ export const traverse: {
 
     return null;
   },
-  findDownerItemSkipNoTextItem: (items: IItem[], id: string): IItem | null => {
-    const item: IItem | null = traverse.findDownerItem(items, id);
+  findDownerSkipNoText: (items: IItem[], id: string): IItem | null => {
+    const item: IItem | null = traverse.findDowner(items, id);
     if (item !== null && item.style === 'DIVIDER') {
-      return traverse.findDownerItemSkipNoTextItem(items, item.id);
+      return traverse.findDownerSkipNoText(items, item.id);
     }
 
     return item;
   },
-  addItem: (items: IItem[], prevId: string, newId?: string): IItem | null => {
+  addAfter: (items: IItem[], prevId: string, newId?: string): IItem | null => {
     for (let i: number = 0; i < items.length; i += 1) {
       const item: IItem = items[i];
       if (item.id === prevId) {
-        const prevItem: IItem | null = traverse.findItem(items, prevId);
+        const prevItem: IItem | null = traverse.find(items, prevId);
         const newItem: IItem = {
           id: newId || uuid(),
           style: 'TEXT',
@@ -261,7 +256,7 @@ export const traverse: {
         return newItem;
       } else {
         if (hasChildren(item)) {
-          const result: IItem | null = traverse.addItem(item.children, prevId, newId);
+          const result: IItem | null = traverse.addAfter(item.children, prevId, newId);
           if (result !== null) {
             return result;
           }
@@ -271,7 +266,7 @@ export const traverse: {
 
     return null;
   },
-  shiftItem(items: IItem[], id: string): void {
+  indent(items: IItem[], id: string): void {
     for (let i: number = 0; i < items.length; i += 1) {
       const item: IItem = items[i];
       if (item.id === id) {
@@ -286,12 +281,12 @@ export const traverse: {
         }
       } else {
         if (hasChildren(item)) {
-          traverse.shiftItem(item.children, id);
+          traverse.indent(item.children, id);
         }
       }
     }
   },
-  unshiftItem(items: IItem[], id: string): void {
+  unindent(items: IItem[], id: string): void {
     for (let i: number = 0; i < items.length; i += 1) {
       const item: IItem = items[i];
       if (hasChildren(item)) {
@@ -305,11 +300,11 @@ export const traverse: {
             return;
           }
         }
-        traverse.unshiftItem(item.children, id);
+        traverse.unindent(item.children, id);
       }
     }
   },
-  deleteItem(items: IItem[], id: string): void {
+  destroy(items: IItem[], id: string): void {
     for (let i: number = 0; i < items.length; i += 1) {
       const item: IItem = items[i];
       if (item.id === id) {
@@ -318,20 +313,20 @@ export const traverse: {
         return;
       } else {
         if (hasChildren(item)) {
-          traverse.deleteItem(item.children, id);
+          traverse.destroy(item.children, id);
         }
       }
     }
   },
-  cancelItem(items: IItem[], id: string, context?: { depth: number }): void {
+  cancel(items: IItem[], id: string, context?: { depth: number }): void {
     // TEXTじゃない場合
     //  TEXTに変換
     // 親がいない
-    //  childrenをunshiftしてdeleteItem
+    //  childrenをunshiftしてdestroy
     // 親がいる & 兄がいる & 弟がいる
-    //  childrenをunshiftしてdeleteItem
+    //  childrenをunshiftしてdestroy
     // 親がいる & 兄がいる & 弟がいない
-    //  unshiftItem
+    //  unindent
 
     const ctx: { depth: number } = context ? context : { depth: 0 };
     const hasParent: boolean = ctx.depth !== 0;
@@ -346,10 +341,10 @@ export const traverse: {
       if (!hasParent && item.id === id) {
         if (hasChildren(item)) {
           for (let j: number = item.children.length - 1; j >= 0; j -= 1) {
-            traverse.unshiftItem(items, item.children[j].id);
+            traverse.unindent(items, item.children[j].id);
           }
         }
-        traverse.deleteItem(items, id);
+        traverse.destroy(items, id);
 
         return;
       }
@@ -369,14 +364,14 @@ export const traverse: {
             } else if (hasPreItem && hasSufItem) {
               if (hasChildren(childItem)) {
                 for (let k: number = childItem.children.length - 1; k >= 0; k -= 1) {
-                  traverse.unshiftItem(items, childItem.children[k].id);
+                  traverse.unindent(items, childItem.children[k].id);
                 }
               }
-              traverse.deleteItem(items, id);
+              traverse.destroy(items, id);
 
               return;
             } else {
-              traverse.unshiftItem(items, id);
+              traverse.unindent(items, id);
 
               return;
             }
@@ -385,18 +380,18 @@ export const traverse: {
       }
 
       if (hasChildren(item)) {
-        traverse.cancelItem(item.children, id, { depth: ctx.depth + 1 });
+        traverse.cancel(item.children, id, { depth: ctx.depth + 1 });
       }
     }
   },
-  prependItem: (items: IItem[], id: string, toId: string, context?: { item: IItem | null }): void => {
+  moveBefore: (items: IItem[], id: string, toId: string, context?: { item: IItem | null }): void => {
     // 一つ前のアイテムに子がいればこの末尾に
     // 子がいなければ前に
     const ctx: { item: IItem | null } = context ? context : { item: null };
-    const item: IItem | null = traverse.findItem(items, id);
+    const item: IItem | null = traverse.find(items, id);
     if (item) {
       ctx.item = item;
-      traverse.deleteItem(items, id);
+      traverse.destroy(items, id);
     }
 
     if (ctx.item) {
@@ -413,20 +408,20 @@ export const traverse: {
           return;
         } else {
           if (hasChildren(targetItem)) {
-            traverse.prependItem(targetItem.children, id, toId, ctx);
+            traverse.moveBefore(targetItem.children, id, toId, ctx);
           }
         }
       }
     }
   },
-  appendItem: (items: IItem[], id: string, toId: string, context?: { item: IItem | null }): void => {
+  moveAfter: (items: IItem[], id: string, toId: string, context?: { item: IItem | null }): void => {
     // 子がいれば子の先頭に
     // 子がいなければ次に
     const ctx: { item: IItem | null } = context ? context : { item: null };
-    const item: IItem | null = traverse.findItem(items, id);
+    const item: IItem | null = traverse.find(items, id);
     if (item) {
       ctx.item = item;
-      traverse.deleteItem(items, id);
+      traverse.destroy(items, id);
     }
 
     if (ctx.item) {
@@ -442,7 +437,7 @@ export const traverse: {
           return;
         } else {
           if (hasChildren(targetItem)) {
-            traverse.appendItem(targetItem.children, id, toId, ctx);
+            traverse.moveAfter(targetItem.children, id, toId, ctx);
           }
         }
       }

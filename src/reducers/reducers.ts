@@ -15,61 +15,53 @@ export function reducers(state: IState, action: IAction): IState {
       break;
     }
     case actionTypes.FOCUS_UPPER_ITEM: {
-      const upperItem: IItem | null = traverse.findUpperItemSkipNoTextItem(page.items, payload.id);
+      const upperItem: IItem | null = traverse.findUpperSkipNoText(page.items, payload.id);
       if (upperItem !== null) {
         newState.ui.focusedId = upperItem.id;
       }
       break;
     }
     case actionTypes.FOCUS_DOWNER_ITEM: {
-      const downerItem: IItem | null = traverse.findDownerItemSkipNoTextItem(page.items, payload.id);
+      const downerItem: IItem | null = traverse.findDownerSkipNoText(page.items, payload.id);
       if (downerItem !== null) {
         newState.ui.focusedId = downerItem.id;
       }
       break;
     }
     case actionTypes.ADD_ITEM: {
-      const item: IItem | null = traverse.addItem(page.items, payload.prevId);
+      const item: IItem | null = traverse.addAfter(page.items, payload.prevId);
       if (item !== null) {
         newState.ui.focusedId = item.id;
       }
       break;
     }
-    case actionTypes.SHIFT_ITEM: {
-      traverse.shiftItem(page.items, payload.id);
+    case actionTypes.INDENT_ITEM: {
+      traverse.indent(page.items, payload.id);
       break;
     }
-    case actionTypes.UNSHIFT_ITEM: {
-      traverse.unshiftItem(page.items, payload.id);
+    case actionTypes.UNINDENT_ITEM: {
+      traverse.unindent(page.items, payload.id);
       break;
     }
-    case actionTypes.DELETE_ITEM: {
-      const upperItem: IItem | null = traverse.findUpperItemSkipNoTextItem(page.items, payload.id);
+    case actionTypes.DESTROY_ITEM: {
+      const upperItem: IItem | null = traverse.findUpperSkipNoText(page.items, payload.id);
       if (upperItem) {
         newState.ui.focusedId = upperItem.id;
       }
-      traverse.deleteItem(page.items, payload.id);
+      traverse.destroy(page.items, payload.id);
       break;
     }
     case actionTypes.CANCEL_ITEM: {
-      const upperItem: IItem | null = traverse.findUpperItem(page.items, payload.id);
-      traverse.cancelItem(page.items, payload.id);
-      const item: IItem | null = traverse.findItem(page.items, payload.id);
+      const upperItem: IItem | null = traverse.findUpper(page.items, payload.id);
+      traverse.cancel(page.items, payload.id);
+      const item: IItem | null = traverse.find(page.items, payload.id);
       if (item === null && upperItem !== null) {
         newState.ui.focusedId = upperItem.id;
       }
       break;
     }
-    case actionTypes.PREPEND_ITEM: {
-      traverse.prependItem(page.items, payload.id, payload.toId);
-      break;
-    }
-    case actionTypes.APPEND_ITEM: {
-      traverse.appendItem(page.items, payload.id, payload.toId);
-      break;
-    }
     case actionTypes.UPDATE_ITEM: {
-      const item: IItem | null = traverse.findItem(page.items, payload.id);
+      const item: IItem | null = traverse.find(page.items, payload.id);
       Object.assign(item, payload);
       break;
     }

@@ -4,12 +4,12 @@ import * as React from 'react';
 import {
   addItem,
   cancelItem,
-  deleteItem,
+  destroyItem,
   focusDownerItem,
   focusItem,
   focusUpperItem,
-  shiftItem,
-  unshiftItem,
+  indentItem,
+  unindentItem,
   updateItem,
 } from 'action-creators/actionCreators';
 import { CommandText } from 'presentations/components/CommandText';
@@ -41,11 +41,11 @@ export class HomeMobilePage extends Container<{}, IState> {
         onSubmit={(): void => {
           addItem(this.dispatch, { prevId: item.id });
         }}
-        onShift={(): void => {
-          shiftItem(this.dispatch, { id: item.id });
+        onIndent={(): void => {
+          indentItem(this.dispatch, { id: item.id });
         }}
-        onUnshift={(): void => {
-          unshiftItem(this.dispatch, { id: item.id });
+        onUnindent={(): void => {
+          unindentItem(this.dispatch, { id: item.id });
         }}
         onUp={(): void => {
           focusUpperItem(this.dispatch, { id: item.id });
@@ -53,8 +53,8 @@ export class HomeMobilePage extends Container<{}, IState> {
         onDown={(): void => {
           focusDownerItem(this.dispatch, { id: item.id });
         }}
-        onDelete={(): void => {
-          deleteItem(this.dispatch, { id: item.id });
+        onDestroy={(): void => {
+          destroyItem(this.dispatch, { id: item.id });
         }}
         onCancel={(): void => {
           cancelItem(this.dispatch, { id: item.id });

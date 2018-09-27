@@ -50,9 +50,9 @@ export async function addItem(dispatch: IDispatch, item: { prevId: string }): Pr
   return action;
 }
 
-export async function shiftItem(dispatch: IDispatch, item: { id: string }): Promise<IAction> {
+export async function indentItem(dispatch: IDispatch, item: { id: string }): Promise<IAction> {
   const action: IAction = {
-    actionType: actionTypes.SHIFT_ITEM,
+    actionType: actionTypes.INDENT_ITEM,
     payload: item,
   };
   dispatch(action);
@@ -60,9 +60,9 @@ export async function shiftItem(dispatch: IDispatch, item: { id: string }): Prom
   return action;
 }
 
-export async function unshiftItem(dispatch: IDispatch, item: { id: string }): Promise<IAction> {
+export async function unindentItem(dispatch: IDispatch, item: { id: string }): Promise<IAction> {
   const action: IAction = {
-    actionType: actionTypes.UNSHIFT_ITEM,
+    actionType: actionTypes.UNINDENT_ITEM,
     payload: item,
   };
   dispatch(action);
@@ -70,9 +70,9 @@ export async function unshiftItem(dispatch: IDispatch, item: { id: string }): Pr
   return action;
 }
 
-export async function deleteItem(dispatch: IDispatch, item: { id: string }): Promise<IAction> {
+export async function destroyItem(dispatch: IDispatch, item: { id: string }): Promise<IAction> {
   const action: IAction = {
-    actionType: actionTypes.DELETE_ITEM,
+    actionType: actionTypes.DESTROY_ITEM,
     payload: item,
   };
   dispatch(action);

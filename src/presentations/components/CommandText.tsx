@@ -41,11 +41,11 @@ interface IProps {
   onChange?(event: React.FormEvent<HTMLInputElement>, props: IProps): void;
   onKeyDown?(event: React.KeyboardEvent<HTMLInputElement>, props: IProps): void;
   onSubmit?(event: React.KeyboardEvent<HTMLInputElement>, props: IProps): void;
-  onShift?(event: React.KeyboardEvent<HTMLInputElement>, props: IProps): void;
-  onUnshift?(event: React.KeyboardEvent<HTMLInputElement>, props: IProps): void;
+  onIndent?(event: React.KeyboardEvent<HTMLInputElement>, props: IProps): void;
+  onUnindent?(event: React.KeyboardEvent<HTMLInputElement>, props: IProps): void;
   onUp?(event: React.KeyboardEvent<HTMLInputElement>, props: IProps): void;
   onDown?(event: React.KeyboardEvent<HTMLInputElement>, props: IProps): void;
-  onDelete?(event: React.KeyboardEvent<HTMLInputElement>, props: IProps): void;
+  onDestroy?(event: React.KeyboardEvent<HTMLInputElement>, props: IProps): void;
   onCancel?(event: React.KeyboardEvent<HTMLInputElement>, props: IProps): void;
   onSelect?(event: React.KeyboardEvent<HTMLInputElement>, props: IProps): void;
   onQuickfind?(event: React.KeyboardEvent<HTMLInputElement>, props: IProps): void;
@@ -146,25 +146,25 @@ export class CommandText extends React.Component<IProps> {
       }
       case keyCode === keyCodes.TAB && !meta && !shift: {
         event.preventDefault();
-        logger.info('onShift');
-        if (this.props.onShift) {
-          this.props.onShift(event, this.props);
+        logger.info('onIndent');
+        if (this.props.onIndent) {
+          this.props.onIndent(event, this.props);
         }
         break;
       }
       case keyCode === keyCodes.TAB && !meta && shift: {
         event.preventDefault();
-        logger.info('onUnshift');
-        if (this.props.onUnshift) {
-          this.props.onUnshift(event, this.props);
+        logger.info('onUnindent');
+        if (this.props.onUnindent) {
+          this.props.onUnindent(event, this.props);
         }
         break;
       }
       case keyCode === keyCodes.DELETE && meta && !shift: {
         event.preventDefault();
-        logger.info('onDelete');
-        if (this.props.onDelete) {
-          this.props.onDelete(event, this.props);
+        logger.info('onDestroy');
+        if (this.props.onDestroy) {
+          this.props.onDestroy(event, this.props);
         }
         break;
       }
