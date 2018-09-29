@@ -40,6 +40,16 @@ export async function focusDownerItem(dispatch: IDispatch, item: { id: string })
   return action;
 }
 
+export async function addBeforeItem(dispatch: IDispatch, item: { prevId: string }): Promise<IAction> {
+  const action: IAction = {
+    actionType: actionTypes.ADD_BEFORE_ITEM,
+    payload: item,
+  };
+  dispatch(action);
+
+  return action;
+}
+
 export async function addItem(dispatch: IDispatch, item: { prevId: string }): Promise<IAction> {
   const action: IAction = {
     actionType: actionTypes.ADD_ITEM,
