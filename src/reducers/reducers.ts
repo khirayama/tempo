@@ -28,6 +28,10 @@ export function reducers(state: IState, action: IAction): IState {
       }
       break;
     }
+    case actionTypes.ADD_BEFORE_ITEM: {
+      const item: IItem | null = traverse.addBefore(page.items, payload.prevId);
+      break;
+    }
     case actionTypes.ADD_ITEM: {
       const item: IItem | null = traverse.addAfter(page.items, payload.prevId);
       if (item !== null) {

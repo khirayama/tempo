@@ -1,7 +1,9 @@
 // tslint:disable:no-any react-this-binding-issue
+import * as classNames from 'classnames';
 import * as React from 'react';
 
 import {
+  addBeforeItem,
   addItem,
   cancelItem,
   destroyItem,
@@ -38,6 +40,9 @@ export class HomeMobilePage extends Container<{}, IState> {
           focusItem(this.dispatch, { id: item.id });
         }}
         onChange={this.onChange}
+        onAddBefore={(): void => {
+          addBeforeItem(this.dispatch, { prevId: item.id });
+        }}
         onSubmit={(): void => {
           addItem(this.dispatch, { prevId: item.id });
         }}

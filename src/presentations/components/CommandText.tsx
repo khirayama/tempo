@@ -17,7 +17,6 @@ import {
 // TODO: focusedIdがnullになるときを考える
 // TODO: turnIntoするためのUI
 // TODO: 文章途中でEnterしたときはそこで区切って新規
-// TODO: 文章ありでも先頭でEnterしたときはTEXTを挿入
 // TODO: 空の状態でEnterしたときTEXT以外ならTEXTに変換(cancel相当)
 // TODO: select状態の考慮
 
@@ -37,6 +36,7 @@ interface IProps {
   onClick?(event: React.MouseEvent<HTMLElement>, props: IProps): void;
   onChange?(event: React.FormEvent<HTMLInputElement>, props: IProps): void;
   onKeyDown?(event: React.KeyboardEvent<HTMLInputElement>, props: IProps): void;
+  onAddBefore?(event: React.KeyboardEvent<HTMLInputElement>, props: IProps): void;
   onSubmit?(event: React.KeyboardEvent<HTMLInputElement>, props: IProps): void;
   onIndent?(event: React.KeyboardEvent<HTMLInputElement>, props: IProps): void;
   onUnindent?(event: React.KeyboardEvent<HTMLInputElement>, props: IProps): void;
@@ -123,12 +123,15 @@ export class CommandText extends React.Component<IProps> {
     const keyCode: number = event.keyCode;
     const meta: boolean = event.metaKey;
     const shift: boolean = event.shiftKey;
-    // Value
-    // "- " -> Bulleted
-    // "1. " -> Numbered
-    // "[ ] " -> Task
+    // FYI: selectionの位置はkeyUpが正しい
+    const selection: Selection = window.getSelection();
+    const selectionStart: number = selection.baseOffset;
+    const selectionEnd: number = selection.focusOffset;
+    // TODO: "- " -> Bulleted
+    // TODO: "1. " -> Numbered
+    // TODO: "[ ] " -> Task
     logger.info(keyCode, meta, shift, value);
-    this.handleKey(value, keyCode, meta, shift, event);
+    this.handleKey(value, keyCode, meta, shift, selectionStart, selectionEnd, event);
   }
 
   // tslint:disable:cyclomatic-complexity
@@ -137,9 +140,19 @@ export class CommandText extends React.Component<IProps> {
     keyCode: number,
     meta: boolean,
     shift: boolean,
+    selectionStart: number,
+    selectionEnd: number,
     event: React.KeyboardEvent<HTMLInputElement>,
   ): void {
     switch (true) {
+      case keyCode === keyCodes.ENTER && !meta && !shift && value && selectionStart === 0 && selectionEnd === 0: {
+        event.preventDefault();
+        logger.info('onAddBefore');
+        if (this.props.onAddBefore) {
+          this.props.onAddBefore(event, this.props);
+        }
+        break;
+      }
       case keyCode === keyCodes.ENTER && !meta && !shift: {
         event.preventDefault();
         logger.info('onSubmit');
