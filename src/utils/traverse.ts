@@ -1,3 +1,4 @@
+// tslint:disable:no-any
 import * as uuid from 'uuid/v4';
 
 import {
@@ -46,8 +47,8 @@ export const traverse: {
   findDowner(items: IItem[], id: string, context?: { rootItems: IItem[] }): IItem | null;
   findDownerSkipNoText(items: IItem[], id: string): IItem | null;
   // command
-  addBefore(items: IItem[], prevId: string): IItem | null;
-  addAfter(items: IItem[], prevId: string): IItem | null;
+  addBefore(items: IItem[], prevId: string, initItem?: any): IItem | null;
+  addAfter(items: IItem[], prevId: string, initItem?: any): IItem | null;
   indent(items: IItem[], id: string): void;
   unindent(items: IItem[], id: string): void;
   destroy(items: IItem[], id: string): void;
@@ -232,15 +233,15 @@ export const traverse: {
 
     return item;
   },
-  addBefore: (items: IItem[], prevId: string): IItem | null => {
+  addBefore: (items: IItem[], prevId: string, initItem?: any): IItem | null => {
     for (let i: number = 0; i < items.length; i += 1) {
       const item: IItem = items[i];
       if (item.id === prevId) {
         const prevItem: IItem | null = traverse.find(items, prevId);
         const newItem: IItem = {
+          ...initItem,
           id: uuid(),
           style: 'TEXT',
-          text: '',
           children: [],
         };
         // FYI: addBeforeの場合、以前のstyleは引き継がず、TEXTで生成する
@@ -250,7 +251,7 @@ export const traverse: {
         return newItem;
       } else {
         if (hasChildren(item)) {
-          const result: IItem | null = traverse.addBefore(item.children, prevId);
+          const result: IItem | null = traverse.addBefore(item.children, prevId, initItem);
           if (result !== null) {
             return result;
           }
@@ -260,21 +261,21 @@ export const traverse: {
 
     return null;
   },
-  addAfter: (items: IItem[], prevId: string): IItem | null => {
+  addAfter: (items: IItem[], prevId: string, initItem?: any): IItem | null => {
     for (let i: number = 0; i < items.length; i += 1) {
       const item: IItem = items[i];
       if (item.id === prevId) {
         const prevItem: IItem | null = traverse.find(items, prevId);
         const newItem: IItem = {
+          ...initItem,
           id: uuid(),
           style: 'TEXT',
-          text: '',
           children: [],
         };
         if (prevItem) {
           traverse.turnInto(newItem, prevItem.style);
         }
-        if (prevItem !== null && hasChildren(prevItem)) {
+        if (prevItem !== null && hasChildren(prevItem) && hasChildren(newItem)) {
           newItem.children = prevItem.children;
           prevItem.children = [];
         }
@@ -284,7 +285,7 @@ export const traverse: {
         return newItem;
       } else {
         if (hasChildren(item)) {
-          const result: IItem | null = traverse.addAfter(item.children, prevId);
+          const result: IItem | null = traverse.addAfter(item.children, prevId, initItem);
           if (result !== null) {
             return result;
           }
