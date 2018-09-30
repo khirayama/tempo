@@ -40,7 +40,7 @@ export async function focusDownerItem(dispatch: IDispatch, item: { id: string })
   return action;
 }
 
-export async function addBeforeItem(dispatch: IDispatch, item: { prevId: string }): Promise<IAction> {
+export async function addBeforeItem(dispatch: IDispatch, item: { prevId: string; text?: string }): Promise<IAction> {
   const action: IAction = {
     actionType: actionTypes.ADD_BEFORE_ITEM,
     payload: item,
@@ -50,7 +50,7 @@ export async function addBeforeItem(dispatch: IDispatch, item: { prevId: string 
   return action;
 }
 
-export async function addItem(dispatch: IDispatch, item: { prevId: string }): Promise<IAction> {
+export async function addItem(dispatch: IDispatch, item: { prevId: string; text?: string }): Promise<IAction> {
   const action: IAction = {
     actionType: actionTypes.ADD_ITEM,
     payload: item,
