@@ -46,6 +46,16 @@ export class HomeMobilePage extends Container<{}, IState> {
         onSubmit={(): void => {
           addItem(this.dispatch, { prevId: item.id });
         }}
+        onSplit={(event: React.KeyboardEvent<HTMLInputElement>, props: any): void => {
+          const selection: Selection = window.getSelection();
+          const selectionStart: number = selection.baseOffset;
+          const value: string = props.item.text;
+          const currentItemText: string = value.slice(0, selectionStart);
+          const newItemText: string = value.slice(selectionStart);
+
+          updateItem(this.dispatch, { id: props.item.id, text: currentItemText });
+          addItem(this.dispatch, { prevId: props.item.id, text: newItemText });
+        }}
         onIndent={(): void => {
           indentItem(this.dispatch, { id: item.id });
         }}
