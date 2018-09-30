@@ -70,6 +70,7 @@ export interface IPage {
 
 export interface IUI {
   focusedId: null | string;
+  selectedIds: string[];
 }
 
 export interface IState {
@@ -80,6 +81,7 @@ export interface IState {
 const sampleState: IState = {
   ui: {
     focusedId: null,
+    selectedIds: ['4', '7'],
   },
   pages: [
     {

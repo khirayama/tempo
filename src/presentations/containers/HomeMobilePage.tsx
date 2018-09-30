@@ -86,6 +86,7 @@ export class HomeMobilePage extends Container<{}, IState> {
 
   // tslint:disable-next-line:max-func-body-length
   public renderItem(item: IItem): JSX.Element {
+    const ui: IUI = this.state.ui;
     let children: JSX.Element[] = [];
 
     const commandTextElement: JSX.Element = this.renderCommandText(item);
@@ -97,7 +98,10 @@ export class HomeMobilePage extends Container<{}, IState> {
         }
 
         return (
-          <div key={item.id} className="Item TextItem">
+          <div
+            key={item.id}
+            className={classNames('Item', 'TextItem', { Item__Selected: ui.selectedIds.indexOf(item.id) !== -1 })}
+          >
             {commandTextElement}
             {children}
           </div>
@@ -110,7 +114,10 @@ export class HomeMobilePage extends Container<{}, IState> {
         }
 
         return (
-          <div className="Item BulletedItem" key={item.id}>
+          <div
+            key={item.id}
+            className={classNames('Item', 'BulletedItem', { Item__Selected: ui.selectedIds.indexOf(item.id) !== -1 })}
+          >
             {commandTextElement}
             {children}
           </div>
@@ -123,7 +130,10 @@ export class HomeMobilePage extends Container<{}, IState> {
         }
 
         return (
-          <div className="Item NumberedItem" key={item.id}>
+          <div
+            key={item.id}
+            className={classNames('Item', 'NumberedItem', { Item__Selected: ui.selectedIds.indexOf(item.id) !== -1 })}
+          >
             {commandTextElement}
             {children}
           </div>
@@ -136,7 +146,10 @@ export class HomeMobilePage extends Container<{}, IState> {
         }
 
         return (
-          <div className="Item TaskItem" key={item.id}>
+          <div
+            key={item.id}
+            className={classNames('Item', 'TaskItem', { Item__Selected: ui.selectedIds.indexOf(item.id) !== -1 })}
+          >
             <input type="checkbox" checked={item.completed} />
             {commandTextElement}
             {children}
@@ -150,7 +163,11 @@ export class HomeMobilePage extends Container<{}, IState> {
         }
 
         return (
-          <details className="Item ToggleItem" key={item.id} open={item.opened}>
+          <details
+            key={item.id}
+            className={classNames('Item', 'ToggleItem', { Item__Selected: ui.selectedIds.indexOf(item.id) !== -1 })}
+            open={item.opened}
+          >
             <summary>{commandTextElement}</summary>
             {children}
           </details>
@@ -159,7 +176,10 @@ export class HomeMobilePage extends Container<{}, IState> {
 
       case 'HEADER': {
         return (
-          <div className="Item HeaderItem" key={item.id}>
+          <div
+            key={item.id}
+            className={classNames('Item', 'HeaderItem', { Item__Selected: ui.selectedIds.indexOf(item.id) !== -1 })}
+          >
             <h2>{commandTextElement}</h2>
           </div>
         );
@@ -167,7 +187,10 @@ export class HomeMobilePage extends Container<{}, IState> {
 
       case 'QUOTE': {
         return (
-          <blockquote className="Item QuoteItem" key={item.id}>
+          <blockquote
+            key={item.id}
+            className={classNames('Item', 'QuoteItem', { Item__Selected: ui.selectedIds.indexOf(item.id) !== -1 })}
+          >
             {commandTextElement}
           </blockquote>
         );
@@ -175,7 +198,10 @@ export class HomeMobilePage extends Container<{}, IState> {
 
       case 'DIVIDER': {
         return (
-          <div className="Item DividerItem" key={item.id}>
+          <div
+            key={item.id}
+            className={classNames('Item', 'DividerItem', { Item__Selected: ui.selectedIds.indexOf(item.id) !== -1 })}
+          >
             <hr />
           </div>
         );

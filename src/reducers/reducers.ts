@@ -29,11 +29,11 @@ export function reducers(state: IState, action: IAction): IState {
       break;
     }
     case actionTypes.ADD_BEFORE_ITEM: {
-      const item: IItem | null = traverse.addBefore(page.items, payload.prevId);
+      const item: IItem | null = traverse.addBefore(page.items, payload.prevId, { text: payload.text || '' });
       break;
     }
     case actionTypes.ADD_ITEM: {
-      const item: IItem | null = traverse.addAfter(page.items, payload.prevId);
+      const item: IItem | null = traverse.addAfter(page.items, payload.prevId, { text: payload.text || '' });
       if (item !== null) {
         newState.ui.focusedId = item.id;
       }
