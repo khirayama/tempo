@@ -1,6 +1,5 @@
 .CommandText {
   display: inline-block;
-  width: 100%;
 
   .EditableText {
     min-width: 1px;
