@@ -38,6 +38,7 @@ interface IProps {
   onChange?(event: React.FormEvent<HTMLInputElement>, props: IProps): void;
   onKeyDown?(event: React.KeyboardEvent<HTMLInputElement>, props: IProps): void;
   onAddBefore?(event: React.KeyboardEvent<HTMLInputElement>, props: IProps): void;
+  onSplit?(event: React.KeyboardEvent<HTMLInputElement>, props: IProps): void;
   onSubmit?(event: React.KeyboardEvent<HTMLInputElement>, props: IProps): void;
   onIndent?(event: React.KeyboardEvent<HTMLInputElement>, props: IProps): void;
   onUnindent?(event: React.KeyboardEvent<HTMLInputElement>, props: IProps): void;
@@ -151,6 +152,20 @@ export class CommandText extends React.Component<IProps> {
         logger.info('onAddBefore');
         if (this.props.onAddBefore) {
           this.props.onAddBefore(event, this.props);
+        }
+        break;
+      }
+      case keyCode === keyCodes.ENTER &&
+        !meta &&
+        !shift &&
+        value &&
+        selectionStart !== 0 &&
+        selectionStart === selectionEnd &&
+        selectionStart < value.length: {
+        event.preventDefault();
+        logger.info('onSplit');
+        if (this.props.onSplit) {
+          this.props.onSplit(event, this.props);
         }
         break;
       }
