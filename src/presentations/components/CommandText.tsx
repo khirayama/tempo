@@ -15,11 +15,10 @@ import {
 } from 'state/state';
 
 // TODO: focusedIdがnullになるときを考える
-// TODO: turnIntoするためのUI
-// TODO: 文章途中でEnterしたときはそこで区切って新規
-// TODO: 空の状態でEnterしたときTEXT以外ならTEXTに変換(cancel相当)
-// TODO: textがあるitemがcancelされると前のItemと結合
-// TODO: select状態の考慮
+// TODO: select状態のUIを追加
+// TODO: turnIntoするためのUIを追加
+// TODO: caretが0の位置の場合、cancel相当
+  // TODO: cancelに「兄にtextがあるitemがcancelされると前のItemとtextが結合」を追加
 
 type ITextableItem =
   | ITextItem
