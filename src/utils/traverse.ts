@@ -348,6 +348,7 @@ export const traverse: {
     }
   },
   cancel(items: IItem[], id: string, context?: { depth: number }): void {
+    // TODO: textの有無によって振る舞いが変わる。ので、ちゃんと整理
     // TEXTじゃない場合
     //  TEXTに変換
     // 親がいない
