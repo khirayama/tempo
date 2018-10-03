@@ -33,8 +33,10 @@ export function reducers(state: IState, action: IAction): IState {
       break;
     }
     case actionTypes.ADD_ITEM: {
+      const prevItem: IItem | null = traverse.find(page.items, payload.prevId);
       const item: IItem | null = traverse.addAfter(page.items, payload.prevId, { text: payload.text || '' });
-      if (item !== null) {
+      if (item !== null && prevItem !== null) {
+        traverse.turnInto(item, prevItem.style);
         newState.ui.focusedId = item.id;
       }
       break;

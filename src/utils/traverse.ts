@@ -244,7 +244,6 @@ export const traverse: {
           style: 'TEXT',
           children: [],
         };
-        // FYI: addBeforeの場合、以前のstyleは引き継がず、TEXTで生成する
 
         items.splice(i, 0, newItem);
 
@@ -272,9 +271,6 @@ export const traverse: {
           style: 'TEXT',
           children: [],
         };
-        if (prevItem) {
-          traverse.turnInto(newItem, prevItem.style);
-        }
         if (prevItem !== null && hasChildren(prevItem) && hasChildren(newItem)) {
           newItem.children = prevItem.children;
           prevItem.children = [];

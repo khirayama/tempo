@@ -135,7 +135,7 @@ export class CommandText extends React.Component<IProps> {
     this.handleKey(value, keyCode, meta, shift, selectionStart, selectionEnd, event);
   }
 
-  // tslint:disable:cyclomatic-complexity
+  // tslint:disable-next-line:cyclomatic-complexity max-func-body-length
   private handleKey(
     value: string,
     keyCode: number,
@@ -146,6 +146,14 @@ export class CommandText extends React.Component<IProps> {
     event: React.KeyboardEvent<HTMLInputElement>,
   ): void {
     switch (true) {
+      case keyCode === keyCodes.ENTER && !meta && !shift && selectionStart === 0 && selectionEnd === 0: {
+        event.preventDefault();
+        logger.info('onCancel');
+        if (this.props.onCancel) {
+          this.props.onCancel(event, this.props);
+        }
+        break;
+      }
       case keyCode === keyCodes.ENTER && !meta && !shift && value && selectionStart === 0 && selectionEnd === 0: {
         event.preventDefault();
         logger.info('onAddBefore');
