@@ -9,6 +9,8 @@ interface IProps {
   onKeyUp?(event: React.KeyboardEvent<HTMLElement>): void;
 }
 
+// TODO: 作り込む必要あり。shouldComponentUpdateが必要かも。キャレット位置問題
+
 export class EditableText extends React.Component<IProps> {
   constructor(props: IProps) {
     super(props);
