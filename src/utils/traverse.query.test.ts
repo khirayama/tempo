@@ -11,6 +11,7 @@ import { sampleItems, sampleItems2, sampleItems3 } from 'utils/traverse.samples'
   findUpperSkipNoText
   findDowner
   findDownerSkipNoText
+  getIdStructures
 */
 
 describe('traverse', () => {

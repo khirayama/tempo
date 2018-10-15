@@ -12,31 +12,12 @@ import {
   IToggleItem,
 } from 'state/state';
 
-function hasChildren(item: IItem): item is ITextItem | IBulletedItem | INumberedItem | ITaskItem | IToggleItem {
-  return (
-    item.style === 'TEXT' ||
-    item.style === 'BULLETED' ||
-    item.style === 'NUMBERED' ||
-    item.style === 'TASK' ||
-    (item.style === 'TOGGLE' && item.opened)
-  );
-}
-
-function hasText(
-  item: IItem,
-): item is ITextItem | IBulletedItem | INumberedItem | ITaskItem | ITaskItem | IToggleItem | IHeaderItem | IQuateItem {
-  return (
-    item.style === 'TEXT' ||
-    item.style === 'BULLETED' ||
-    item.style === 'NUMBERED' ||
-    item.style === 'TASK' ||
-    item.style === 'TOGGLE' ||
-    item.style === 'HEADER' ||
-    item.style === 'QUOTE'
-  );
-}
-
 export const traverse: {
+  // check
+  hasChildren(item: IItem | null): item is ITextItem | IBulletedItem | INumberedItem | ITaskItem | IToggleItem;
+  hasText(
+    item: IItem | null,
+  ): item is ITextItem | IBulletedItem | INumberedItem | ITaskItem | ITaskItem | IToggleItem | IHeaderItem | IQuateItem;
   // query
   find(items: IItem[], id: string): IItem | null;
   findParent(items: IItem[], id: string): IItem | null;
@@ -58,12 +39,50 @@ export const traverse: {
   merge(item: IItem, newItem: IItem): IItem;
   turnInto(item: IItem, style: string): IItem;
 } = {
+  hasChildren(item: IItem | null): item is ITextItem | IBulletedItem | INumberedItem | ITaskItem | IToggleItem {
+    if (item === null) {
+      return false;
+    }
+
+    return (
+      item.style === 'TEXT' ||
+      item.style === 'BULLETED' ||
+      item.style === 'NUMBERED' ||
+      item.style === 'TASK' ||
+      (item.style === 'TOGGLE' && item.opened)
+    );
+  },
+  hasText(
+    item: IItem | null,
+  ): item is
+    | ITextItem
+    | IBulletedItem
+    | INumberedItem
+    | ITaskItem
+    | ITaskItem
+    | IToggleItem
+    | IHeaderItem
+    | IQuateItem {
+    if (item === null) {
+      return false;
+    }
+
+    return (
+      item.style === 'TEXT' ||
+      item.style === 'BULLETED' ||
+      item.style === 'NUMBERED' ||
+      item.style === 'TASK' ||
+      item.style === 'TOGGLE' ||
+      item.style === 'HEADER' ||
+      item.style === 'QUOTE'
+    );
+  },
   find: (items: IItem[], id: string): IItem | null => {
     for (const item of items) {
       if (item.id === id) {
         return item;
       } else {
-        if (hasChildren(item)) {
+        if (traverse.hasChildren(item)) {
           const result: IItem | null = traverse.find(item.children, id);
           if (result !== null) {
             return result;
@@ -76,7 +95,7 @@ export const traverse: {
   },
   findParent: (items: IItem[], id: string): IItem | null => {
     for (const item of items) {
-      if (hasChildren(item)) {
+      if (traverse.hasChildren(item)) {
         for (const childItem of item.children) {
           if (childItem.id === id) {
             return item;
@@ -93,9 +112,9 @@ export const traverse: {
     return null;
   },
   findLastChild: (item: IItem): IItem | null => {
-    if (hasChildren(item) && item.children.length) {
+    if (traverse.hasChildren(item) && item.children.length) {
       const lastChild: IItem = item.children[item.children.length - 1];
-      if (hasChildren(lastChild) && lastChild.children.length) {
+      if (traverse.hasChildren(lastChild) && lastChild.children.length) {
         return traverse.findLastChild(lastChild);
       } else {
         return lastChild;
@@ -107,7 +126,7 @@ export const traverse: {
   findParentBrother: (items: IItem[], id: string): IItem | null => {
     for (let i: number = 0; i < items.length; i += 1) {
       const item: IItem = items[i];
-      if (hasChildren(item)) {
+      if (traverse.hasChildren(item)) {
         for (const childItem of item.children) {
           if (childItem.id === id) {
             return items[i + 1] || null;
@@ -130,7 +149,7 @@ export const traverse: {
       if (item.id === id) {
         const prevItem: IItem | null = items[i - 1] || null;
 
-        if (prevItem !== null && hasChildren(prevItem) && prevItem.children.length) {
+        if (prevItem !== null && traverse.hasChildren(prevItem) && prevItem.children.length) {
           const result: IItem | null = traverse.findLastChild(prevItem);
           if (result !== null) {
             return result;
@@ -138,7 +157,7 @@ export const traverse: {
         }
 
         return prevItem;
-      } else if (hasChildren(item)) {
+      } else if (traverse.hasChildren(item)) {
         // 次に行く前に子供のチェック
         for (let j: number = 0; j < item.children.length; j += 1) {
           const childItem: IItem = item.children[j];
@@ -149,7 +168,7 @@ export const traverse: {
             } else {
               const prevItem: IItem | null = item.children[j - 1] || null;
 
-              if (prevItem !== null && hasChildren(prevItem) && prevItem.children.length) {
+              if (prevItem !== null && traverse.hasChildren(prevItem) && prevItem.children.length) {
                 const result: IItem | null = traverse.findLastChild(prevItem);
                 if (result !== null) {
                   return result;
@@ -162,7 +181,7 @@ export const traverse: {
         }
       }
 
-      if (hasChildren(item)) {
+      if (traverse.hasChildren(item)) {
         const result: IItem | null = traverse.findUpper(item.children, id);
         if (result !== null) {
           return result;
@@ -206,7 +225,7 @@ export const traverse: {
     for (let i: number = 0; i < items.length; i += 1) {
       const item: IItem = items[i];
       if (item.id === id) {
-        if (hasChildren(item) && item.children.length) {
+        if (traverse.hasChildren(item) && item.children.length) {
           return item.children[0];
         } else if (items[i + 1]) {
           return items[i + 1];
@@ -215,7 +234,7 @@ export const traverse: {
         }
       }
 
-      if (hasChildren(item)) {
+      if (traverse.hasChildren(item)) {
         const result: IItem | null = traverse.findDowner(item.children, id, ctx);
         if (result !== null) {
           return result;
@@ -249,7 +268,7 @@ export const traverse: {
 
         return newItem;
       } else {
-        if (hasChildren(item)) {
+        if (traverse.hasChildren(item)) {
           const result: IItem | null = traverse.addBefore(item.children, prevId, initItem);
           if (result !== null) {
             return result;
@@ -271,7 +290,7 @@ export const traverse: {
           style: 'TEXT',
           children: [],
         };
-        if (prevItem !== null && hasChildren(prevItem) && hasChildren(newItem)) {
+        if (prevItem !== null && traverse.hasChildren(prevItem) && traverse.hasChildren(newItem)) {
           newItem.children = prevItem.children;
           prevItem.children = [];
         }
@@ -280,7 +299,7 @@ export const traverse: {
 
         return newItem;
       } else {
-        if (hasChildren(item)) {
+        if (traverse.hasChildren(item)) {
           const result: IItem | null = traverse.addAfter(item.children, prevId, initItem);
           if (result !== null) {
             return result;
@@ -297,7 +316,7 @@ export const traverse: {
       if (item.id === id) {
         const prevItem: IItem | null = items[i - 1] || null;
         if (prevItem) {
-          if (hasChildren(prevItem)) {
+          if (traverse.hasChildren(prevItem)) {
             items.splice(i, 1);
             prevItem.children.push(item);
 
@@ -305,7 +324,7 @@ export const traverse: {
           }
         }
       } else {
-        if (hasChildren(item)) {
+        if (traverse.hasChildren(item)) {
           traverse.indent(item.children, id);
         }
       }
@@ -314,7 +333,7 @@ export const traverse: {
   unindent(items: IItem[], id: string): void {
     for (let i: number = 0; i < items.length; i += 1) {
       const item: IItem = items[i];
-      if (hasChildren(item)) {
+      if (traverse.hasChildren(item)) {
         for (let j: number = 0; j < item.children.length; j += 1) {
           const childItem: IItem = item.children[j];
 
@@ -337,7 +356,7 @@ export const traverse: {
 
         return;
       } else {
-        if (hasChildren(item)) {
+        if (traverse.hasChildren(item)) {
           traverse.destroy(item.children, id);
         }
       }
@@ -365,7 +384,7 @@ export const traverse: {
       }
 
       if (!hasParent && item.id === id) {
-        if (hasChildren(item)) {
+        if (traverse.hasChildren(item)) {
           for (let j: number = item.children.length - 1; j >= 0; j -= 1) {
             traverse.unindent(items, item.children[j].id);
           }
@@ -375,7 +394,7 @@ export const traverse: {
         return;
       }
 
-      if (hasChildren(item)) {
+      if (traverse.hasChildren(item)) {
         for (let j: number = 0; j < item.children.length; j += 1) {
           const childItem: IItem = item.children[j];
 
@@ -388,7 +407,7 @@ export const traverse: {
 
               return;
             } else if (hasPreItem && hasSufItem) {
-              if (hasChildren(childItem)) {
+              if (traverse.hasChildren(childItem)) {
                 for (let k: number = childItem.children.length - 1; k >= 0; k -= 1) {
                   traverse.unindent(items, childItem.children[k].id);
                 }
@@ -405,7 +424,7 @@ export const traverse: {
         }
       }
 
-      if (hasChildren(item)) {
+      if (traverse.hasChildren(item)) {
         traverse.cancel(item.children, id, { depth: ctx.depth + 1 });
       }
     }
@@ -425,7 +444,7 @@ export const traverse: {
         const targetItem: IItem = items[i];
         const prevItem: IItem | null = items[i - 1] || null;
         if (targetItem.id === toId) {
-          if (prevItem && hasChildren(prevItem) && prevItem.children.length > 0) {
+          if (prevItem && traverse.hasChildren(prevItem) && prevItem.children.length > 0) {
             prevItem.children.push(ctx.item);
           } else {
             items.splice(i, 0, ctx.item);
@@ -433,7 +452,7 @@ export const traverse: {
 
           return;
         } else {
-          if (hasChildren(targetItem)) {
+          if (traverse.hasChildren(targetItem)) {
             traverse.moveBefore(targetItem.children, id, toId, ctx);
           }
         }
@@ -454,7 +473,7 @@ export const traverse: {
       for (let i: number = 0; i < items.length; i += 1) {
         const targetItem: IItem = items[i];
         if (targetItem.id === toId) {
-          if (targetItem !== null && hasChildren(targetItem) && targetItem.children.length > 0) {
+          if (targetItem !== null && traverse.hasChildren(targetItem) && targetItem.children.length > 0) {
             targetItem.children.unshift(ctx.item);
           } else {
             items.splice(i + 1, 0, ctx.item);
@@ -462,7 +481,7 @@ export const traverse: {
 
           return;
         } else {
-          if (hasChildren(targetItem)) {
+          if (traverse.hasChildren(targetItem)) {
             traverse.moveAfter(targetItem.children, id, toId, ctx);
           }
         }
@@ -490,8 +509,8 @@ export const traverse: {
           // tslint:disable-next-line:prefer-object-spread
           return Object.assign(item, {
             style,
-            text: hasText(item) ? item.text : '',
-            children: hasChildren(item) ? item.children : [],
+            text: traverse.hasText(item) ? item.text : '',
+            children: traverse.hasChildren(item) ? item.children : [],
             completed: undefined,
             opened: undefined,
           });
@@ -500,8 +519,8 @@ export const traverse: {
           // tslint:disable-next-line:prefer-object-spread
           return Object.assign(item, {
             style,
-            text: hasText(item) ? item.text : '',
-            children: hasChildren(item) ? item.children : [],
+            text: traverse.hasText(item) ? item.text : '',
+            children: traverse.hasChildren(item) ? item.children : [],
             completed: undefined,
             opened: undefined,
           });
@@ -510,8 +529,8 @@ export const traverse: {
           // tslint:disable-next-line:prefer-object-spread
           return Object.assign(item, {
             style,
-            text: hasText(item) ? item.text : '',
-            children: hasChildren(item) ? item.children : [],
+            text: traverse.hasText(item) ? item.text : '',
+            children: traverse.hasChildren(item) ? item.children : [],
             completed: undefined,
             opened: undefined,
           });
@@ -520,8 +539,8 @@ export const traverse: {
           // tslint:disable-next-line:prefer-object-spread
           return Object.assign(item, {
             style,
-            text: hasText(item) ? item.text : '',
-            children: hasChildren(item) ? item.children : [],
+            text: traverse.hasText(item) ? item.text : '',
+            children: traverse.hasChildren(item) ? item.children : [],
             completed: false,
             opened: undefined,
           });
@@ -531,8 +550,8 @@ export const traverse: {
           // tslint:disable-next-line:prefer-object-spread
           return Object.assign(item, {
             style,
-            text: hasText(item) ? item.text : '',
-            children: hasChildren(item) ? item.children : [],
+            text: traverse.hasText(item) ? item.text : '',
+            children: traverse.hasChildren(item) ? item.children : [],
             completed: undefined,
             opened: false,
           });
@@ -541,7 +560,7 @@ export const traverse: {
           // tslint:disable-next-line:prefer-object-spread
           return Object.assign(item, {
             style,
-            text: hasText(item) ? item.text : '',
+            text: traverse.hasText(item) ? item.text : '',
             children: undefined,
             completed: undefined,
             opened: undefined,
