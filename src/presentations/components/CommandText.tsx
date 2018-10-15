@@ -18,7 +18,7 @@ import {
 // TODO: select状態のUIを追加
 // TODO: turnIntoするためのUIを追加
 // TODO: caretが0の位置の場合、cancel相当
-  // TODO: cancelに「兄にtextがあるitemがcancelされると前のItemとtextが結合」を追加
+// TODO: cancelに「兄にtextがあるitemがcancelされると前のItemとtextが結合」を追加
 
 type ITextableItem =
   | ITextItem

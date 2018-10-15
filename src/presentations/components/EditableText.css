@@ -1,4 +1,19 @@
 .EditableText {
   display: inline-block;
   user-select: text !important;
+  position: relative;
+
+  .EditableText--Input {
+    width: 100%;
+
+    &:empty {
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+  }
+
+  .EditableText--Placeholder {
+    color: $color-text-hint;
+  }
 }
