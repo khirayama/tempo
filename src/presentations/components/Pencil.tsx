@@ -38,6 +38,8 @@ const keyCodes: { [key: string]: number } = {
 };
 
 export class Pencil extends Container<IProps & IContainerProps, ILocalState & IState> {
+  private inputRef: React.RefObject<HTMLInputElement>;
+
   constructor(props: IProps & IContainerProps) {
     super(props);
     const state: IState = this.getState();
@@ -51,10 +53,20 @@ export class Pencil extends Container<IProps & IContainerProps, ILocalState & IS
       value: traverse.hasText(item) ? item.text : '',
     };
 
+    this.inputRef = React.createRef();
+    this.focus = this.focus.bind(this);
     this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
     this.onKeyUp = this.onKeyUp.bind(this);
     this.onKeyDown = this.onKeyDown.bind(this);
+  }
+
+  public componentDidUpdate(): void {
+    const state: IState = this.getState();
+    const focusedId: string | null = state.ui.focusedId;
+    if (focusedId) {
+      this.focus();
+    }
   }
 
   public render(): JSX.Element {
@@ -64,6 +76,8 @@ export class Pencil extends Container<IProps & IContainerProps, ILocalState & IS
     return (
       <form className="Pencil" onSubmit={this.onSubmit}>
         <input
+          autoFocus
+          ref={this.inputRef}
           value={value}
           placeholder="Input something"
           onChange={this.onChange}
@@ -73,6 +87,13 @@ export class Pencil extends Container<IProps & IContainerProps, ILocalState & IS
         <span>{focusedId}</span>
       </form>
     );
+  }
+
+  private focus(): void {
+    const inputEl: HTMLInputElement | null = this.inputRef.current;
+    if (inputEl) {
+      inputEl.focus();
+    }
   }
 
   private onChange(event: React.FormEvent<HTMLInputElement>): void {

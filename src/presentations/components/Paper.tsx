@@ -30,26 +30,35 @@ interface ILocalState {}
 // tslint:disable-next-line:function-name no-any
 function Item(props: { ui: IUI; item: IItem; dispatch: IDispatch }): JSX.Element | null {
   const item: IItem = props.item;
+  const ui: IUI = props.ui;
 
   let children: JSX.Element[] = [];
   if (traverse.hasChildren(item)) {
     children = item.children.map((childItem: IItem) => {
-      return <Item key={childItem.id} ui={props.ui} dispatch={props.dispatch} item={childItem} />;
+      return <Item key={childItem.id} ui={ui} dispatch={props.dispatch} item={childItem} />;
     });
   }
 
   if (item.style === 'TEXT') {
     return (
       <div
-        className={classNames('Item', { Item__Focused: props.ui.focusedId === item.id })}
+        className="Item"
         onClick={(event: React.MouseEvent<HTMLElement>): void => {
           event.stopPropagation();
           focusItem(props.dispatch, { id: item.id, text: item.text });
         }}
       >
-        {item.text}
+        {item.text ? (
+          <span className={classNames('Item--Text', { 'Item--Text__Focused': ui.focusedId === item.id })}>
+            {item.text}
+          </span>
+        ) : null}
+        {!item.text ? (
+          <span className={classNames('Item--Placeholder', { 'Item--Placeholder__Focused': ui.focusedId === item.id })}>
+            / command
+          </span>
+        ) : null}
         {children}
-        {!item.text ? <span className="Item--Placeholder">/ command</span> : null}
       </div>
     );
   }

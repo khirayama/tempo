@@ -1,21 +1,34 @@
 .Item {
   padding: 0 0 0 4px;
   width: 100%;
+  max-width: 764px;
+  margin: 0 auto;
 
   .Item {
     margin-left: 1rem;
   }
 
-  &.Item__Focused {
-    background: rgba(45, 170, 219, 0.1);
-  }
+  .Item--Text {
+    display: inline-block;
+    width: 100%;
 
-  &.Item__Selected {
-    background: rgba(45, 170, 219, 0.3);
+    &.Item--Text__Focused {
+      background: rgba(45, 170, 219, 0.1);
+    }
   }
 
   .Item--Placeholder {
     color: $color-text-hint;
+    display: inline-block;
+    width: 100%;
+
+    &.Item--Placeholder__Focused {
+      background: rgba(45, 170, 219, 0.1);
+    }
+  }
+
+  &.Item__Selected {
+    background: rgba(45, 170, 219, 0.3);
   }
 
   &.TextItem {
