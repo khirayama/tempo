@@ -16,7 +16,7 @@ import { copyItems, sampleItems, sampleItems2 } from 'utils/traverse.samples';
 */
 
 describe('traverse', () => {
-  describe('addAfter', () => {
+  describe('addBefore', () => {
     it('add an item before id: 1', () => {
       const items: any = copyItems(sampleItems);
       const newItem: IItem = <IItem>traverse.addBefore(items, '1');
