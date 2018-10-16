@@ -73,6 +73,7 @@ export interface IBinder {
 }
 
 export interface IUI {
+  inputValue: string;
   focusedId: null | string;
   selectedIds: string[];
 }
@@ -84,6 +85,7 @@ export interface IState {
 
 const sampleState: IState = {
   ui: {
+    inputValue: '',
     focusedId: null,
     selectedIds: ['4', '7'],
   },
@@ -293,6 +295,7 @@ const sampleState: IState = {
 
 const emptyState: IState = {
   ui: {
+    inputValue: '',
     focusedId: '1',
     selectedIds: [],
   },

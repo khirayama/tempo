@@ -1,16 +1,21 @@
 .Item {
   padding: 0 0 0 4px;
+  width: 100%;
 
   .Item {
     margin-left: 1rem;
+  }
+
+  &.Item__Focused {
+    background: rgba(45, 170, 219, 0.1);
   }
 
   &.Item__Selected {
     background: rgba(45, 170, 219, 0.3);
   }
 
-  .CommandText {
-    padding: 4px 8px;
+  .Item--Placeholder {
+    color: $color-text-hint;
   }
 
   &.TextItem {

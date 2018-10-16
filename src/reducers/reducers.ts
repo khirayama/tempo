@@ -10,10 +10,11 @@ export function reducers(state: IState, action: IAction): IState {
 
   const paper: IPaper = newState.binders[0].papers[0];
   switch (action.actionType) {
-    //   case actionTypes.FOCUS_ITEM: {
-    //     newState.ui.focusedId = payload.id;
-    //     break;
-    //   }
+    case actionTypes.FOCUS_ITEM: {
+      newState.ui.focusedId = payload.id;
+      newState.ui.inputValue = payload.text;
+      break;
+    }
     //   case actionTypes.FOCUS_UPPER_ITEM: {
     //     const upperItem: IItem | null = traverse.findUpperSkipNoText(paper.items, payload.id);
     //     if (upperItem !== null) {
@@ -32,23 +33,24 @@ export function reducers(state: IState, action: IAction): IState {
     //     const item: IItem | null = traverse.addBefore(paper.items, payload.prevId, { text: payload.text || '' });
     //     break;
     //   }
-      case actionTypes.ADD_ITEM: {
-        const prevItem: IItem | null = traverse.find(paper.items, payload.prevId);
-        const item: IItem | null = traverse.addAfter(paper.items, payload.prevId, { text: payload.text || '' });
-        if (item !== null && prevItem !== null) {
-          traverse.turnInto(item, prevItem.style);
-          newState.ui.focusedId = item.id;
-        }
-        break;
+    case actionTypes.ADD_ITEM: {
+      const prevItem: IItem | null = traverse.find(paper.items, payload.prevId);
+      const item: IItem | null = traverse.addAfter(paper.items, payload.prevId, { text: payload.text || '' });
+      if (item !== null && prevItem !== null) {
+        traverse.turnInto(item, prevItem.style);
+        newState.ui.inputValue = '';
+        newState.ui.focusedId = item.id;
       }
-      case actionTypes.INDENT_ITEM: {
-        traverse.indent(paper.items, payload.id);
-        break;
-      }
-      case actionTypes.UNINDENT_ITEM: {
-        traverse.unindent(paper.items, payload.id);
-        break;
-      }
+      break;
+    }
+    case actionTypes.INDENT_ITEM: {
+      traverse.indent(paper.items, payload.id);
+      break;
+    }
+    case actionTypes.UNINDENT_ITEM: {
+      traverse.unindent(paper.items, payload.id);
+      break;
+    }
     //   case actionTypes.DESTROY_ITEM: {
     //     const upperItem: IItem | null = traverse.findUpperSkipNoText(paper.items, payload.id);
     //     if (upperItem) {

@@ -15,9 +15,9 @@ export class HomeDesktopPage extends Container<{}, IState> {
   }
 
   public render(): JSX.Element {
-    const focusedId: string | null = this.state.ui.focusedId;
+    const ui: IUI = this.state.ui;
     const paper: IPaper = this.state.binders[0].papers[0];
 
-    return <Pad paper={paper} store={this.props.store} />;
+    return <Pad ui={ui} paper={paper} store={this.props.store} />;
   }
 }

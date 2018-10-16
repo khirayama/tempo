@@ -1,9 +1,5 @@
 import * as React from 'react';
 
-import { Container, IContainerProps } from 'presentations/containers/Container';
-import { IItem, IPaper, IState, ITextItem, IUI } from 'state/state';
-import { traverse } from 'utils/traverse';
-
 import {
   addBeforeItem,
   addItem,
@@ -17,8 +13,12 @@ import {
   unindentItem,
   updateItem,
 } from 'action-creators/actionCreators';
+import { Container, IContainerProps } from 'presentations/containers/Container';
+import { IItem, IPaper, IState, ITextItem, IUI } from 'state/state';
+import { traverse } from 'utils/traverse';
 
 export interface IProps {
+  ui: IUI;
   paper: IPaper;
 }
 
@@ -58,11 +58,18 @@ export class Pencil extends Container<IProps & IContainerProps, ILocalState & IS
   }
 
   public render(): JSX.Element {
+    const value: string | null = this.state.ui.inputValue;
     const focusedId: string | null = this.state.ui.focusedId;
 
     return (
       <form className="Pencil" onSubmit={this.onSubmit}>
-        <input value={this.state.value} placeholder="Input something" onChange={this.onChange} onKeyDown={this.onKeyDown} onKeyUp={this.onKeyUp}/>
+        <input
+          value={value}
+          placeholder="Input something"
+          onChange={this.onChange}
+          onKeyDown={this.onKeyDown}
+          onKeyUp={this.onKeyUp}
+        />
         <span>{focusedId}</span>
       </form>
     );
@@ -72,8 +79,8 @@ export class Pencil extends Container<IProps & IContainerProps, ILocalState & IS
     const focusedId: string | null = this.state.ui.focusedId;
     const value: string = event.currentTarget.value;
 
-    this.setState({ value });
     if (focusedId) {
+      focusItem(this.dispatch, { id: focusedId, text: value });
       updateItem(this.dispatch, { id: focusedId, text: value });
     }
   }
@@ -103,22 +110,14 @@ export class Pencil extends Container<IProps & IContainerProps, ILocalState & IS
     // TAB                          : Indent (Mobile: Button)
     // SHIFT + TAB                  : Unindent (Mobile: Button)
     switch (true) {
-      case (
-        keyCode === keyCodes.TAB &&
-        !meta &&
-        !shift
-      ): {
+      case keyCode === keyCodes.TAB && !meta && !shift: {
         if (focusedId) {
           event.preventDefault();
           indentItem(this.dispatch, { id: focusedId });
         }
         break;
       }
-      case (
-        keyCode === keyCodes.TAB &&
-        !meta &&
-        shift
-      ): {
+      case keyCode === keyCodes.TAB && !meta && shift: {
         if (focusedId) {
           event.preventDefault();
           unindentItem(this.dispatch, { id: focusedId });

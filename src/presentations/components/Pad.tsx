@@ -8,18 +8,20 @@ import { Pencil } from 'presentations/components/Pencil';
 import { IItem, IPaper, IState, ITextItem, IUI } from 'state/state';
 
 interface IProps {
+  ui: IUI;
   paper: IPaper;
   store: Store<IState, IAction>;
 }
 
 export class Pad extends React.Component<IProps> {
   public render(): JSX.Element {
+    const ui: IUI = this.props.ui;
     const paper: IPaper = this.props.paper;
 
     return (
       <>
-        <Pencil store={this.props.store} paper={paper} />
-        <Paper paper={paper} />
+        <Pencil store={this.props.store} paper={paper} ui={ui} />
+        <Paper store={this.props.store} paper={paper} ui={ui} />
       </>
     );
   }

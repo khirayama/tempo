@@ -10,7 +10,7 @@ export interface IAction {
 
 export type IDispatch = (action: IAction) => void;
 
-export async function focusItem(dispatch: IDispatch, item: { id: string }): Promise<IAction> {
+export async function focusItem(dispatch: IDispatch, item: { id: string; text: string }): Promise<IAction> {
   const action: IAction = {
     actionType: actionTypes.FOCUS_ITEM,
     payload: item,
