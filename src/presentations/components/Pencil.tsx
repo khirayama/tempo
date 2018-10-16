@@ -130,6 +130,7 @@ export class Pencil extends Container<IProps & IContainerProps, ILocalState & IS
 
     // TAB                          : Indent (Mobile: Button)
     // SHIFT + TAB                  : Unindent (Mobile: Button)
+    // UP / DOWN                      : Move to UP / DOWN(Mobile: Button)
     switch (true) {
       case keyCode === keyCodes.TAB && !meta && !shift: {
         if (focusedId) {
@@ -142,6 +143,20 @@ export class Pencil extends Container<IProps & IContainerProps, ILocalState & IS
         if (focusedId) {
           event.preventDefault();
           unindentItem(this.dispatch, { id: focusedId });
+        }
+        break;
+      }
+      case keyCode === keyCodes.UP && !meta && !shift: {
+        if (focusedId) {
+          event.preventDefault();
+          focusUpperItem(this.dispatch, { id: focusedId });
+        }
+        break;
+      }
+      case keyCode === keyCodes.DOWN && !meta && !shift: {
+        if (focusedId) {
+          event.preventDefault();
+          focusDownerItem(this.dispatch, { id: focusedId });
         }
         break;
       }
