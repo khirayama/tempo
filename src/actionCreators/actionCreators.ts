@@ -40,6 +40,19 @@ export async function focusDownerItem(dispatch: IDispatch, item: { id: string })
   return action;
 }
 
+export async function moveSelection(
+  dispatch: IDispatch,
+  selection: { start: number | null; end: number | null },
+): Promise<IAction> {
+  const action: IAction = {
+    actionType: actionTypes.MOVE_SELECTION,
+    payload: selection,
+  };
+  dispatch(action);
+
+  return action;
+}
+
 export async function addBeforeItem(dispatch: IDispatch, item: { prevId: string; text?: string }): Promise<IAction> {
   const action: IAction = {
     actionType: actionTypes.ADD_BEFORE_ITEM,

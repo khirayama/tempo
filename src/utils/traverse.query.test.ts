@@ -1,6 +1,6 @@
 import { IItem } from 'state/state';
 import { traverse } from 'utils/traverse';
-import { sampleItems, sampleItems2, sampleItems3 } from 'utils/traverse.samples';
+import { sampleItems } from 'utils/traverse.samples';
 
 /*
   find
@@ -11,624 +11,221 @@ import { sampleItems, sampleItems2, sampleItems3 } from 'utils/traverse.samples'
   findUpperSkipNoText
   findDowner
   findDownerSkipNoText
-  getIdStructures
 */
 
 describe('traverse', () => {
   describe('find', () => {
     it('id: 1 is an item', () => {
-      const actual: IItem | null = traverse.find(sampleItems, '1');
-      if (actual !== null) {
-        expect(actual.id).toEqual('1');
-      } else {
-        throw new Error('null');
-      }
+      const actual: IItem = <IItem>traverse.find(sampleItems, '1');
+      expect(actual.id).toEqual('1');
     });
 
     it('id: 2 is an item', () => {
-      const actual: IItem | null = traverse.find(sampleItems, '2');
-      if (actual !== null) {
-        expect(actual.id).toEqual('2');
-      } else {
-        throw new Error('null');
-      }
+      const actual: IItem = <IItem>traverse.find(sampleItems, '2');
+      expect(actual.id).toEqual('2');
     });
 
     it('id: 3 is an item', () => {
-      const actual: IItem | null = traverse.find(sampleItems, '3');
-      if (actual !== null) {
-        expect(actual.id).toEqual('3');
-      } else {
-        throw new Error('null');
-      }
+      const actual: IItem = <IItem>traverse.find(sampleItems, '3');
+      expect(actual.id).toEqual('3');
     });
 
     it('id: 4 is an item', () => {
-      const actual: IItem | null = traverse.find(sampleItems, '4');
-      if (actual !== null) {
-        expect(actual.id).toEqual('4');
-      } else {
-        throw new Error('null');
-      }
+      const actual: IItem = <IItem>traverse.find(sampleItems, '4');
+      expect(actual.id).toEqual('4');
     });
 
     it('id: 5 is an item', () => {
-      const actual: IItem | null = traverse.find(sampleItems, '5');
-      if (actual !== null) {
-        expect(actual.id).toEqual('5');
-      } else {
-        throw new Error('null');
-      }
+      const actual: IItem = <IItem>traverse.find(sampleItems, '5');
+      expect(actual.id).toEqual('5');
     });
 
     it('id: 6 is an item', () => {
-      const actual: IItem | null = traverse.find(sampleItems, '6');
-      if (actual !== null) {
-        expect(actual.id).toEqual('6');
-      } else {
-        throw new Error('null');
-      }
+      const actual: IItem = <IItem>traverse.find(sampleItems, '6');
+      expect(actual.id).toEqual('6');
     });
 
     it('id: 7 is an item', () => {
-      const actual: IItem | null = traverse.find(sampleItems, '7');
-      if (actual !== null) {
-        expect(actual.id).toEqual('7');
-      } else {
-        throw new Error('null');
-      }
+      const actual: IItem = <IItem>traverse.find(sampleItems, '7');
+      expect(actual.id).toEqual('7');
     });
 
     it('id: 8 is an item', () => {
-      const actual: IItem | null = traverse.find(sampleItems, '8');
-      if (actual !== null) {
-        expect(actual.id).toEqual('8');
-      } else {
-        throw new Error('null');
-      }
+      const actual: IItem = <IItem>traverse.find(sampleItems, '8');
+      expect(actual.id).toEqual('8');
     });
 
     it('id: 9 is null', () => {
-      const actual: IItem | null = traverse.find(sampleItems, '9');
+      const actual: IItem | null= traverse.find(sampleItems, '9');
       expect(actual).toEqual(null);
     });
   });
 
-  describe('findParent', () => {
-    it('find parent of id: 1', () => {
-      const actual: IItem | null = traverse.findParent(sampleItems, '1');
+  describe('findPrev', () => {
+    it('prev item of id: 1 is null', () => {
+      const actual: IItem | null = traverse.findPrev(sampleItems, '1');
       expect(actual).toEqual(null);
     });
 
-    it('find parent of id: 2', () => {
-      const actual: IItem | null = traverse.findParent(sampleItems, '2');
-      if (actual !== null) {
-        expect(actual.id).toEqual('1');
-      } else {
-        throw new Error('null');
-      }
+    it('prev item of id: 2 is an item', () => {
+      const actual: IItem = <IItem>traverse.findPrev(sampleItems, '2');
+      expect(actual.id).toEqual('1');
     });
 
-    it('find parent of id: 3', () => {
-      const actual: IItem | null = traverse.findParent(sampleItems, '3');
-      if (actual !== null) {
-        expect(actual.id).toEqual('1');
-      } else {
-        throw new Error('null');
-      }
+    it('prev item of id: 3 is an item', () => {
+      const actual: IItem = <IItem>traverse.findPrev(sampleItems, '3');
+      expect(actual.id).toEqual('2');
     });
 
-    it('find parent of id: 4', () => {
-      const actual: IItem | null = traverse.findParent(sampleItems, '4');
-      if (actual !== null) {
-        expect(actual.id).toEqual('3');
-      } else {
-        throw new Error('null');
-      }
+    it('prev item of id: 4 is an item', () => {
+      const actual: IItem = <IItem>traverse.findPrev(sampleItems, '4');
+      expect(actual.id).toEqual('3');
     });
 
-    it('find parent of id: 5', () => {
-      const actual: IItem | null = traverse.findParent(sampleItems, '5');
-      if (actual !== null) {
-        expect(actual.id).toEqual('3');
-      } else {
-        throw new Error('null');
-      }
+    it('prev item of id: 5 is an item', () => {
+      const actual: IItem = <IItem>traverse.findPrev(sampleItems, '5');
+      expect(actual.id).toEqual('4');
     });
 
-    it('find parent of id: 6', () => {
-      const actual: IItem | null = traverse.findParent(sampleItems, '6');
-      if (actual !== null) {
-        expect(actual.id).toEqual('1');
-      } else {
-        throw new Error('null');
-      }
+    it('prev item of id: 6 is an item', () => {
+      const actual: IItem = <IItem>traverse.findPrev(sampleItems, '6');
+      expect(actual.id).toEqual('5');
     });
 
-    it('find parent of id: 7', () => {
-      const actual: IItem | null = traverse.findParent(sampleItems, '7');
-      if (actual !== null) {
-        expect(actual.id).toEqual('1');
-      } else {
-        throw new Error('null');
-      }
+    it('prev item of id: 7 is an item', () => {
+      const actual: IItem = <IItem>traverse.findPrev(sampleItems, '7');
+      expect(actual.id).toEqual('6');
     });
 
-    it('find parent of id: 8', () => {
-      const actual: IItem | null = traverse.findParent(sampleItems, '8');
+    it('prev item of id: 8 is an item', () => {
+      const actual: IItem = <IItem>traverse.findPrev(sampleItems, '8');
+      expect(actual.id).toEqual('7');
+    });
+  });
+
+  describe('findPrevSkipNoText', () => {
+    it('prev item of id: 1 is null', () => {
+      const actual: IItem | null = traverse.findPrevSkipNoText(sampleItems, '1');
+      expect(actual).toEqual(null);
+    });
+
+    it('prev item of id: 2 is an item', () => {
+      const actual: IItem = <IItem>traverse.findPrevSkipNoText(sampleItems, '2');
+      expect(actual.id).toEqual('1');
+    });
+
+    it('prev item of id: 3 is an item', () => {
+      const actual: IItem = <IItem>traverse.findPrevSkipNoText(sampleItems, '3');
+      expect(actual.id).toEqual('2');
+    });
+
+    it('prev item of id: 4 is an item', () => {
+      const actual: IItem = <IItem>traverse.findPrevSkipNoText(sampleItems, '4');
+      expect(actual.id).toEqual('3');
+    });
+
+    it('prev item of id: 5 is an item', () => {
+      const actual: IItem = <IItem>traverse.findPrevSkipNoText(sampleItems, '5');
+      expect(actual.id).toEqual('4');
+    });
+
+    it('prev item of id: 6 is an item', () => {
+      const actual: IItem = <IItem>traverse.findPrevSkipNoText(sampleItems, '6');
+      expect(actual.id).toEqual('5');
+    });
+
+    it('prev item of id: 7 is an item', () => {
+      const actual: IItem = <IItem>traverse.findPrevSkipNoText(sampleItems, '7');
+      expect(actual.id).toEqual('6');
+    });
+
+    it('prev item of id: 8 is an item', () => {
+      const actual: IItem = <IItem>traverse.findPrevSkipNoText(sampleItems, '8');
+      expect(actual.id).toEqual('7');
+    });
+  });
+
+  describe('findNext', () => {
+    it('next item of id: 1 is an item', () => {
+      const actual: IItem = <IItem>traverse.findNext(sampleItems, '1');
+      expect(actual.id).toEqual('2');
+    });
+
+    it('next item of id: 2 is an item', () => {
+      const actual: IItem = <IItem>traverse.findNext(sampleItems, '2');
+      expect(actual.id).toEqual('3');
+    });
+
+    it('next item of id: 3 is an item', () => {
+      const actual: IItem = <IItem>traverse.findNext(sampleItems, '3');
+      expect(actual.id).toEqual('4');
+    });
+
+    it('next item of id: 4 is an item', () => {
+      const actual: IItem = <IItem>traverse.findNext(sampleItems, '4');
+      expect(actual.id).toEqual('5');
+    });
+
+    it('next item of id: 5 is an item', () => {
+      const actual: IItem = <IItem>traverse.findNext(sampleItems, '5');
+      expect(actual.id).toEqual('6');
+    });
+
+    it('next item of id: 6 is an item', () => {
+      const actual: IItem = <IItem>traverse.findNext(sampleItems, '6');
+      expect(actual.id).toEqual('7');
+    });
+
+    it('next item of id: 7 is an item', () => {
+      const actual: IItem = <IItem>traverse.findNext(sampleItems, '7');
+      expect(actual.id).toEqual('8');
+    });
+
+    it('next item of id: 8 is null', () => {
+      const actual: IItem | null = traverse.findNext(sampleItems, '8');
       expect(actual).toEqual(null);
     });
   });
 
-  describe('findParentBrother', () => {
-    it('find parent brother of id: 1', () => {
-      const actual: IItem | null = traverse.findParentBrother(sampleItems, '1');
+  describe('findNextSkipNoText', () => {
+    it('next item of id: 1 is an item', () => {
+      const actual: IItem = <IItem>traverse.findNextSkipNoText(sampleItems, '1');
+      expect(actual.id).toEqual('2');
+    });
+
+    it('next item of id: 2 is an item', () => {
+      const actual: IItem = <IItem>traverse.findNextSkipNoText(sampleItems, '2');
+      expect(actual.id).toEqual('3');
+    });
+
+    it('next item of id: 3 is an item', () => {
+      const actual: IItem = <IItem>traverse.findNextSkipNoText(sampleItems, '3');
+      expect(actual.id).toEqual('4');
+    });
+
+    it('next item of id: 4 is an item', () => {
+      const actual: IItem = <IItem>traverse.findNextSkipNoText(sampleItems, '4');
+      expect(actual.id).toEqual('5');
+    });
+
+    it('next item of id: 5 is an item', () => {
+      const actual: IItem = <IItem>traverse.findNextSkipNoText(sampleItems, '5');
+      expect(actual.id).toEqual('6');
+    });
+
+    it('next item of id: 6 is an item', () => {
+      const actual: IItem = <IItem>traverse.findNextSkipNoText(sampleItems, '6');
+      expect(actual.id).toEqual('7');
+    });
+
+    it('next item of id: 7 is an item', () => {
+      const actual: IItem = <IItem>traverse.findNextSkipNoText(sampleItems, '7');
+      expect(actual.id).toEqual('8');
+    });
+
+    it('next item of id: 8 is null', () => {
+      const actual: IItem | null = traverse.findNextSkipNoText(sampleItems, '8');
       expect(actual).toEqual(null);
-    });
-
-    it('find parent brother of id: 2', () => {
-      const actual: IItem | null = traverse.findParentBrother(sampleItems, '2');
-      if (actual !== null) {
-        expect(actual.id).toEqual('8');
-      } else {
-        throw new Error('null');
-      }
-    });
-
-    it('find parent brother of id: 3', () => {
-      const actual: IItem | null = traverse.findParentBrother(sampleItems, '3');
-      if (actual !== null) {
-        expect(actual.id).toEqual('8');
-      } else {
-        throw new Error('null');
-      }
-    });
-
-    it('find parent brother of id: 4', () => {
-      const actual: IItem | null = traverse.findParentBrother(sampleItems, '4');
-      if (actual !== null) {
-        expect(actual.id).toEqual('6');
-      } else {
-        throw new Error('null');
-      }
-    });
-
-    it('find parent brother of id: 5', () => {
-      const actual: IItem | null = traverse.findParentBrother(sampleItems, '5');
-      if (actual !== null) {
-        expect(actual.id).toEqual('6');
-      } else {
-        throw new Error('null');
-      }
-    });
-
-    it('find parent brother of id: 6', () => {
-      const actual: IItem | null = traverse.findParentBrother(sampleItems, '6');
-      if (actual !== null) {
-        expect(actual.id).toEqual('8');
-      } else {
-        throw new Error('null');
-      }
-    });
-
-    it('find parent brother of id: 7', () => {
-      const actual: IItem | null = traverse.findParentBrother(sampleItems, '7');
-      if (actual !== null) {
-        expect(actual.id).toEqual('8');
-      } else {
-        throw new Error('null');
-      }
-    });
-
-    it('find parent brother of id: 8', () => {
-      const actual: IItem | null = traverse.findParentBrother(sampleItems, '8');
-      expect(actual).toEqual(null);
-    });
-  });
-
-  describe('findLastChild', () => {
-    it('find last child of id: 1', () => {
-      const targetItem: IItem | null = traverse.find(sampleItems, '1');
-      if (targetItem !== null) {
-        const actual: IItem | null = traverse.findLastChild(targetItem);
-        if (actual !== null) {
-          expect(actual.id).toEqual('7');
-        } else {
-          throw new Error('null');
-        }
-      } else {
-        throw new Error('null');
-      }
-    });
-
-    it('find last child of id: 2', () => {
-      const targetItem: IItem | null = traverse.find(sampleItems, '2');
-      if (targetItem !== null) {
-        const actual: IItem | null = traverse.findLastChild(targetItem);
-        expect(actual).toEqual(null);
-      } else {
-        throw new Error('null');
-      }
-    });
-
-    it('find last child of id: 3', () => {
-      const targetItem: IItem | null = traverse.find(sampleItems, '3');
-      if (targetItem !== null) {
-        const actual: IItem | null = traverse.findLastChild(targetItem);
-        if (actual !== null) {
-          expect(actual.id).toEqual('5');
-        } else {
-          throw new Error('null');
-        }
-      } else {
-        throw new Error('null');
-      }
-    });
-
-    it('find last child of id: 4', () => {
-      const targetItem: IItem | null = traverse.find(sampleItems, '4');
-      if (targetItem !== null) {
-        const actual: IItem | null = traverse.findLastChild(targetItem);
-        expect(actual).toEqual(null);
-      } else {
-        throw new Error('null');
-      }
-    });
-
-    it('find last child of id: 5', () => {
-      const targetItem: IItem | null = traverse.find(sampleItems, '5');
-      if (targetItem !== null) {
-        const actual: IItem | null = traverse.findLastChild(targetItem);
-        expect(actual).toEqual(null);
-      } else {
-        throw new Error('null');
-      }
-    });
-
-    it('find last child of id: 6', () => {
-      const targetItem: IItem | null = traverse.find(sampleItems, '6');
-      if (targetItem !== null) {
-        const actual: IItem | null = traverse.findLastChild(targetItem);
-        expect(actual).toEqual(null);
-      } else {
-        throw new Error('null');
-      }
-    });
-
-    it('find last child of id: 7', () => {
-      const targetItem: IItem | null = traverse.find(sampleItems, '7');
-      if (targetItem !== null) {
-        const actual: IItem | null = traverse.findLastChild(targetItem);
-        expect(actual).toEqual(null);
-      } else {
-        throw new Error('null');
-      }
-    });
-
-    it('find last child of id: 8', () => {
-      const targetItem: IItem | null = traverse.find(sampleItems, '8');
-      if (targetItem !== null) {
-        const actual: IItem | null = traverse.findLastChild(targetItem);
-        expect(actual).toEqual(null);
-      } else {
-        throw new Error('null');
-      }
-    });
-  });
-
-  describe('findUpper', () => {
-    it('find upper of id: 1', () => {
-      const actual: IItem | null = traverse.findUpper(sampleItems, '1');
-      expect(actual).toEqual(null);
-    });
-
-    it('find upper of id: 2', () => {
-      const actual: IItem | null = traverse.findUpper(sampleItems, '2');
-      if (actual !== null) {
-        expect(actual.id).toEqual('1');
-      } else {
-        throw new Error('null');
-      }
-    });
-
-    it('find upper of id: 3', () => {
-      const actual: IItem | null = traverse.findUpper(sampleItems, '3');
-      if (actual !== null) {
-        expect(actual.id).toEqual('2');
-      } else {
-        throw new Error('null');
-      }
-    });
-
-    it('find upper of id: 4', () => {
-      const actual: IItem | null = traverse.findUpper(sampleItems, '4');
-      if (actual !== null) {
-        expect(actual.id).toEqual('3');
-      } else {
-        throw new Error('null');
-      }
-    });
-
-    it('find upper of id: 5', () => {
-      const actual: IItem | null = traverse.findUpper(sampleItems, '5');
-      if (actual !== null) {
-        expect(actual.id).toEqual('4');
-      } else {
-        throw new Error('null');
-      }
-    });
-
-    it('find upper of id: 6', () => {
-      const actual: IItem | null = traverse.findUpper(sampleItems, '6');
-      if (actual !== null) {
-        expect(actual.id).toEqual('5');
-      } else {
-        throw new Error('null');
-      }
-    });
-
-    it('find upper of id: 7', () => {
-      const actual: IItem | null = traverse.findUpper(sampleItems, '7');
-      if (actual !== null) {
-        expect(actual.id).toEqual('6');
-      } else {
-        throw new Error('null');
-      }
-    });
-
-    it('find upper of id: 8', () => {
-      const actual: IItem | null = traverse.findUpper(sampleItems, '8');
-      if (actual !== null) {
-        expect(actual.id).toEqual('7');
-      } else {
-        throw new Error('null');
-      }
-    });
-
-    it('sampleItems2: find upper of id: 4', () => {
-      const actual: IItem | null = traverse.findUpper(sampleItems2, '4');
-      if (actual !== null) {
-        expect(actual.id).toEqual('3');
-      } else {
-        throw new Error('null');
-      }
-    });
-  });
-
-  describe('findUpperSkipNoText', () => {
-    it('find upper skip no text of id: 1', () => {
-      const actual: IItem | null = traverse.findUpperSkipNoText(sampleItems, '1');
-      expect(actual).toEqual(null);
-    });
-
-    it('find upper skip no text of id: 2', () => {
-      const actual: IItem | null = traverse.findUpperSkipNoText(sampleItems, '2');
-      if (actual !== null) {
-        expect(actual.id).toEqual('1');
-      } else {
-        throw new Error('null');
-      }
-    });
-
-    it('find upper skip no text of id: 3', () => {
-      const actual: IItem | null = traverse.findUpperSkipNoText(sampleItems, '3');
-      if (actual !== null) {
-        expect(actual.id).toEqual('2');
-      } else {
-        throw new Error('null');
-      }
-    });
-
-    it('find upper skip no text of id: 4', () => {
-      const actual: IItem | null = traverse.findUpperSkipNoText(sampleItems, '4');
-      if (actual !== null) {
-        expect(actual.id).toEqual('3');
-      } else {
-        throw new Error('null');
-      }
-    });
-
-    it('find upper skip no text of id: 5', () => {
-      const actual: IItem | null = traverse.findUpperSkipNoText(sampleItems, '5');
-      if (actual !== null) {
-        expect(actual.id).toEqual('4');
-      } else {
-        throw new Error('null');
-      }
-    });
-
-    it('find upper skip no text of id: 6', () => {
-      const actual: IItem | null = traverse.findUpperSkipNoText(sampleItems, '6');
-      if (actual !== null) {
-        expect(actual.id).toEqual('5');
-      } else {
-        throw new Error('null');
-      }
-    });
-
-    it('find upper skip no text of id: 7', () => {
-      const actual: IItem | null = traverse.findUpperSkipNoText(sampleItems, '7');
-      if (actual !== null) {
-        expect(actual.id).toEqual('6');
-      } else {
-        throw new Error('null');
-      }
-    });
-
-    it('find upper skip no text of id: 8', () => {
-      const actual: IItem | null = traverse.findUpperSkipNoText(sampleItems, '8');
-      if (actual !== null) {
-        expect(actual.id).toEqual('7');
-      } else {
-        throw new Error('null');
-      }
-    });
-
-    it('sampleItems2: find upper of id: 4', () => {
-      const actual: IItem | null = traverse.findUpper(sampleItems2, '4');
-      if (actual !== null) {
-        expect(actual.id).toEqual('3');
-      } else {
-        throw new Error('null');
-      }
-    });
-  });
-
-  describe('findDowner', () => {
-    it('find downer of id: 1', () => {
-      const actual: IItem | null = traverse.findDowner(sampleItems, '1');
-      if (actual !== null) {
-        expect(actual.id).toEqual('2');
-      } else {
-        throw new Error('null');
-      }
-    });
-
-    it('find downer of id: 2', () => {
-      const actual: IItem | null = traverse.findDowner(sampleItems, '2');
-      if (actual !== null) {
-        expect(actual.id).toEqual('3');
-      } else {
-        throw new Error('null');
-      }
-    });
-
-    it('find downer of id: 3', () => {
-      const actual: IItem | null = traverse.findDowner(sampleItems, '3');
-      if (actual !== null) {
-        expect(actual.id).toEqual('4');
-      } else {
-        throw new Error('null');
-      }
-    });
-
-    it('find downer of id: 4', () => {
-      const actual: IItem | null = traverse.findDowner(sampleItems, '4');
-      if (actual !== null) {
-        expect(actual.id).toEqual('5');
-      } else {
-        throw new Error('null');
-      }
-    });
-
-    it('find downer of id: 5', () => {
-      const actual: IItem | null = traverse.findDowner(sampleItems, '5');
-      if (actual !== null) {
-        expect(actual.id).toEqual('6');
-      } else {
-        throw new Error('null');
-      }
-    });
-
-    it('find downer of id: 6', () => {
-      const actual: IItem | null = traverse.findDowner(sampleItems, '6');
-      if (actual !== null) {
-        expect(actual.id).toEqual('7');
-      } else {
-        throw new Error('null');
-      }
-    });
-
-    it('find downer of id: 7', () => {
-      const actual: IItem | null = traverse.findDowner(sampleItems, '7');
-      if (actual !== null) {
-        expect(actual.id).toEqual('8');
-      } else {
-        throw new Error('null');
-      }
-    });
-
-    it('find downer of id: 8', () => {
-      const actual: IItem | null = traverse.findDowner(sampleItems, '8');
-      expect(actual).toEqual(null);
-    });
-
-    it('sampleItems2: find downer of id: 3', () => {
-      const actual: IItem | null = traverse.findDowner(sampleItems2, '3');
-      if (actual !== null) {
-        expect(actual.id).toEqual('4');
-      } else {
-        throw new Error('null');
-      }
-    });
-  });
-
-  describe('findDownerSkipNoText', () => {
-    it('find downer skip no text of id: 1', () => {
-      const actual: IItem | null = traverse.findDownerSkipNoText(sampleItems, '1');
-      if (actual !== null) {
-        expect(actual.id).toEqual('2');
-      } else {
-        throw new Error('null');
-      }
-    });
-
-    it('find downer skip no text of id: 2', () => {
-      const actual: IItem | null = traverse.findDownerSkipNoText(sampleItems, '2');
-      if (actual !== null) {
-        expect(actual.id).toEqual('3');
-      } else {
-        throw new Error('null');
-      }
-    });
-
-    it('find downer skip no text of id: 3', () => {
-      const actual: IItem | null = traverse.findDownerSkipNoText(sampleItems, '3');
-      if (actual !== null) {
-        expect(actual.id).toEqual('4');
-      } else {
-        throw new Error('null');
-      }
-    });
-
-    it('find downer skip no text of id: 4', () => {
-      const actual: IItem | null = traverse.findDownerSkipNoText(sampleItems, '4');
-      if (actual !== null) {
-        expect(actual.id).toEqual('5');
-      } else {
-        throw new Error('null');
-      }
-    });
-
-    it('find downer skip no text of id: 5', () => {
-      const actual: IItem | null = traverse.findDownerSkipNoText(sampleItems, '5');
-      if (actual !== null) {
-        expect(actual.id).toEqual('6');
-      } else {
-        throw new Error('null');
-      }
-    });
-
-    it('find downer skip no text of id: 6', () => {
-      const actual: IItem | null = traverse.findDownerSkipNoText(sampleItems, '6');
-      if (actual !== null) {
-        expect(actual.id).toEqual('7');
-      } else {
-        throw new Error('null');
-      }
-    });
-
-    it('find downer skip no text of id: 7', () => {
-      const actual: IItem | null = traverse.findDownerSkipNoText(sampleItems, '7');
-      if (actual !== null) {
-        expect(actual.id).toEqual('8');
-      } else {
-        throw new Error('null');
-      }
-    });
-
-    it('find downer skip no text of id: 8', () => {
-      const actual: IItem | null = traverse.findDownerSkipNoText(sampleItems, '8');
-      expect(actual).toEqual(null);
-    });
-
-    it('sampleItems2: find downer skip no text of id: 3', () => {
-      const actual: IItem | null = traverse.findDownerSkipNoText(sampleItems2, '3');
-      if (actual !== null) {
-        expect(actual.id).toEqual('4');
-      } else {
-        throw new Error('null');
-      }
     });
   });
 });

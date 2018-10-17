@@ -1,4 +1,5 @@
 .Item {
+  position: relative;
   padding: 0 0 0 4px;
   width: 100%;
   max-width: 764px;
@@ -14,6 +15,24 @@
 
     &.Item--Text__Focused {
       background: rgba(45, 170, 219, 0.1);
+    }
+  }
+
+  .Item--Caret {
+    position: absolute;
+    top: 0;
+    left: 4px;
+    color: transparent;
+
+    &::after {
+      display: inline-block;
+      content: '';
+      position: absolute;
+      top: 0;
+      right: -1px;
+      width: 1px;
+      height: 100%;
+      background: red;
     }
   }
 

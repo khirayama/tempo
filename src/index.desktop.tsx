@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 
-import { IAction } from 'action-creators/actionCreators';
+import { IAction } from 'actionCreators/actionCreators';
 import { logger } from 'logger';
 import { reducers } from 'reducers/reducers';
 import { Navigator } from 'router/Navigator';

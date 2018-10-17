@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { Store } from 'Store';
 
-import { IAction, IDispatch } from 'action-creators/actionCreators';
+import { IAction, IDispatch } from 'actionCreators/actionCreators';
 import { Paper } from 'presentations/components/Paper';
 import { Pencil } from 'presentations/components/Pencil';
 import { IItem, IPaper, IState, ITextItem, IUI } from 'state/state';

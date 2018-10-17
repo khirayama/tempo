@@ -1,5 +1,5 @@
 // tslint:disable:no-any
-import { IAction } from 'action-creators/actionCreators';
+import { IAction } from 'actionCreators/actionCreators';
 import { actionTypes } from 'constants/actionTypes';
 import { IItem, IPaper, IState } from 'state/state';
 import { traverse } from 'utils/traverse';
@@ -33,6 +33,11 @@ export function reducers(state: IState, action: IAction): IState {
       if (traverse.hasText(downerItem)) {
         newState.ui.inputValue = downerItem.text;
       }
+      break;
+    }
+    case actionTypes.MOVE_SELECTION: {
+      newState.ui.selection.start = payload.start;
+      newState.ui.selection.end = payload.end;
       break;
     }
     //   case actionTypes.ADD_BEFORE_ITEM: {

@@ -10,9 +10,10 @@ import {
   focusUpperItem,
   IAction,
   indentItem,
+  moveSelection,
   unindentItem,
   updateItem,
-} from 'action-creators/actionCreators';
+} from 'actionCreators/actionCreators';
 import { Container, IContainerProps } from 'presentations/containers/Container';
 import { IItem, IPaper, IState, ITextItem, IUI } from 'state/state';
 import { traverse } from 'utils/traverse';
@@ -58,6 +59,7 @@ export class Pencil extends Container<IProps & IContainerProps, ILocalState & IS
     this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
     this.onKeyUp = this.onKeyUp.bind(this);
+    this.onKeyPress = this.onKeyPress.bind(this);
     this.onKeyDown = this.onKeyDown.bind(this);
   }
 
@@ -82,6 +84,7 @@ export class Pencil extends Container<IProps & IContainerProps, ILocalState & IS
           placeholder="Input something"
           onChange={this.onChange}
           onKeyDown={this.onKeyDown}
+          onInput={this.onKeyPress}
           onKeyUp={this.onKeyUp}
         />
         <span>{focusedId}</span>
@@ -164,6 +167,19 @@ export class Pencil extends Container<IProps & IContainerProps, ILocalState & IS
     }
   }
 
+  private onKeyPress(event: React.KeyboardEvent<HTMLInputElement>): void {
+    // value, start, endの値を使う場合はこちら
+    const el: HTMLInputElement = event.currentTarget;
+    const value: string = el.value;
+    const keyCode: number = event.keyCode;
+    const meta: boolean = event.metaKey;
+    const shift: boolean = event.shiftKey;
+    const start: number | null = el.selectionStart;
+    const end: number | null = el.selectionEnd;
+    console.log('KeyPress', keyCode, meta, shift, value, start, end);
+    moveSelection(this.dispatch, { start, end });
+  }
+
   private onKeyUp(event: React.KeyboardEvent<HTMLInputElement>): void {
     // value, start, endの値を使う場合はこちら
     const el: HTMLInputElement = event.currentTarget;
@@ -174,5 +190,6 @@ export class Pencil extends Container<IProps & IContainerProps, ILocalState & IS
     const start: number | null = el.selectionStart;
     const end: number | null = el.selectionEnd;
     console.log('KeyUp', keyCode, meta, shift, value, start, end);
+    moveSelection(this.dispatch, { start, end });
   }
 }

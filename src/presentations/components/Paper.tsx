@@ -14,7 +14,7 @@ import {
   indentItem,
   unindentItem,
   updateItem,
-} from 'action-creators/actionCreators';
+} from 'actionCreators/actionCreators';
 import { Container, IContainerProps } from 'presentations/containers/Container';
 import { IItem, IPaper, IState, ITextItem, IUI } from 'state/state';
 import { traverse } from 'utils/traverse';
@@ -48,6 +48,9 @@ function Item(props: { ui: IUI; item: IItem; dispatch: IDispatch }): JSX.Element
           focusItem(props.dispatch, { id: item.id, text: item.text });
         }}
       >
+        {item.text && ui.selection.start === ui.selection.end && item.id === ui.focusedId ? (
+          <span className="Item--Caret">{item.text.substr(0, ui.selection.start || 0)}</span>
+        ) : null}
         {item.text ? (
           <span className={classNames('Item--Text', { 'Item--Text__Focused': ui.focusedId === item.id })}>
             {item.text}
