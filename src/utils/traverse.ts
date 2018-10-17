@@ -14,11 +14,19 @@ import {
 } from 'state/state';
 
 export const traverse: {
-  // check
   hasIndent(item: IItem | null): item is ITextItem | IBulletedItem | INumberedItem | ITaskItem | IToggleItem;
   hasText(
     item: IItem | null,
-  ): item is ITextItem | IBulletedItem | INumberedItem | ITaskItem | ITaskItem | IToggleItem | IHeaderItem | IQuateItem | ISubHeaderItem;
+  ): item is
+    | ITextItem
+    | IBulletedItem
+    | INumberedItem
+    | ITaskItem
+    | ITaskItem
+    | IToggleItem
+    | IHeaderItem
+    | IQuateItem
+    | ISubHeaderItem;
   // query
   find(items: IItem[], id: string): IItem | null;
   findPrev(items: IItem[], id: string): IItem | null;
@@ -28,10 +36,10 @@ export const traverse: {
   // command
   addBefore(items: IItem[], id: string): IItem | null;
   addAfter(items: IItem[], id: string): IItem | null;
-  indent(items: IItem[], id: string): void;
-  unindent(items: IItem[], id: string): void;
   destroy(items: IItem[], id: string): void;
   // transform
+  indent(items: IItem[], id: string): void;
+  unindent(items: IItem[], id: string): void;
   merge(id: string, newItem: IItem): IItem;
   turnInto(id: string, style: string): IItem;
 } = {
@@ -75,6 +83,7 @@ export const traverse: {
       item.style === 'QUOTE'
     );
   },
+  // query
   find: (items: IItem[], id: string): IItem | null => {
     for (const item of items) {
       if (item.id === id) {
@@ -96,9 +105,8 @@ export const traverse: {
   findPrevSkipNoText: (items: IItem[], id: string): IItem | null => {
     for (let i: number = 0; i < items.length; i += 1) {
       if (items[i].id === id) {
-
         let j: number = 1;
-        while(j <= i) {
+        while (j <= i) {
           const prevItem: IItem | null = items[i - j] || null;
 
           if (prevItem === null) {
@@ -126,9 +134,8 @@ export const traverse: {
   findNextSkipNoText: (items: IItem[], id: string): IItem | null => {
     for (let i: number = 0; i < items.length; i += 1) {
       if (items[i].id === id) {
-
         let j: number = 1;
-        while(j <= items.length - i) {
+        while (j <= items.length - i) {
           const nextItem: IItem | null = items[i + j] || null;
 
           if (nextItem === null) {
@@ -144,200 +151,38 @@ export const traverse: {
 
     return null;
   },
-  findLastChild: (item: IItem): IItem | null => {
-    if (traverse.hasIndent(item) && item.children.length) {
-      const lastChild: IItem = item.children[item.children.length - 1];
-      if (traverse.hasIndent(lastChild) && lastChild.children.length) {
-        return traverse.findLastChild(lastChild);
-      } else {
-        return lastChild;
-      }
-    }
-
-    return null;
-  },
-  findParentBrother: (items: IItem[], id: string): IItem | null => {
-    for (let i: number = 0; i < items.length; i += 1) {
-      const item: IItem = items[i];
-      if (traverse.hasIndent(item)) {
-        for (const childItem of item.children) {
-          if (childItem.id === id) {
-            return items[i + 1] || null;
-          }
-        }
-
-        const result: IItem | null = traverse.findParentBrother(item.children, id);
-        if (result !== null) {
-          return result;
-        }
-      }
-    }
-
-    return null;
-  },
-  findUpper: (items: IItem[], id: string): IItem | null => {
-    for (let i: number = 0; i < items.length; i += 1) {
-      const item: IItem = items[i];
-
-      if (item.id === id) {
-        const prevItem: IItem | null = items[i - 1] || null;
-
-        if (prevItem !== null && traverse.hasIndent(prevItem) && prevItem.children.length) {
-          const result: IItem | null = traverse.findLastChild(prevItem);
-          if (result !== null) {
-            return result;
-          }
-        }
-
-        return prevItem;
-      } else if (traverse.hasIndent(item)) {
-        // 次に行く前に子供のチェック
-        for (let j: number = 0; j < item.children.length; j += 1) {
-          const childItem: IItem = item.children[j];
-
-          if (childItem.id === id) {
-            if (j === 0) {
-              return item;
-            } else {
-              const prevItem: IItem | null = item.children[j - 1] || null;
-
-              if (prevItem !== null && traverse.hasIndent(prevItem) && prevItem.children.length) {
-                const result: IItem | null = traverse.findLastChild(prevItem);
-                if (result !== null) {
-                  return result;
-                }
-              }
-
-              return prevItem;
-            }
-          }
-        }
-      }
-
-      if (traverse.hasIndent(item)) {
-        const result: IItem | null = traverse.findUpper(item.children, id);
-        if (result !== null) {
-          return result;
-        }
-      }
-    }
-
-    return null;
-  },
-  findUpperSkipNoText: (items: IItem[], id: string): IItem | null => {
-    const item: IItem | null = traverse.findUpper(items, id);
-    if (item !== null && item.style === 'DIVIDER') {
-      return traverse.findUpperSkipNoText(items, item.id);
-    }
-
-    return item;
-  },
-  findDowner: (items: IItem[], id: string, context?: { rootItems: IItem[] }): IItem | null => {
-    // 自分に子がいれば、一番上の子
-    // 子がいなければ、弟
-    // 子も弟もいなければ、親の弟
-    // 親の弟もいなければ、親の親の弟(親なしまで繰り返す)
-
-    const ctx: { rootItems: IItem[] } = context ? context : { rootItems: items };
-    function findParentsBrotherItem(rootItems: IItem[], shadowId: string): IItem | null {
-      const parentBrotherItem: IItem | null = traverse.findParentBrother(rootItems, shadowId);
-      if (parentBrotherItem !== null) {
-        return parentBrotherItem;
-      } else {
-        const parentItem: IItem | null = traverse.findParent(rootItems, shadowId);
-        if (parentItem !== null) {
-          return findParentsBrotherItem(rootItems, parentItem.id);
-        } else {
-          return null;
-        }
-      }
-
-      return null;
-    }
-
+  // command
+  addBefore: (items: IItem[], id: string): IItem | null => {
     for (let i: number = 0; i < items.length; i += 1) {
       const item: IItem = items[i];
       if (item.id === id) {
-        if (traverse.hasIndent(item) && item.children.length) {
-          return item.children[0];
-        } else if (items[i + 1]) {
-          return items[i + 1];
-        } else {
-          return findParentsBrotherItem(ctx.rootItems, id);
-        }
-      }
-
-      if (traverse.hasIndent(item)) {
-        const result: IItem | null = traverse.findDowner(item.children, id, ctx);
-        if (result !== null) {
-          return result;
-        }
-      }
-    }
-
-    return null;
-  },
-  findDownerSkipNoText: (items: IItem[], id: string): IItem | null => {
-    const item: IItem | null = traverse.findDowner(items, id);
-    if (item !== null && item.style === 'DIVIDER') {
-      return traverse.findDownerSkipNoText(items, item.id);
-    }
-
-    return item;
-  },
-  addBefore: (items: IItem[], prevId: string, initItem?: any): IItem | null => {
-    for (let i: number = 0; i < items.length; i += 1) {
-      const item: IItem = items[i];
-      if (item.id === prevId) {
-        const prevItem: IItem | null = traverse.find(items, prevId);
-        const newItem: IItem = {
-          ...initItem,
+        const newItem: ITextItem = {
           id: uuid(),
           style: 'TEXT',
-          children: [],
+          text: '',
+          indent: traverse.hasIndent(item) ? item.indent : 0,
         };
-
         items.splice(i, 0, newItem);
 
         return newItem;
-      } else {
-        if (traverse.hasIndent(item)) {
-          const result: IItem | null = traverse.addBefore(item.children, prevId, initItem);
-          if (result !== null) {
-            return result;
-          }
-        }
       }
     }
 
     return null;
   },
-  addAfter: (items: IItem[], prevId: string, initItem?: any): IItem | null => {
+  addAfter: (items: IItem[], id: string): IItem | null => {
     for (let i: number = 0; i < items.length; i += 1) {
       const item: IItem = items[i];
-      if (item.id === prevId) {
-        const prevItem: IItem | null = traverse.find(items, prevId);
-        const newItem: IItem = {
-          ...initItem,
+      if (item.id === id) {
+        const newItem: ITextItem = {
           id: uuid(),
           style: 'TEXT',
-          children: [],
+          text: '',
+          indent: traverse.hasIndent(item) ? item.indent : 0,
         };
-        if (prevItem !== null && traverse.hasIndent(prevItem) && traverse.hasIndent(newItem)) {
-          newItem.children = prevItem.children;
-          prevItem.children = [];
-        }
-
         items.splice(i + 1, 0, newItem);
 
         return newItem;
-      } else {
-        if (traverse.hasIndent(item)) {
-          const result: IItem | null = traverse.addAfter(item.children, prevId, initItem);
-          if (result !== null) {
-            return result;
-          }
-        }
       }
     }
 
