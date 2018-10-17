@@ -58,37 +58,44 @@ export const sampleItems: IItem[] = [
     style: 'TEXT',
     text: 'text 1',
     indent: 0,
-  }, {
+  },
+  {
     id: '2',
     style: 'TEXT',
     text: 'text 2',
     indent: 1,
-  }, {
+  },
+  {
     id: '3',
     style: 'TEXT',
     text: 'text 3',
     indent: 1,
-  }, {
+  },
+  {
     id: '4',
     style: 'TEXT',
     text: 'text 4',
     indent: 2,
-  }, {
+  },
+  {
     id: '5',
     style: 'TEXT',
     text: 'text 5',
     indent: 2,
-  }, {
+  },
+  {
     id: '6',
     style: 'TEXT',
     text: 'text 6',
     indent: 1,
-  }, {
+  },
+  {
     id: '7',
     style: 'TEXT',
     text: 'text 7',
     indent: 1,
-  }, {
+  },
+  {
     id: '8',
     style: 'TEXT',
     text: 'text 8',

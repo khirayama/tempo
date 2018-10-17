@@ -56,7 +56,7 @@ describe('traverse', () => {
     });
 
     it('id: 9 is null', () => {
-      const actual: IItem | null= traverse.find(sampleItems, '9');
+      const actual: IItem | null = traverse.find(sampleItems, '9');
       expect(actual).toEqual(null);
     });
   });
