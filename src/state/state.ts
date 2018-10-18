@@ -79,30 +79,36 @@ export interface IBinder {
   papers: IPaper[];
 }
 
-export interface IUI {
-  inputValue: string;
+export interface IPencil {
+  focusedId: null | string;
+  value: string;
   selection: {
     start: number | null;
     end: number | null;
   };
-  focusedId: null | string;
+}
+
+export interface IUI {
   selectedIds: string[];
 }
 
 export interface IState {
   ui: IUI;
+  pencil: IPencil;
   binders: IBinder[];
 }
 
 const emptyState: IState = {
   ui: {
-    inputValue: '',
+    selectedIds: [],
+  },
+  pencil: {
+    focusedId: '1',
+    value: '',
     selection: {
       start: null,
       end: null,
     },
-    focusedId: '1',
-    selectedIds: [],
   },
   binders: [
     {
