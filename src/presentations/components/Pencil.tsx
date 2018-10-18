@@ -155,6 +155,11 @@ export class Pencil extends Container<IProps & IContainerProps, IState> {
           focusNextItem(this.dispatch, { id: focusedId });
           break;
         }
+        case keyCode === keyCodes.DELETE && meta && !shift: {
+          event.preventDefault();
+          removeItem(this.dispatch, { id: focusedId });
+          break;
+        }
         default:
       }
     }

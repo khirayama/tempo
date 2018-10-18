@@ -56,23 +56,14 @@ export function reducers(state: IState, action: IAction): IState {
       traverse.unindent(paper.items, payload.id);
       break;
     }
-    //   case actionTypes.DESTROY_ITEM: {
-    //     const upperItem: IItem | null = traverse.findUpperSkipNoText(paper.items, payload.id);
-    //     if (upperItem) {
-    //       newState.ui.focusedId = upperItem.id;
-    //     }
-    //     traverse.destroy(paper.items, payload.id);
-    //     break;
-    //   }
-    //   case actionTypes.CANCEL_ITEM: {
-    //     const upperItem: IItem | null = traverse.findUpper(paper.items, payload.id);
-    //     traverse.cancel(paper.items, payload.id);
-    //     const item: IItem | null = traverse.find(paper.items, payload.id);
-    //     if (item === null && upperItem !== null) {
-    //       newState.ui.focusedId = upperItem.id;
-    //     }
-    //     break;
-    //   }
+    case actionTypes.REMOVE_ITEM: {
+      const prevItem: IItem | null = traverse.findPrevSkipNoText(paper.items, payload.id);
+      if (prevItem) {
+        newState.pencil.focusedId = prevItem.id;
+      }
+      traverse.remove(paper.items, payload.id);
+      break;
+    }
     // case actionTypes.UPDATE_ITEM: {
     //   const item: IItem | null = traverse.find(paper.items, payload.id);
     //   traverse.merge(<IItem>item, payload);
