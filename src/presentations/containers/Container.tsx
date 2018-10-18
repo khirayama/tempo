@@ -21,6 +21,10 @@ export class Container<P, S> extends React.Component<P & IContainerProps, S & IS
   constructor(props: P & IContainerProps) {
     super(props);
 
+    this.state = {
+      ...store.getState(),
+    };
+
     this.handleStateUpdate = (): void => {
       this.setState(store.getState());
     };
