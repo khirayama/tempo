@@ -195,7 +195,7 @@ export const traverse: {
   indent(items: IItem[], id: string): IItem | null {
     const item: IItem | null = traverse.find(items, id);
     if (item !== null && traverse.hasIndent(item)) {
-      item.indent = item.indent + 1;
+      item.indent = Math.min(item.indent + 1, 8);
 
       return item;
     }
@@ -205,7 +205,7 @@ export const traverse: {
   unindent(items: IItem[], id: string): IItem | null {
     const item: IItem | null = traverse.find(items, id);
     if (item !== null && traverse.hasIndent(item)) {
-      item.indent = item.indent - 1;
+      item.indent = Math.max(item.indent - 1, 0);
 
       return item;
     }
