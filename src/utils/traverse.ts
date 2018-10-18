@@ -34,14 +34,13 @@ export const traverse: {
   findNext(items: IItem[], id: string): IItem | null;
   findNextSkipNoText(items: IItem[], id: string): IItem | null;
   // command
-  addBefore(items: IItem[], id: string): IItem | null;
   addAfter(items: IItem[], id: string): IItem | null;
   destroy(items: IItem[], id: string): void;
   // transform
+  merge(item: IItem, newItem: IItem): IItem;
   indent(items: IItem[], id: string): void;
   unindent(items: IItem[], id: string): void;
-  merge(id: string, newItem: IItem): IItem;
-  turnInto(id: string, style: string): IItem;
+  turnInto(item: IItem, style: string): IItem;
 } = {
   hasIndent(item: IItem | null): item is ITextItem | IBulletedItem | INumberedItem | ITaskItem | IToggleItem {
     if (item === null) {
@@ -152,24 +151,6 @@ export const traverse: {
     return null;
   },
   // command
-  addBefore: (items: IItem[], id: string): IItem | null => {
-    for (let i: number = 0; i < items.length; i += 1) {
-      const item: IItem = items[i];
-      if (item.id === id) {
-        const newItem: ITextItem = {
-          id: uuid(),
-          style: 'TEXT',
-          text: '',
-          indent: traverse.hasIndent(item) ? item.indent : 0,
-        };
-        items.splice(i, 0, newItem);
-
-        return newItem;
-      }
-    }
-
-    return null;
-  },
   addAfter: (items: IItem[], id: string): IItem | null => {
     for (let i: number = 0; i < items.length; i += 1) {
       const item: IItem = items[i];
@@ -188,191 +169,22 @@ export const traverse: {
 
     return null;
   },
-  indent(items: IItem[], id: string): void {
-    for (let i: number = 0; i < items.length; i += 1) {
-      const item: IItem = items[i];
-      if (item.id === id) {
-        const prevItem: IItem | null = items[i - 1] || null;
-        if (prevItem) {
-          if (traverse.hasIndent(prevItem)) {
-            items.splice(i, 1);
-            prevItem.children.push(item);
-
-            return;
-          }
-        }
-      } else {
-        if (traverse.hasIndent(item)) {
-          traverse.indent(item.children, id);
-        }
-      }
-    }
-  },
-  unindent(items: IItem[], id: string): void {
-    for (let i: number = 0; i < items.length; i += 1) {
-      const item: IItem = items[i];
-      if (traverse.hasIndent(item)) {
-        for (let j: number = 0; j < item.children.length; j += 1) {
-          const childItem: IItem = item.children[j];
-
-          if (childItem.id === id) {
-            item.children.splice(j, 1);
-            items.splice(i + 1, 0, childItem);
-
-            return;
-          }
-        }
-        traverse.unindent(item.children, id);
-      }
-    }
-  },
   destroy(items: IItem[], id: string): void {
     for (let i: number = 0; i < items.length; i += 1) {
       const item: IItem = items[i];
       if (item.id === id) {
         items.splice(i, 1);
-
-        return;
-      } else {
-        if (traverse.hasIndent(item)) {
-          traverse.destroy(item.children, id);
-        }
       }
     }
   },
-  cancel(items: IItem[], id: string, context?: { depth: number }): void {
-    // TODO: textの有無によって振る舞いが変わる。ので、ちゃんと整理
-    // TEXTじゃない場合
-    //  TEXTに変換
-    // 親がいない
-    //  childrenをunshiftしてdestroy
-    // 親がいる & 兄がいる & 弟がいる
-    //  childrenをunshiftしてdestroy
-    // 親がいる & 兄がいる & 弟がいない
-    //  unindent
-
-    const ctx: { depth: number } = context ? context : { depth: 0 };
-    const hasParent: boolean = ctx.depth !== 0;
-
-    for (const item of items) {
-      if (item.style !== 'TEXT' && item.id === id) {
-        traverse.turnInto(item, 'TEXT');
-
-        return;
-      }
-
-      if (!hasParent && item.id === id) {
-        if (traverse.hasIndent(item)) {
-          for (let j: number = item.children.length - 1; j >= 0; j -= 1) {
-            traverse.unindent(items, item.children[j].id);
-          }
-        }
-        traverse.destroy(items, id);
-
-        return;
-      }
-
-      if (traverse.hasIndent(item)) {
-        for (let j: number = 0; j < item.children.length; j += 1) {
-          const childItem: IItem = item.children[j];
-
-          if (childItem.id === id) {
-            const hasPreItem: boolean = !!item.children[j - 1];
-            const hasSufItem: boolean = !!item.children[j + 1];
-
-            if (childItem.style !== 'TEXT') {
-              traverse.turnInto(childItem, 'TEXT');
-
-              return;
-            } else if (hasPreItem && hasSufItem) {
-              if (traverse.hasIndent(childItem)) {
-                for (let k: number = childItem.children.length - 1; k >= 0; k -= 1) {
-                  traverse.unindent(items, childItem.children[k].id);
-                }
-              }
-              traverse.destroy(items, id);
-
-              return;
-            } else {
-              traverse.unindent(items, id);
-
-              return;
-            }
-          }
-        }
-      }
-
-      if (traverse.hasIndent(item)) {
-        traverse.cancel(item.children, id, { depth: ctx.depth + 1 });
-      }
-    }
-  },
-  moveBefore: (items: IItem[], id: string, toId: string, context?: { item: IItem | null }): void => {
-    // 一つ前のアイテムに子がいればこの末尾に
-    // 子がいなければ前に
-    const ctx: { item: IItem | null } = context ? context : { item: null };
-    const item: IItem | null = traverse.find(items, id);
-    if (item) {
-      ctx.item = item;
-      traverse.destroy(items, id);
-    }
-
-    if (ctx.item) {
-      for (let i: number = 0; i < items.length; i += 1) {
-        const targetItem: IItem = items[i];
-        const prevItem: IItem | null = items[i - 1] || null;
-        if (targetItem.id === toId) {
-          if (prevItem && traverse.hasIndent(prevItem) && prevItem.children.length > 0) {
-            prevItem.children.push(ctx.item);
-          } else {
-            items.splice(i, 0, ctx.item);
-          }
-
-          return;
-        } else {
-          if (traverse.hasIndent(targetItem)) {
-            traverse.moveBefore(targetItem.children, id, toId, ctx);
-          }
-        }
-      }
-    }
-  },
-  moveAfter: (items: IItem[], id: string, toId: string, context?: { item: IItem | null }): void => {
-    // 子がいれば子の先頭に
-    // 子がいなければ次に
-    const ctx: { item: IItem | null } = context ? context : { item: null };
-    const item: IItem | null = traverse.find(items, id);
-    if (item) {
-      ctx.item = item;
-      traverse.destroy(items, id);
-    }
-
-    if (ctx.item) {
-      for (let i: number = 0; i < items.length; i += 1) {
-        const targetItem: IItem = items[i];
-        if (targetItem.id === toId) {
-          if (targetItem !== null && traverse.hasIndent(targetItem) && targetItem.children.length > 0) {
-            targetItem.children.unshift(ctx.item);
-          } else {
-            items.splice(i + 1, 0, ctx.item);
-          }
-
-          return;
-        } else {
-          if (traverse.hasIndent(targetItem)) {
-            traverse.moveAfter(targetItem.children, id, toId, ctx);
-          }
-        }
-      }
-    }
-  },
+  // transform
   merge: (
     item: IItem,
     newItem: {
       id?: string;
-      style: string;
+      style?: string;
       text?: string;
-      children?: IItem[];
+      indent?: number;
       completed?: boolean | undefined;
       opened?: boolean | undefined;
     },
@@ -380,6 +192,27 @@ export const traverse: {
     // tslint:disable-next-line:prefer-object-spread
     return Object.assign(item, newItem);
   },
+  indent(items: IItem[], id: string): IItem | null {
+    const item: IItem | null = traverse.find(items, id);
+    if (item !== null && traverse.hasIndent(item)) {
+      item.indent = item.indent + 1;
+
+      return item;
+    }
+
+    return null;
+  },
+  unindent(items: IItem[], id: string): IItem | null {
+    const item: IItem | null = traverse.find(items, id);
+    if (item !== null && traverse.hasIndent(item)) {
+      item.indent = item.indent - 1;
+
+      return item;
+    }
+
+    return null;
+  },
+  // tslint:disable-next-line:cyclomatic-complexity
   turnInto: (item: IItem, style: string): IItem => {
     if (item.style !== style) {
       switch (style) {
@@ -388,7 +221,7 @@ export const traverse: {
           return Object.assign(item, {
             style,
             text: traverse.hasText(item) ? item.text : '',
-            children: traverse.hasIndent(item) ? item.children : [],
+            indent: traverse.hasIndent(item) ? item.indent : 0,
             completed: undefined,
             opened: undefined,
           });
@@ -398,7 +231,7 @@ export const traverse: {
           return Object.assign(item, {
             style,
             text: traverse.hasText(item) ? item.text : '',
-            children: traverse.hasIndent(item) ? item.children : [],
+            indent: traverse.hasIndent(item) ? item.indent : 0,
             completed: undefined,
             opened: undefined,
           });
@@ -408,7 +241,7 @@ export const traverse: {
           return Object.assign(item, {
             style,
             text: traverse.hasText(item) ? item.text : '',
-            children: traverse.hasIndent(item) ? item.children : [],
+            indent: traverse.hasIndent(item) ? item.indent : 0,
             completed: undefined,
             opened: undefined,
           });
@@ -418,7 +251,7 @@ export const traverse: {
           return Object.assign(item, {
             style,
             text: traverse.hasText(item) ? item.text : '',
-            children: traverse.hasIndent(item) ? item.children : [],
+            indent: traverse.hasIndent(item) ? item.indent : 0,
             completed: false,
             opened: undefined,
           });
@@ -429,7 +262,7 @@ export const traverse: {
           return Object.assign(item, {
             style,
             text: traverse.hasText(item) ? item.text : '',
-            children: traverse.hasIndent(item) ? item.children : [],
+            indent: traverse.hasIndent(item) ? item.indent : 0,
             completed: undefined,
             opened: false,
           });
@@ -439,7 +272,7 @@ export const traverse: {
           return Object.assign(item, {
             style,
             text: traverse.hasText(item) ? item.text : '',
-            children: undefined,
+            indent: undefined,
             completed: undefined,
             opened: undefined,
           });
@@ -449,7 +282,7 @@ export const traverse: {
           return Object.assign(item, {
             style,
             text: traverse.hasText(item) ? item.text : '',
-            children: undefined,
+            indent: undefined,
             completed: undefined,
             opened: undefined,
           });
@@ -459,7 +292,7 @@ export const traverse: {
           return Object.assign(item, {
             style,
             text: undefined,
-            children: undefined,
+            indent: undefined,
             completed: undefined,
             opened: undefined,
           });
