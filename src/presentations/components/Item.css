@@ -1,12 +1,41 @@
 .Item {
-  position: relative;
+  $indent: 1.5rem;
+
   padding: 0 0 0 4px;
   width: 100%;
   max-width: 764px;
   margin: 0 auto;
 
-  .Item {
-    margin-left: 1rem;
+  &.Item__Indent1 {
+    margin-left: calc($indent * 1);
+  }
+
+  &.Item__Indent2 {
+    margin-left: calc($indent * 2);
+  }
+
+  &.Item__Indent3 {
+    margin-left: calc($indent * 3);
+  }
+
+  &.Item__Indent4 {
+    margin-left: calc($indent * 4);
+  }
+
+  &.Item__Indent5 {
+    margin-left: calc($indent * 5);
+  }
+
+  &.Item__Indent6 {
+    margin-left: calc($indent * 6);
+  }
+
+  &.Item__Indent7 {
+    margin-left: calc($indent * 7);
+  }
+
+  &.Item__Indent8 {
+    margin-left: calc($indent * 8);
   }
 
   .Item--Text {
@@ -14,25 +43,7 @@
     width: 100%;
 
     &.Item--Text__Focused {
-      background: rgba(45, 170, 219, 0.1);
-    }
-  }
-
-  .Item--Caret {
-    position: absolute;
-    top: 0;
-    left: 4px;
-    color: transparent;
-
-    &::after {
-      display: inline-block;
-      content: '';
-      position: absolute;
-      top: 0;
-      right: -1px;
-      width: 1px;
-      height: 100%;
-      background: red;
+      background: $color-grey-50;
     }
   }
 
@@ -42,7 +53,7 @@
     width: 100%;
 
     &.Item--Placeholder__Focused {
-      background: rgba(45, 170, 219, 0.1);
+      background: $color-grey-50;
     }
   }
 
