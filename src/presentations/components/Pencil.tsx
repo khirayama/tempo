@@ -1,13 +1,11 @@
 import * as React from 'react';
 
 import {
-  addBeforeItem,
-  addItem,
-  cancelItem,
+  addAfterItem,
   destroyItem,
-  focusDownerItem,
   focusItem,
-  focusUpperItem,
+  focusNextItem,
+  focusPrevItem,
   IAction,
   indentItem,
   moveSelection,
@@ -15,17 +13,11 @@ import {
   updateItem,
 } from 'actionCreators/actionCreators';
 import { Container, IContainerProps } from 'presentations/containers/Container';
-import { IItem, IPaper, IState, ITextItem, IUI } from 'state/state';
+import { IItem, IPaper, IPencil, IState, ITextItem, IUI } from 'state/state';
 import { traverse } from 'utils/traverse';
 
-export interface IProps {
-  ui: IUI;
-  paper: IPaper;
-}
-
-export interface ILocalState {
-  value: string;
-  item: IItem | null;
+interface IProps {
+  item: IItem;
 }
 
 const keyCodes: { [key: string]: number } = {
@@ -38,158 +30,130 @@ const keyCodes: { [key: string]: number } = {
   P: 80,
 };
 
-export class Pencil extends Container<IProps & IContainerProps, ILocalState & IState> {
-  private inputRef: React.RefObject<HTMLInputElement>;
+export class Pencil extends Container<IProps & IContainerProps, IState> {
+  // tslint:disable-next-line:no-any
+  private ref: React.RefObject<any>;
 
   constructor(props: IProps & IContainerProps) {
     super(props);
-    const state: IState = this.getState();
-    const paper: IPaper = this.props.paper;
-    const focusedId: string | null = state.ui.focusedId;
-    const item: IItem | null = focusedId ? traverse.find(paper.items, focusedId) : null;
 
-    this.state = {
-      ...state,
-      item,
-      value: traverse.hasText(item) ? item.text : '',
-    };
-
-    this.inputRef = React.createRef();
-    this.focus = this.focus.bind(this);
-    this.onChange = this.onChange.bind(this);
-    this.onSubmit = this.onSubmit.bind(this);
+    this.ref = React.createRef();
+    this.onInput = this.onInput.bind(this);
     this.onKeyUp = this.onKeyUp.bind(this);
-    this.onKeyPress = this.onKeyPress.bind(this);
     this.onKeyDown = this.onKeyDown.bind(this);
+    this.onFocus = this.onFocus.bind(this);
+  }
+
+  public componentDidMount(): void {
+    const pencil: IPencil = this.state.pencil;
+    const paper: IPaper = this.state.binders[0].papers[0];
+    if (pencil.focusedId === this.props.item.id) {
+      this.ref.current.focus();
+    }
   }
 
   public componentDidUpdate(): void {
-    const state: IState = this.getState();
-    const focusedId: string | null = state.ui.focusedId;
-    if (focusedId) {
-      this.focus();
+    const pencil: IPencil = this.state.pencil;
+    const paper: IPaper = this.state.binders[0].papers[0];
+    if (pencil.focusedId === this.props.item.id) {
+      this.ref.current.focus();
     }
   }
 
   public render(): JSX.Element {
-    const value: string | null = this.state.ui.inputValue;
-    const focusedId: string | null = this.state.ui.focusedId;
+    const value: string | null = this.state.pencil.value;
+    const focusedId: string | null = this.state.pencil.focusedId;
 
     return (
-      <form className="Pencil" onSubmit={this.onSubmit}>
-        <input
-          autoFocus
-          ref={this.inputRef}
-          value={value}
-          placeholder="Input something"
-          onChange={this.onChange}
-          onKeyDown={this.onKeyDown}
-          onInput={this.onKeyPress}
-          onKeyUp={this.onKeyUp}
-        />
-        <span>{focusedId}</span>
-      </form>
+      <div
+        className="Pencil"
+        contentEditable
+        suppressContentEditableWarning={true}
+        ref={this.ref}
+        onInput={this.onInput}
+        onKeyDown={this.onKeyDown}
+        onKeyUp={this.onKeyUp}
+        onFocus={this.onFocus}
+      >
+        {value}
+      </div>
     );
   }
 
-  private focus(): void {
-    const inputEl: HTMLInputElement | null = this.inputRef.current;
-    if (inputEl) {
-      inputEl.focus();
-    }
-  }
-
-  private onChange(event: React.FormEvent<HTMLInputElement>): void {
-    const focusedId: string | null = this.state.ui.focusedId;
-    const value: string = event.currentTarget.value;
+  private onInput(event: React.FormEvent<HTMLElement>): void {
+    const focusedId: string | null = this.state.pencil.focusedId;
+    const value: string = event.currentTarget.innerText;
 
     if (focusedId) {
-      focusItem(this.dispatch, { id: focusedId, text: value });
+      focusItem(this.dispatch, { id: focusedId });
       updateItem(this.dispatch, { id: focusedId, text: value });
     }
   }
 
-  private onSubmit(event: React.FormEvent<HTMLFormElement>): void {
-    event.preventDefault();
-
-    const focusedId: string | null = this.state.ui.focusedId;
-
-    this.setState({ value: '' });
-    if (focusedId) {
-      addItem(this.dispatch, { prevId: focusedId });
-    }
-  }
-
-  private onKeyDown(event: React.KeyboardEvent<HTMLInputElement>): void {
-    const focusedId: string | null = this.state.ui.focusedId;
-    const el: HTMLInputElement = event.currentTarget;
-    const value: string = el.value;
+  private onKeyDown(event: React.KeyboardEvent<HTMLElement>): void {
+    const focusedId: string | null = this.state.pencil.focusedId;
+    const el: HTMLElement = event.currentTarget;
+    const value: string = event.currentTarget.innerText;
     const keyCode: number = event.keyCode;
     const meta: boolean = event.metaKey;
     const shift: boolean = event.shiftKey;
-    const start: number | null = el.selectionStart;
-    const end: number | null = el.selectionEnd;
+    const selection: Selection = window.getSelection();
+    const start: number | null = selection.baseOffset;
+    const end: number | null = selection.extentOffset;
     console.log('KeyDown', keyCode, meta, shift, value, start, end);
 
     // TAB                          : Indent (Mobile: Button)
     // SHIFT + TAB                  : Unindent (Mobile: Button)
-    // UP / DOWN                      : Move to UP / DOWN(Mobile: Button)
-    switch (true) {
-      case keyCode === keyCodes.TAB && !meta && !shift: {
-        if (focusedId) {
+    // UP / DOWN                    : Move to UP / DOWN(Mobile: Button)
+    if (focusedId) {
+      switch (true) {
+        case keyCode === keyCodes.ENTER && !meta && !shift: {
+          event.preventDefault();
+          addAfterItem(this.dispatch, { id: focusedId });
+          break;
+        }
+        case keyCode === keyCodes.TAB && !meta && !shift: {
           event.preventDefault();
           indentItem(this.dispatch, { id: focusedId });
+          break;
         }
-        break;
-      }
-      case keyCode === keyCodes.TAB && !meta && shift: {
-        if (focusedId) {
+        case keyCode === keyCodes.TAB && !meta && shift: {
           event.preventDefault();
           unindentItem(this.dispatch, { id: focusedId });
+          break;
         }
-        break;
-      }
-      case keyCode === keyCodes.UP && !meta && !shift: {
-        if (focusedId) {
+        case keyCode === keyCodes.UP && !meta && !shift: {
           event.preventDefault();
-          focusUpperItem(this.dispatch, { id: focusedId });
+          focusPrevItem(this.dispatch, { id: focusedId });
+          break;
         }
-        break;
-      }
-      case keyCode === keyCodes.DOWN && !meta && !shift: {
-        if (focusedId) {
+        case keyCode === keyCodes.DOWN && !meta && !shift: {
           event.preventDefault();
-          focusDownerItem(this.dispatch, { id: focusedId });
+          focusNextItem(this.dispatch, { id: focusedId });
+          break;
         }
-        break;
+        default:
       }
-      default:
     }
   }
 
-  private onKeyPress(event: React.KeyboardEvent<HTMLInputElement>): void {
+  private onKeyUp(event: React.KeyboardEvent<HTMLElement>): void {
     // value, start, endの値を使う場合はこちら
-    const el: HTMLInputElement = event.currentTarget;
-    const value: string = el.value;
+    const el: HTMLElement = event.currentTarget;
+    const value: string = event.currentTarget.innerText;
     const keyCode: number = event.keyCode;
     const meta: boolean = event.metaKey;
     const shift: boolean = event.shiftKey;
-    const start: number | null = el.selectionStart;
-    const end: number | null = el.selectionEnd;
-    console.log('KeyPress', keyCode, meta, shift, value, start, end);
+    const selection: Selection = window.getSelection();
+    const start: number | null = selection.baseOffset;
+    const end: number | null = selection.extentOffset;
+    console.log('KeyUp', keyCode, meta, shift, value, start, end);
     moveSelection(this.dispatch, { start, end });
   }
 
-  private onKeyUp(event: React.KeyboardEvent<HTMLInputElement>): void {
-    // value, start, endの値を使う場合はこちら
-    const el: HTMLInputElement = event.currentTarget;
-    const value: string = el.value;
-    const keyCode: number = event.keyCode;
-    const meta: boolean = event.metaKey;
-    const shift: boolean = event.shiftKey;
-    const start: number | null = el.selectionStart;
-    const end: number | null = el.selectionEnd;
-    console.log('KeyUp', keyCode, meta, shift, value, start, end);
-    moveSelection(this.dispatch, { start, end });
+  private onFocus(event: React.FocusEvent<HTMLElement>): void {
+    const item: IItem = this.props.item;
+
+    focusItem(this.dispatch, { id: item.id });
   }
 }
