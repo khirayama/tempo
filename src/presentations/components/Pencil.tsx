@@ -52,10 +52,11 @@ export class Pencil extends Container<IProps & IContainerProps, IState> {
     }
   }
 
-  public componentDidUpdate(): void {
+  public componentDidUpdate(prevProps: IProps & IContainerProps, prevState: IState): void {
     const pencil: IPencil = this.state.pencil;
+    const prevPencil: IPencil = prevState.pencil;
     const paper: IPaper = this.state.binders[0].papers[0];
-    if (pencil.focusedId === this.props.item.id) {
+    if (pencil.focusedId === this.props.item.id && pencil.focusedId !== prevPencil.focusedId) {
       this.focus();
     }
   }
