@@ -80,6 +80,16 @@ export async function removeItem(dispatch: IDispatch, item: { id: string }): Pro
   return action;
 }
 
+export async function turnInto(dispatch: IDispatch, item: { id: string; style: string }): Promise<IAction> {
+  const action: IAction = {
+    actionType: actionTypes.TURN_INTO,
+    payload: item,
+  };
+  dispatch(action);
+
+  return action;
+}
+
 export async function updateItem(dispatch: IDispatch, item: { id: string; text?: string }): Promise<IAction> {
   const action: IAction = {
     actionType: actionTypes.UPDATE_ITEM,

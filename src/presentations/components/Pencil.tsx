@@ -8,6 +8,7 @@ import {
   IAction,
   indentItem,
   removeItem,
+  turnInto,
   unindentItem,
   updateItem,
 } from 'actionCreators/actionCreators';

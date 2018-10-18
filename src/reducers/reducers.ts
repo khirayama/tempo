@@ -64,6 +64,13 @@ export function reducers(state: IState, action: IAction): IState {
       traverse.remove(paper.items, payload.id);
       break;
     }
+    case actionTypes.TURN_INTO: {
+      const item: IItem | null = traverse.find(paper.items, payload.id);
+      if (item) {
+        traverse.turnInto(item, payload.style);
+      }
+      break;
+    }
     // case actionTypes.UPDATE_ITEM: {
     //   const item: IItem | null = traverse.find(paper.items, payload.id);
     //   traverse.merge(<IItem>item, payload);
