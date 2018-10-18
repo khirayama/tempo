@@ -47,7 +47,7 @@ export class Pencil extends Container<IProps & IContainerProps, IState> {
     const pencil: IPencil = this.state.pencil;
     const paper: IPaper = this.state.binders[0].papers[0];
     if (pencil.focusedId === this.props.item.id) {
-      this.ref.current.focus();
+      this.focus();
     }
   }
 
@@ -55,7 +55,7 @@ export class Pencil extends Container<IProps & IContainerProps, IState> {
     const pencil: IPencil = this.state.pencil;
     const paper: IPaper = this.state.binders[0].papers[0];
     if (pencil.focusedId === this.props.item.id) {
-      this.ref.current.focus();
+      this.focus();
     }
   }
 
@@ -77,6 +77,20 @@ export class Pencil extends Container<IProps & IContainerProps, IState> {
         {value}
       </div>
     );
+  }
+
+  private focus(): void {
+    // FYI: https://stackoverflow.com/questions/4233265/contenteditable-set-caret-at-the-end-of-the-text-cross-browser
+    const el: HTMLElement = this.ref.current;
+    el.focus();
+    if (window.getSelection && window.document.createRange) {
+      const range: Range = window.document.createRange();
+      range.selectNodeContents(el);
+      range.collapse(false);
+      const sel: Selection = window.getSelection();
+      sel.removeAllRanges();
+      sel.addRange(range);
+    }
   }
 
   private onInput(event: React.FormEvent<HTMLElement>): void {
