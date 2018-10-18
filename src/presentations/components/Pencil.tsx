@@ -2,13 +2,12 @@ import * as React from 'react';
 
 import {
   addAfterItem,
-  destroyItem,
   focusItem,
   focusNextItem,
   focusPrevItem,
   IAction,
   indentItem,
-  moveSelection,
+  removeItem,
   unindentItem,
   updateItem,
 } from 'actionCreators/actionCreators';
@@ -102,9 +101,12 @@ export class Pencil extends Container<IProps & IContainerProps, IState> {
     const end: number | null = selection.extentOffset;
     console.log('KeyDown', keyCode, meta, shift, value, start, end);
 
+    // ENTER                        : Add new line
     // TAB                          : Indent (Mobile: Button)
     // SHIFT + TAB                  : Unindent (Mobile: Button)
-    // UP / DOWN                    : Move to UP / DOWN(Mobile: Button)
+    // UP                           : Move to UP(Mobile: Button)
+    // DOWN                         : Move to DOWN(Mobile: Button)
+    // SHIFT + DELETE               : Remove line
     if (focusedId) {
       switch (true) {
         case keyCode === keyCodes.ENTER && !meta && !shift: {
@@ -148,7 +150,6 @@ export class Pencil extends Container<IProps & IContainerProps, IState> {
     const start: number | null = selection.baseOffset;
     const end: number | null = selection.extentOffset;
     console.log('KeyUp', keyCode, meta, shift, value, start, end);
-    moveSelection(this.dispatch, { start, end });
   }
 
   private onFocus(event: React.FocusEvent<HTMLElement>): void {

@@ -48,11 +48,6 @@ export function reducers(state: IState, action: IAction): IState {
       }
       break;
     }
-    case actionTypes.MOVE_SELECTION: {
-      newState.pencil.selection.start = payload.start;
-      newState.pencil.selection.end = payload.end;
-      break;
-    }
     case actionTypes.INDENT_ITEM: {
       traverse.indent(paper.items, payload.id);
       break;

@@ -40,19 +40,6 @@ export async function focusNextItem(dispatch: IDispatch, item: { id: string }): 
   return action;
 }
 
-export async function moveSelection(
-  dispatch: IDispatch,
-  selection: { start: number | null; end: number | null },
-): Promise<IAction> {
-  const action: IAction = {
-    actionType: actionTypes.MOVE_SELECTION,
-    payload: selection,
-  };
-  dispatch(action);
-
-  return action;
-}
-
 export async function addAfterItem(dispatch: IDispatch, item: { id: string; text?: string }): Promise<IAction> {
   const action: IAction = {
     actionType: actionTypes.ADD_AFTER_ITEM,
@@ -83,9 +70,9 @@ export async function unindentItem(dispatch: IDispatch, item: { id: string }): P
   return action;
 }
 
-export async function destroyItem(dispatch: IDispatch, item: { id: string }): Promise<IAction> {
+export async function removeItem(dispatch: IDispatch, item: { id: string }): Promise<IAction> {
   const action: IAction = {
-    actionType: actionTypes.DESTROY_ITEM,
+    actionType: actionTypes.REMOVE_ITEM,
     payload: item,
   };
   dispatch(action);

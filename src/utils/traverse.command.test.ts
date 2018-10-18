@@ -7,7 +7,7 @@ import { copyItems, sampleItems } from 'utils/traverse.samples';
   addAfter
   indent
   unindent
-  destroy
+  remove
   merge
   turnInto
 */
@@ -135,10 +135,10 @@ describe('traverse', () => {
     });
   });
 
-  describe('destroy', () => {
-    it('destroy id: 1', () => {
+  describe('remove', () => {
+    it('remove id: 1', () => {
       const items: any = copyItems(sampleItems);
-      traverse.destroy(items, '1');
+      traverse.remove(items, '1');
       expect(items[0].id).toEqual('2');
       expect(items[1].id).toEqual('3');
       expect(items[2].id).toEqual('4');
@@ -148,9 +148,9 @@ describe('traverse', () => {
       expect(items[6].id).toEqual('8');
     });
 
-    it('destroy id: 2', () => {
+    it('remove id: 2', () => {
       const items: any = copyItems(sampleItems);
-      traverse.destroy(items, '2');
+      traverse.remove(items, '2');
       expect(items[0].id).toEqual('1');
       expect(items[1].id).toEqual('3');
       expect(items[2].id).toEqual('4');
@@ -160,9 +160,9 @@ describe('traverse', () => {
       expect(items[6].id).toEqual('8');
     });
 
-    it('destroy id: 3', () => {
+    it('remove id: 3', () => {
       const items: any = copyItems(sampleItems);
-      traverse.destroy(items, '3');
+      traverse.remove(items, '3');
       expect(items[0].id).toEqual('1');
       expect(items[1].id).toEqual('2');
       expect(items[2].id).toEqual('4');
@@ -172,9 +172,9 @@ describe('traverse', () => {
       expect(items[6].id).toEqual('8');
     });
 
-    it('destroy id: 4', () => {
+    it('remove id: 4', () => {
       const items: any = copyItems(sampleItems);
-      traverse.destroy(items, '4');
+      traverse.remove(items, '4');
       expect(items[0].id).toEqual('1');
       expect(items[1].id).toEqual('2');
       expect(items[2].id).toEqual('3');
@@ -184,9 +184,9 @@ describe('traverse', () => {
       expect(items[6].id).toEqual('8');
     });
 
-    it('destroy id: 5', () => {
+    it('remove id: 5', () => {
       const items: any = copyItems(sampleItems);
-      traverse.destroy(items, '5');
+      traverse.remove(items, '5');
       expect(items[0].id).toEqual('1');
       expect(items[1].id).toEqual('2');
       expect(items[2].id).toEqual('3');
@@ -196,9 +196,9 @@ describe('traverse', () => {
       expect(items[6].id).toEqual('8');
     });
 
-    it('destroy id: 6', () => {
+    it('remove id: 6', () => {
       const items: any = copyItems(sampleItems);
-      traverse.destroy(items, '6');
+      traverse.remove(items, '6');
       expect(items[0].id).toEqual('1');
       expect(items[1].id).toEqual('2');
       expect(items[2].id).toEqual('3');
@@ -208,9 +208,9 @@ describe('traverse', () => {
       expect(items[6].id).toEqual('8');
     });
 
-    it('destroy id: 7', () => {
+    it('remove id: 7', () => {
       const items: any = copyItems(sampleItems);
-      traverse.destroy(items, '7');
+      traverse.remove(items, '7');
       expect(items[0].id).toEqual('1');
       expect(items[1].id).toEqual('2');
       expect(items[2].id).toEqual('3');
@@ -220,9 +220,9 @@ describe('traverse', () => {
       expect(items[6].id).toEqual('8');
     });
 
-    it('destroy id: 8', () => {
+    it('remove id: 8', () => {
       const items: any = copyItems(sampleItems);
-      traverse.destroy(items, '8');
+      traverse.remove(items, '8');
       expect(items[0].id).toEqual('1');
       expect(items[1].id).toEqual('2');
       expect(items[2].id).toEqual('3');

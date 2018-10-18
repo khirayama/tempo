@@ -1,18 +1,6 @@
 import * as classNames from 'classnames';
 import * as React from 'react';
 
-import {
-  addAfterItem,
-  destroyItem,
-  focusDownerItem,
-  focusItem,
-  focusUpperItem,
-  IAction,
-  IDispatch,
-  indentItem,
-  unindentItem,
-  updateItem,
-} from 'actionCreators/actionCreators';
 import { Pencil } from 'presentations/components/Pencil';
 import { Container, IContainerProps } from 'presentations/containers/Container';
 import { IItem, IPaper, IState, ITextItem, IUI } from 'state/state';

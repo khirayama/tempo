@@ -35,7 +35,7 @@ export const traverse: {
   findNextSkipNoText(items: IItem[], id: string): IItem | null;
   // command
   addAfter(items: IItem[], id: string): IItem | null;
-  destroy(items: IItem[], id: string): void;
+  remove(items: IItem[], id: string): void;
   // transform
   merge(item: IItem, newItem: IItem): IItem;
   indent(items: IItem[], id: string): void;
@@ -169,7 +169,7 @@ export const traverse: {
 
     return null;
   },
-  destroy(items: IItem[], id: string): void {
+  remove(items: IItem[], id: string): void {
     for (let i: number = 0; i < items.length; i += 1) {
       const item: IItem = items[i];
       if (item.id === id) {
