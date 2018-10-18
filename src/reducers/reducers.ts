@@ -11,47 +11,46 @@ export function reducers(state: IState, action: IAction): IState {
   const paper: IPaper = newState.binders[0].papers[0];
   switch (action.actionType) {
     case actionTypes.FOCUS_ITEM: {
-      newState.ui.focusedId = payload.id;
-      newState.ui.inputValue = payload.text;
-      break;
-    }
-    case actionTypes.FOCUS_UPPER_ITEM: {
-      const upperItem: IItem | null = traverse.findUpperSkipNoText(paper.items, payload.id);
-      if (upperItem !== null) {
-        newState.ui.focusedId = upperItem.id;
-      }
-      if (traverse.hasText(upperItem)) {
-        newState.ui.inputValue = upperItem.text;
+      const item: IItem | null = traverse.find(paper.items, payload.id);
+      if (item && traverse.hasText(item)) {
+        newState.pencil.focusedId = payload.id;
+        newState.pencil.value = item.text;
       }
       break;
     }
-    case actionTypes.FOCUS_DOWNER_ITEM: {
-      const downerItem: IItem | null = traverse.findDownerSkipNoText(paper.items, payload.id);
-      if (downerItem !== null) {
-        newState.ui.focusedId = downerItem.id;
+    case actionTypes.FOCUS_PREV_ITEM: {
+      const prevItem: IItem | null = traverse.findPrevSkipNoText(paper.items, payload.id);
+      if (prevItem !== null) {
+        newState.pencil.focusedId = prevItem.id;
       }
-      if (traverse.hasText(downerItem)) {
-        newState.ui.inputValue = downerItem.text;
+      if (traverse.hasText(prevItem)) {
+        newState.pencil.value = prevItem.text;
+      }
+      break;
+    }
+    case actionTypes.FOCUS_NEXT_ITEM: {
+      const nextItem: IItem | null = traverse.findNextSkipNoText(paper.items, payload.id);
+      if (nextItem !== null) {
+        newState.pencil.focusedId = nextItem.id;
+      }
+      if (traverse.hasText(nextItem)) {
+        newState.pencil.value = nextItem.text;
+      }
+      break;
+    }
+    case actionTypes.ADD_AFTER_ITEM: {
+      const item: IItem | null = traverse.find(paper.items, payload.id);
+      const newItem: IItem | null = traverse.addAfter(paper.items, payload.id);
+      if (item !== null && newItem !== null) {
+        traverse.turnInto(item, item.style);
+        newState.pencil.value = '';
+        newState.pencil.focusedId = newItem.id;
       }
       break;
     }
     case actionTypes.MOVE_SELECTION: {
-      newState.ui.selection.start = payload.start;
-      newState.ui.selection.end = payload.end;
-      break;
-    }
-    //   case actionTypes.ADD_BEFORE_ITEM: {
-    //     const item: IItem | null = traverse.addBefore(paper.items, payload.prevId, { text: payload.text || '' });
-    //     break;
-    //   }
-    case actionTypes.ADD_ITEM: {
-      const prevItem: IItem | null = traverse.find(paper.items, payload.prevId);
-      const item: IItem | null = traverse.addAfter(paper.items, payload.prevId, { text: payload.text || '' });
-      if (item !== null && prevItem !== null) {
-        traverse.turnInto(item, prevItem.style);
-        newState.ui.inputValue = '';
-        newState.ui.focusedId = item.id;
-      }
+      newState.pencil.selection.start = payload.start;
+      newState.pencil.selection.end = payload.end;
       break;
     }
     case actionTypes.INDENT_ITEM: {
@@ -79,11 +78,11 @@ export function reducers(state: IState, action: IAction): IState {
     //     }
     //     break;
     //   }
-    case actionTypes.UPDATE_ITEM: {
-      const item: IItem | null = traverse.find(paper.items, payload.id);
-      traverse.merge(<IItem>item, payload);
-      break;
-    }
+    // case actionTypes.UPDATE_ITEM: {
+    //   const item: IItem | null = traverse.find(paper.items, payload.id);
+    //   traverse.merge(<IItem>item, payload);
+    //   break;
+    // }
     default:
   }
 
