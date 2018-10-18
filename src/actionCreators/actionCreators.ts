@@ -10,7 +10,7 @@ export interface IAction {
 
 export type IDispatch = (action: IAction) => void;
 
-export async function focusItem(dispatch: IDispatch, item: { id: string; text: string }): Promise<IAction> {
+export async function focusItem(dispatch: IDispatch, item: { id: string }): Promise<IAction> {
   const action: IAction = {
     actionType: actionTypes.FOCUS_ITEM,
     payload: item,
@@ -20,9 +20,9 @@ export async function focusItem(dispatch: IDispatch, item: { id: string; text: s
   return action;
 }
 
-export async function focusUpperItem(dispatch: IDispatch, item: { id: string }): Promise<IAction> {
+export async function focusPrevItem(dispatch: IDispatch, item: { id: string }): Promise<IAction> {
   const action: IAction = {
-    actionType: actionTypes.FOCUS_UPPER_ITEM,
+    actionType: actionTypes.FOCUS_PREV_ITEM,
     payload: item,
   };
   dispatch(action);
@@ -30,9 +30,9 @@ export async function focusUpperItem(dispatch: IDispatch, item: { id: string }):
   return action;
 }
 
-export async function focusDownerItem(dispatch: IDispatch, item: { id: string }): Promise<IAction> {
+export async function focusNextItem(dispatch: IDispatch, item: { id: string }): Promise<IAction> {
   const action: IAction = {
-    actionType: actionTypes.FOCUS_DOWNER_ITEM,
+    actionType: actionTypes.FOCUS_NEXT_ITEM,
     payload: item,
   };
   dispatch(action);
@@ -53,19 +53,9 @@ export async function moveSelection(
   return action;
 }
 
-export async function addBeforeItem(dispatch: IDispatch, item: { prevId: string; text?: string }): Promise<IAction> {
+export async function addAfterItem(dispatch: IDispatch, item: { id: string; text?: string }): Promise<IAction> {
   const action: IAction = {
-    actionType: actionTypes.ADD_BEFORE_ITEM,
-    payload: item,
-  };
-  dispatch(action);
-
-  return action;
-}
-
-export async function addItem(dispatch: IDispatch, item: { prevId: string; text?: string }): Promise<IAction> {
-  const action: IAction = {
-    actionType: actionTypes.ADD_ITEM,
+    actionType: actionTypes.ADD_AFTER_ITEM,
     payload: item,
   };
   dispatch(action);
@@ -96,16 +86,6 @@ export async function unindentItem(dispatch: IDispatch, item: { id: string }): P
 export async function destroyItem(dispatch: IDispatch, item: { id: string }): Promise<IAction> {
   const action: IAction = {
     actionType: actionTypes.DESTROY_ITEM,
-    payload: item,
-  };
-  dispatch(action);
-
-  return action;
-}
-
-export async function cancelItem(dispatch: IDispatch, item: { id: string }): Promise<IAction> {
-  const action: IAction = {
-    actionType: actionTypes.CANCEL_ITEM,
     payload: item,
   };
   dispatch(action);
