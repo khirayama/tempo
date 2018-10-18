@@ -115,14 +115,21 @@ export class Pencil extends Container<IProps & IContainerProps, IState> {
     const end: number | null = selection.extentOffset;
     console.log('KeyDown', keyCode, meta, shift, value, start, end);
 
-    // ENTER                        : Add new line
-    // TAB                          : Indent (Mobile: Button)
-    // SHIFT + TAB                  : Unindent (Mobile: Button)
-    // UP                           : Move to UP(Mobile: Button)
-    // DOWN                         : Move to DOWN(Mobile: Button)
-    // SHIFT + DELETE               : Remove line
+    // COMMAND
+    // ENTER                                 : Add new line
+    // TAB                                   : Indent (Mobile: Button)
+    // SHIFT + TAB                           : Unindent (Mobile: Button)
+    // UP                                    : Move to UP(Mobile: Button)
+    // DOWN                                  : Move to DOWN(Mobile: Button)
+    // CMD + DELETE                          : Remove line
+    // NATURAL
+    // CARET POS 0 + !TEXT + DELETE          : Turn into TEXT
+    // CARET POS 0 + INDENT !0 + DELETE      : Unindent
+    // CARET POS 0 + INDENT 0 + DELETE       : Concat text to prev item
+    // CARET POS !0 + ENTER                  : Split line
     if (focusedId) {
       switch (true) {
+        // COMMAND
         case keyCode === keyCodes.ENTER && !meta && !shift: {
           event.preventDefault();
           addAfterItem(this.dispatch, { id: focusedId });
