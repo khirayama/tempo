@@ -4,6 +4,7 @@ import { actionTypes } from 'constants/actionTypes';
 import { IItem, IPaper, IState } from 'state/state';
 import { traverse } from 'utils/traverse';
 
+// tslint:disable-next-line:cyclomatic-complexity
 export function reducers(state: IState, action: IAction): IState {
   const newState: IState = JSON.parse(JSON.stringify(state));
   const payload: any = action.payload;
@@ -71,11 +72,26 @@ export function reducers(state: IState, action: IAction): IState {
       }
       break;
     }
-    // case actionTypes.UPDATE_ITEM: {
-    //   const item: IItem | null = traverse.find(paper.items, payload.id);
-    //   traverse.merge(<IItem>item, payload);
-    //   break;
-    // }
+    case actionTypes.CONCAT_ITEM: {
+      const prevItem: IItem | null = traverse.findPrev(paper.items, payload.id);
+      const item: IItem | null = traverse.find(paper.items, payload.id);
+      if (item && traverse.hasText(item) && traverse.hasText(prevItem)) {
+        traverse.merge(prevItem, {
+          ...prevItem,
+          text: prevItem.text + item.text,
+        });
+        if (prevItem) {
+          newState.pencil.focusedId = prevItem.id;
+        }
+        traverse.remove(paper.items, item.id);
+      }
+      break;
+    }
+    case actionTypes.UPDATE_ITEM: {
+      const item: IItem | null = traverse.find(paper.items, payload.id);
+      traverse.merge(<IItem>item, payload);
+      break;
+    }
     default:
   }
 

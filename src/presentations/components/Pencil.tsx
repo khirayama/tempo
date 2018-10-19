@@ -2,6 +2,7 @@ import * as React from 'react';
 
 import {
   addAfterItem,
+  concatItem,
   focusItem,
   focusNextItem,
   focusPrevItem,
@@ -118,7 +119,12 @@ export class Pencil extends Container<IProps & IContainerProps, IState> {
     }
   }
 
+  // tslint:disable-next-line:cyclomatic-complexity
   private onKeyDown(event: React.KeyboardEvent<HTMLElement>): void {
+    const paper: IPaper = this.state.binders[0].papers[0];
+
+    const item: IItem = this.props.item;
+    const prevItem: IItem | null = traverse.findPrev(paper.items, item.id);
     const focusedId: string | null = this.state.pencil.focusedId;
     const el: HTMLElement = event.currentTarget;
     const value: string = event.currentTarget.innerText;
@@ -138,10 +144,11 @@ export class Pencil extends Container<IProps & IContainerProps, IState> {
     // DOWN                                  : Move to DOWN(Mobile: Button)
     // CMD + DELETE                          : Remove line
     // NATURAL
-    // CARET POS 0 + !TEXT + DELETE          : Turn into TEXT
-    // CARET POS 0 + INDENT !0 + DELETE      : Unindent
-    // CARET POS 0 + INDENT 0 + DELETE       : Concat text to prev item
-    // CARET POS !0 + ENTER                  : Split line
+    // CARET POS 0 + !TEXT + DELETE                            : Turn into TEXT
+    // CARET POS 0 + INDENT !0 + DELETE                        : Unindent
+    // CARET POS 0 + INDENT 0 + DELETE + PREV ITEM HAS NO TEXT : Remove prev item
+    // CARET POS 0 + INDENT 0 + DELETE + PREV ITEM HAS TEXT    : Concat text to prev item
+    // CARET POS !0 + ENTER                                    : Split line
     if (focusedId) {
       switch (true) {
         // COMMAND
@@ -173,6 +180,35 @@ export class Pencil extends Container<IProps & IContainerProps, IState> {
         case keyCode === keyCodes.DELETE && meta && !shift: {
           event.preventDefault();
           removeItem(this.dispatch, { id: focusedId });
+          break;
+        }
+        // NATURAL
+        case keyCode === keyCodes.DELETE && !meta && !shift && start === 0 && end === 0 && item.style !== 'TEXT': {
+          event.preventDefault();
+          turnInto(this.dispatch, { id: item.id, style: 'TEXT' });
+          break;
+        }
+        case keyCode === keyCodes.DELETE &&
+          !meta &&
+          !shift &&
+          start === 0 &&
+          end === 0 &&
+          traverse.hasIndent(item) &&
+          item.indent !== 0: {
+          event.preventDefault();
+          unindentItem(this.dispatch, { id: focusedId });
+          break;
+        }
+        case keyCode === keyCodes.DELETE &&
+          !meta &&
+          !shift &&
+          start === 0 &&
+          end === 0 &&
+          traverse.hasIndent(item) &&
+          item.indent === 0 &&
+          traverse.hasText(prevItem): {
+          event.preventDefault();
+          concatItem(this.dispatch, { id: focusedId });
           break;
         }
         default:

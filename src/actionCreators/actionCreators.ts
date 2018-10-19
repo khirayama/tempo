@@ -90,6 +90,16 @@ export async function turnInto(dispatch: IDispatch, item: { id: string; style: s
   return action;
 }
 
+export async function concatItem(dispatch: IDispatch, item: { id: string }): Promise<IAction> {
+  const action: IAction = {
+    actionType: actionTypes.CONCAT_ITEM,
+    payload: item,
+  };
+  dispatch(action);
+
+  return action;
+}
+
 export async function updateItem(dispatch: IDispatch, item: { id: string; text?: string }): Promise<IAction> {
   const action: IAction = {
     actionType: actionTypes.UPDATE_ITEM,
