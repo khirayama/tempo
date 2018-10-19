@@ -7,35 +7,35 @@
   margin: 0 auto;
 
   &.Item__Indent1 {
-    margin-left: calc($indent * 1);
+    padding-left: calc($indent * 1);
   }
 
   &.Item__Indent2 {
-    margin-left: calc($indent * 2);
+    padding-left: calc($indent * 2);
   }
 
   &.Item__Indent3 {
-    margin-left: calc($indent * 3);
+    padding-left: calc($indent * 3);
   }
 
   &.Item__Indent4 {
-    margin-left: calc($indent * 4);
+    padding-left: calc($indent * 4);
   }
 
   &.Item__Indent5 {
-    margin-left: calc($indent * 5);
+    padding-left: calc($indent * 5);
   }
 
   &.Item__Indent6 {
-    margin-left: calc($indent * 6);
+    padding-left: calc($indent * 6);
   }
 
   &.Item__Indent7 {
-    margin-left: calc($indent * 7);
+    padding-left: calc($indent * 7);
   }
 
   &.Item__Indent8 {
-    margin-left: calc($indent * 8);
+    padding-left: calc($indent * 8);
   }
 
   .Item--Text {

@@ -1,5 +1,8 @@
 import * as React from 'react';
 
+import { logger } from 'logger';
+import { IItem, IPaper, IPencil, IState, ITextItem, IUI } from 'state/state';
+
 import {
   addAfterItem,
   concatItem,
@@ -9,12 +12,12 @@ import {
   IAction,
   indentItem,
   removeItem,
+  splitItem,
   turnInto,
   unindentItem,
   updateItem,
 } from 'actionCreators/actionCreators';
 import { Container, IContainerProps } from 'presentations/containers/Container';
-import { IItem, IPaper, IPencil, IState, ITextItem, IUI } from 'state/state';
 import { traverse } from 'utils/traverse';
 
 interface IProps {
@@ -122,7 +125,6 @@ export class Pencil extends Container<IProps & IContainerProps, IState> {
   // tslint:disable-next-line:cyclomatic-complexity max-func-body-length
   private onKeyDown(event: React.KeyboardEvent<HTMLElement>): void {
     const paper: IPaper = this.state.binders[0].papers[0];
-
     const item: IItem = this.props.item;
     const prevItem: IItem | null = traverse.findPrev(paper.items, item.id);
     const focusedId: string | null = this.state.pencil.focusedId;
@@ -134,29 +136,27 @@ export class Pencil extends Container<IProps & IContainerProps, IState> {
     const selection: Selection = window.getSelection();
     const start: number | null = selection.baseOffset;
     const end: number | null = selection.extentOffset;
-    console.log('KeyDown', keyCode, meta, shift, value, start, end);
+    logger.info(event.type, keyCode, meta, shift, value, start, end, selection);
+    // SHORTCUTS
+    // [x] TAB                                                     : Indent (Mobile: Button)
+    // [x] SHIFT + TAB                                             : Unindent (Mobile: Button)
+    // [x] UP                                                      : Move to up(Mobile: Button)
+    // [ ] CMD + UP                                                : Move to top(Mobile: Button)
+    // [x] DOWN                                                    : Move to down(Mobile: Button)
+    // [ ] CMD + DOWN                                              : Move to bottom(Mobile: Button)
+    // [x] CMD + DELETE                                            : Remove line
+    // [x] CARET POS 0 + !TEXT + DELETE                            : Turn into TEXT
+    // [x] CARET POS 0 + INDENT !0 + DELETE                        : Unindent
+    // [x] CARET POS 0 + INDENT 0 + DELETE + PREV ITEM HAS NO TEXT : Remove prev item
+    // [x] CARET POS 0 + INDENT 0 + DELETE + PREV ITEM HAS TEXT    : Concat text to prev item
+    // [x] CARET POS !0 + ENTER                                    : Split line
+    if (keyCode === keyCodes.ENTER) {
+      // FYI: Always prevent to enter ENTER
+      event.preventDefault();
+    }
 
-    // COMMAND
-    // ENTER                                 : Add new line
-    // TAB                                   : Indent (Mobile: Button)
-    // SHIFT + TAB                           : Unindent (Mobile: Button)
-    // UP                                    : Move to UP(Mobile: Button)
-    // DOWN                                  : Move to DOWN(Mobile: Button)
-    // CMD + DELETE                          : Remove line
-    // NATURAL
-    // CARET POS 0 + !TEXT + DELETE                            : Turn into TEXT
-    // CARET POS 0 + INDENT !0 + DELETE                        : Unindent
-    // CARET POS 0 + INDENT 0 + DELETE + PREV ITEM HAS NO TEXT : Remove prev item
-    // CARET POS 0 + INDENT 0 + DELETE + PREV ITEM HAS TEXT    : Concat text to prev item
-    // CARET POS !0 + ENTER                                    : Split line
     if (focusedId) {
       switch (true) {
-        // COMMAND
-        case keyCode === keyCodes.ENTER && !meta && !shift: {
-          event.preventDefault();
-          addAfterItem(this.dispatch, { id: focusedId });
-          break;
-        }
         case keyCode === keyCodes.TAB && !meta && !shift: {
           event.preventDefault();
           indentItem(this.dispatch, { id: focusedId });
@@ -182,7 +182,6 @@ export class Pencil extends Container<IProps & IContainerProps, IState> {
           removeItem(this.dispatch, { id: focusedId });
           break;
         }
-        // NATURAL
         case keyCode === keyCodes.DELETE && !meta && !shift && start === 0 && end === 0 && item.style !== 'TEXT': {
           event.preventDefault();
           turnInto(this.dispatch, { id: item.id, style: 'TEXT' });
@@ -206,9 +205,11 @@ export class Pencil extends Container<IProps & IContainerProps, IState> {
           end === 0 &&
           traverse.hasIndent(item) &&
           item.indent === 0 &&
-          traverse.hasText(prevItem): {
+          !traverse.hasText(prevItem): {
           event.preventDefault();
-          concatItem(this.dispatch, { id: focusedId });
+          if (prevItem) {
+            removeItem(this.dispatch, { id: prevItem.id });
+          }
           break;
         }
         case keyCode === keyCodes.DELETE &&
@@ -218,11 +219,20 @@ export class Pencil extends Container<IProps & IContainerProps, IState> {
           end === 0 &&
           traverse.hasIndent(item) &&
           item.indent === 0 &&
-          !traverse.hasText(prevItem): {
+          traverse.hasText(prevItem): {
           event.preventDefault();
-          if (prevItem) {
-            removeItem(this.dispatch, { id: prevItem.id });
-          }
+          concatItem(this.dispatch, { id: focusedId });
+          break;
+        }
+        case keyCode === keyCodes.ENTER &&
+          !meta &&
+          !shift &&
+          start === end &&
+          start !== 0 &&
+          traverse.hasText(item) &&
+          start <= item.text.length: {
+          event.preventDefault();
+          splitItem(this.dispatch, { id: focusedId }, start);
           break;
         }
         default:
@@ -230,8 +240,13 @@ export class Pencil extends Container<IProps & IContainerProps, IState> {
     }
   }
 
+  // tslint:disable-next-line:cyclomatic-complexity max-func-body-length
   private onKeyUp(event: React.KeyboardEvent<HTMLElement>): void {
     // value, start, endの値を使う場合はこちら
+    const paper: IPaper = this.state.binders[0].papers[0];
+    const item: IItem = this.props.item;
+    const prevItem: IItem | null = traverse.findPrev(paper.items, item.id);
+    const focusedId: string | null = this.state.pencil.focusedId;
     const el: HTMLElement = event.currentTarget;
     const value: string = event.currentTarget.innerText;
     const keyCode: number = event.keyCode;
@@ -240,7 +255,7 @@ export class Pencil extends Container<IProps & IContainerProps, IState> {
     const selection: Selection = window.getSelection();
     const start: number | null = selection.baseOffset;
     const end: number | null = selection.extentOffset;
-    console.log('KeyUp', keyCode, meta, shift, value, start, end);
+    logger.info(event.type, keyCode, meta, shift, value, start, end);
   }
 
   private onFocus(event: React.FocusEvent<HTMLElement>): void {
