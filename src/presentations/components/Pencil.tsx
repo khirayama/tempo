@@ -61,8 +61,21 @@ export class Pencil extends Container<IProps & IContainerProps, IState> {
     }
   }
 
+  public shouldComponentUpdate(prevProps: IProps & IContainerProps, prevState: IState): boolean {
+    const pencil: IPencil = this.state.pencil;
+    const prevPencil: IPencil = prevState.pencil;
+    const paper: IPaper = this.state.binders[0].papers[0];
+    if (pencil.focusedId === prevPencil.focusedId) {
+      return false;
+    }
+
+    return true;
+  }
+
   public render(): JSX.Element {
-    const value: string | null = this.state.pencil.value;
+    // TODO: For now I consider only hasText item
+    const item: IItem = this.props.item;
+    const value: string | null = traverse.hasText(item) ? item.text : '';
     const focusedId: string | null = this.state.pencil.focusedId;
 
     return (
