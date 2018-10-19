@@ -119,7 +119,7 @@ export class Pencil extends Container<IProps & IContainerProps, IState> {
     }
   }
 
-  // tslint:disable-next-line:cyclomatic-complexity
+  // tslint:disable-next-line:cyclomatic-complexity max-func-body-length
   private onKeyDown(event: React.KeyboardEvent<HTMLElement>): void {
     const paper: IPaper = this.state.binders[0].papers[0];
 
@@ -209,6 +209,20 @@ export class Pencil extends Container<IProps & IContainerProps, IState> {
           traverse.hasText(prevItem): {
           event.preventDefault();
           concatItem(this.dispatch, { id: focusedId });
+          break;
+        }
+        case keyCode === keyCodes.DELETE &&
+          !meta &&
+          !shift &&
+          start === 0 &&
+          end === 0 &&
+          traverse.hasIndent(item) &&
+          item.indent === 0 &&
+          !traverse.hasText(prevItem): {
+          event.preventDefault();
+          if (prevItem) {
+            removeItem(this.dispatch, { id: prevItem.id });
+          }
           break;
         }
         default:
