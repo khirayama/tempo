@@ -47,16 +47,6 @@
     }
   }
 
-  .Item--Placeholder {
-    color: $color-text-hint;
-    display: inline-block;
-    width: 100%;
-
-    &.Item--Placeholder__Focused {
-      background: $color-grey-50;
-    }
-  }
-
   &.Item__Selected {
     background: rgba(45, 170, 219, 0.3);
   }
