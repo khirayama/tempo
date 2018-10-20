@@ -42,7 +42,7 @@ export class Pencil extends Container<IProps & IContainerProps, IState> {
     super(props);
 
     this.ref = React.createRef();
-    this.onInput = this.onInput.bind(this);
+    this.onChange = this.onChange.bind(this);
     this.onKeyUp = this.onKeyUp.bind(this);
     this.onKeyDown = this.onKeyDown.bind(this);
     this.onFocus = this.onFocus.bind(this);
@@ -65,17 +65,6 @@ export class Pencil extends Container<IProps & IContainerProps, IState> {
     }
   }
 
-  public shouldComponentUpdate(prevProps: IProps & IContainerProps, prevState: IState): boolean {
-    const pencil: IPencil = this.state.pencil;
-    const prevPencil: IPencil = prevState.pencil;
-    const paper: IPaper = this.state.binders[0].papers[0];
-    if (pencil.focusedId === prevPencil.focusedId) {
-      return false;
-    }
-
-    return true;
-  }
-
   public render(): JSX.Element {
     // TODO: For now I consider only hasText item
     const item: IItem = this.props.item;
@@ -83,38 +72,28 @@ export class Pencil extends Container<IProps & IContainerProps, IState> {
     const focusedId: string | null = this.state.pencil.focusedId;
 
     return (
-      <div
+      <input
         className="Pencil"
-        contentEditable
-        suppressContentEditableWarning={true}
+        placeholder="/ command"
+        value={value}
         ref={this.ref}
-        onInput={this.onInput}
+        onChange={this.onChange}
         onKeyDown={this.onKeyDown}
         onKeyUp={this.onKeyUp}
         onFocus={this.onFocus}
-      >
-        {value}
-      </div>
+      />
     );
   }
 
   private focus(): void {
     // FYI: https://stackoverflow.com/questions/4233265/contenteditable-set-caret-at-the-end-of-the-text-cross-browser
-    const el: HTMLElement = this.ref.current;
+    const el: HTMLInputElement = this.ref.current;
     el.focus();
-    if (window.getSelection && window.document.createRange) {
-      const range: Range = window.document.createRange();
-      range.selectNodeContents(el);
-      range.collapse(false);
-      const sel: Selection = window.getSelection();
-      sel.removeAllRanges();
-      sel.addRange(range);
-    }
   }
 
-  private onInput(event: React.FormEvent<HTMLElement>): void {
+  private onChange(event: React.FormEvent<HTMLInputElement>): void {
     const focusedId: string | null = this.state.pencil.focusedId;
-    const value: string = event.currentTarget.innerText;
+    const value: string = event.currentTarget.value;
 
     if (focusedId) {
       focusItem(this.dispatch, { id: focusedId });
@@ -123,20 +102,19 @@ export class Pencil extends Container<IProps & IContainerProps, IState> {
   }
 
   // tslint:disable-next-line:cyclomatic-complexity max-func-body-length
-  private onKeyDown(event: React.KeyboardEvent<HTMLElement>): void {
+  private onKeyDown(event: React.KeyboardEvent<HTMLInputElement>): void {
     const paper: IPaper = this.state.binders[0].papers[0];
     const item: IItem = this.props.item;
     const prevItem: IItem | null = traverse.findPrev(paper.items, item.id);
     const focusedId: string | null = this.state.pencil.focusedId;
-    const el: HTMLElement = event.currentTarget;
+    const el: HTMLInputElement = event.currentTarget;
     const value: string = event.currentTarget.innerText;
     const keyCode: number = event.keyCode;
     const meta: boolean = event.metaKey;
     const shift: boolean = event.shiftKey;
-    const selection: Selection = window.getSelection();
-    const start: number | null = selection.baseOffset;
-    const end: number | null = selection.extentOffset;
-    logger.info(event.type, keyCode, meta, shift, value, start, end, selection);
+    const start: number | null = el.selectionStart;
+    const end: number | null = el.selectionEnd;
+    logger.info(event.type, keyCode, meta, shift, value, start, end);
     // SHORTCUTS
     // [x] TAB                                                     : Indent (Mobile: Button)
     // [x] SHIFT + TAB                                             : Unindent (Mobile: Button)
@@ -150,11 +128,6 @@ export class Pencil extends Container<IProps & IContainerProps, IState> {
     // [x] CARET POS 0 + INDENT 0 + DELETE + PREV ITEM HAS NO TEXT : Remove prev item
     // [x] CARET POS 0 + INDENT 0 + DELETE + PREV ITEM HAS TEXT    : Concat text to prev item
     // [x] CARET POS !0 + ENTER                                    : Split line
-    if (keyCode === keyCodes.ENTER) {
-      // FYI: Always prevent to enter ENTER
-      event.preventDefault();
-    }
-
     if (focusedId) {
       switch (true) {
         case keyCode === keyCodes.TAB && !meta && !shift: {
@@ -230,9 +203,12 @@ export class Pencil extends Container<IProps & IContainerProps, IState> {
           start === end &&
           start !== 0 &&
           traverse.hasText(item) &&
+          start !== null &&
           start <= item.text.length: {
-          event.preventDefault();
-          splitItem(this.dispatch, { id: focusedId }, start);
+          if (start !== null) {
+            event.preventDefault();
+            splitItem(this.dispatch, { id: focusedId }, start);
+          }
           break;
         }
         default:
