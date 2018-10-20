@@ -1,4 +1,18 @@
 .Pencil {
   width: 100%;
-  background: rgba(255, 0, 0, 0.32);
+
+  &hover {
+    cursor: text;
+  }
+
+  &::placeholder {
+    color: transparent;
+  }
+
+  &:focus {
+    &::placeholder {
+      color: $color-text-hint;
+      opacity: 1;
+    }
+  }
 }

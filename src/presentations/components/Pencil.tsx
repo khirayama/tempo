@@ -201,14 +201,11 @@ export class Pencil extends Container<IProps & IContainerProps, IState> {
           !meta &&
           !shift &&
           start === end &&
-          start !== 0 &&
           traverse.hasText(item) &&
           start !== null &&
           start <= item.text.length: {
-          if (start !== null) {
-            event.preventDefault();
-            splitItem(this.dispatch, { id: focusedId }, start);
-          }
+          event.preventDefault();
+          splitItem(this.dispatch, { id: focusedId }, start || 0);
           break;
         }
         default:
