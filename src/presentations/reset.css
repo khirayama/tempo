@@ -103,3 +103,7 @@ img {
   vertical-align: top;
   width: 100%;
 }
+
+[contenteditable] {
+  user-select: text;
+}
