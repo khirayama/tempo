@@ -1,3 +1,4 @@
+// tslint:disable:react-no-dangerous-html
 import * as React from 'react';
 
 import { logger } from 'logger';
@@ -38,11 +39,16 @@ export class Pencil extends Container<IProps & IContainerProps, IState> {
   // tslint:disable-next-line:no-any
   private ref: React.RefObject<any>;
 
+  private tmp: { value: string; isPressing: boolean } = {
+    value: '',
+    isPressing: false,
+  };
+
   constructor(props: IProps & IContainerProps) {
     super(props);
 
     this.ref = React.createRef();
-    this.onChange = this.onChange.bind(this);
+    this.onInput = this.onInput.bind(this);
     this.onKeyUp = this.onKeyUp.bind(this);
     this.onKeyDown = this.onKeyDown.bind(this);
     this.onFocus = this.onFocus.bind(this);
@@ -65,6 +71,27 @@ export class Pencil extends Container<IProps & IContainerProps, IState> {
     }
   }
 
+  public shouldComponentUpdate(nextProps: IProps & IContainerProps, nextState: IState): boolean {
+    const nextItem: IItem = nextProps.item;
+    const pencil: IPencil = this.state.pencil;
+    const nextPencil: IPencil = nextState.pencil;
+    const paper: IPaper = this.state.binders[0].papers[0];
+
+    if (traverse.hasText(nextItem) && nextItem.text !== this.tmp.value) {
+      return true;
+    }
+
+    if (pencil.focusedId !== this.props.item.id) {
+      return true;
+    }
+
+    if (this.tmp.isPressing) {
+      return false;
+    }
+
+    return true;
+  }
+
   public render(): JSX.Element {
     // TODO: For now I consider only hasText item
     const item: IItem = this.props.item;
@@ -72,15 +99,16 @@ export class Pencil extends Container<IProps & IContainerProps, IState> {
     const focusedId: string | null = this.state.pencil.focusedId;
 
     return (
-      <input
+      <div
         className="Pencil"
-        placeholder="/ command"
-        value={value}
+        contentEditable
+        suppressContentEditableWarning={true}
+        dangerouslySetInnerHTML={{ __html: value }}
         ref={this.ref}
-        onChange={this.onChange}
-        onKeyDown={this.onKeyDown}
-        onKeyUp={this.onKeyUp}
         onFocus={this.onFocus}
+        onKeyDown={this.onKeyDown}
+        onInput={this.onInput}
+        onKeyUp={this.onKeyUp}
       />
     );
   }
@@ -89,32 +117,58 @@ export class Pencil extends Container<IProps & IContainerProps, IState> {
     // FYI: https://stackoverflow.com/questions/4233265/contenteditable-set-caret-at-the-end-of-the-text-cross-browser
     const el: HTMLInputElement = this.ref.current;
     el.focus();
+    const range: Range = document.createRange();
+    /*
+    FYI: If you use following lines, it doesn't work. It returns selection start and end are 1.
+    Maybe it is react's problem. Raw content editable doesn't have.
+    ```
+    range.selectNodeContents(el);
+    range.collapse(false);
+    ```
+    */
+    range.setStart(el.childNodes[0] || el, el.innerText.length);
+    range.setEnd(el.childNodes[0] || el, el.innerText.length);
+    const selection: Selection = window.getSelection();
+    selection.removeAllRanges();
+    selection.addRange(range);
   }
 
-  private onChange(event: React.FormEvent<HTMLInputElement>): void {
+  private onInput(event: React.FormEvent<HTMLElement>): void {
+    // For Safari: Safari has events in input, keydown, keypress, keyup order.
+    this.tmp.isPressing = true;
+
     const focusedId: string | null = this.state.pencil.focusedId;
-    const value: string = event.currentTarget.value;
+    const value: string = event.currentTarget.innerHTML || event.currentTarget.innerText;
 
     if (focusedId) {
+      this.tmp.value = value;
       focusItem(this.dispatch, { id: focusedId });
       updateItem(this.dispatch, { id: focusedId, text: value });
     }
   }
 
   // tslint:disable-next-line:cyclomatic-complexity max-func-body-length
-  private onKeyDown(event: React.KeyboardEvent<HTMLInputElement>): void {
+  private onKeyDown(event: React.KeyboardEvent<HTMLElement>): void {
+    this.tmp.isPressing = true;
+
     const paper: IPaper = this.state.binders[0].papers[0];
     const item: IItem = this.props.item;
     const prevItem: IItem | null = traverse.findPrev(paper.items, item.id);
     const focusedId: string | null = this.state.pencil.focusedId;
-    const el: HTMLInputElement = event.currentTarget;
+    const el: HTMLElement = event.currentTarget;
     const value: string = event.currentTarget.innerText;
     const keyCode: number = event.keyCode;
     const meta: boolean = event.metaKey;
     const shift: boolean = event.shiftKey;
-    const start: number | null = el.selectionStart;
-    const end: number | null = el.selectionEnd;
-    logger.info(event.type, keyCode, meta, shift, value, start, end);
+    const selection: Selection = window.getSelection();
+    const start: number | null = selection.baseOffset;
+    const end: number | null = selection.extentOffset;
+    logger.info(item.id, this.tmp.isPressing, event.type, keyCode, meta, shift, value, start, end);
+
+    // preventDefault keys
+    if (keyCodes.ENTER === keyCode) {
+      event.preventDefault();
+    }
     // SHORTCUTS
     // [x] TAB                                                     : Indent (Mobile: Button)
     // [x] SHIFT + TAB                                             : Unindent (Mobile: Button)
@@ -215,6 +269,8 @@ export class Pencil extends Container<IProps & IContainerProps, IState> {
 
   // tslint:disable-next-line:cyclomatic-complexity max-func-body-length
   private onKeyUp(event: React.KeyboardEvent<HTMLElement>): void {
+    this.tmp.isPressing = false;
+
     // value, start, endの値を使う場合はこちら
     const paper: IPaper = this.state.binders[0].papers[0];
     const item: IItem = this.props.item;
@@ -228,7 +284,7 @@ export class Pencil extends Container<IProps & IContainerProps, IState> {
     const selection: Selection = window.getSelection();
     const start: number | null = selection.baseOffset;
     const end: number | null = selection.extentOffset;
-    logger.info(event.type, keyCode, meta, shift, value, start, end);
+    logger.info(item.id, this.tmp.isPressing, event.type, keyCode, meta, shift, value, start, end);
   }
 
   private onFocus(event: React.FocusEvent<HTMLElement>): void {
