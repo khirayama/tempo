@@ -1,6 +1,7 @@
 .WorkaroundPage {
   display: inline-block;
   width: 100%;
+  overflow: scroll;
 
   .WorkaroundPage--Column {
     display: inline-block;
@@ -8,12 +9,14 @@
     vertical-align: top;
   }
 
-  .ContentEditableComponent {
+  .ContentEditableComponent,
+  .WrappedContentEditableComponent {
     width: 100%;
     background: rgba(255, 0, 0, 0.12);
   }
 
-  .InputComponent {
+  .InputComponent,
+  .WrappedInputComponent {
     width: 100%;
     background: rgba(0, 255, 0, 0.12);
   }

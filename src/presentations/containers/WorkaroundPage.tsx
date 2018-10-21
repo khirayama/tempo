@@ -37,8 +37,15 @@ function LogTable(props: { logs: string[][] }): JSX.Element {
         {logs.map((log: string[], index: number) => {
           return (
             <tr key={index}>
-              {log.map((val: string, i: number) => {
-                return <td key={i}>{val || <span className="empty">undefined</span>}</td>;
+              {log.map((val: string | number, i: number) => {
+                if (val || val === 0) {
+                  return <td key={i}>{val}</td>;
+                }
+                return (
+                  <td key={i}>
+                    <span className="empty">undefined</span>
+                  </td>
+                );
               })}
             </tr>
           );
@@ -73,6 +80,7 @@ function logger(event: any): void {
   });
 }
 
+// Components
 class ContentEditableComponent extends React.Component<any, any> {
   constructor(props: any) {
     super(props);
@@ -100,6 +108,86 @@ class ContentEditableComponent extends React.Component<any, any> {
         <button
           onClick={() => {
             const el: HTMLElement | null = document.querySelector('.ContentEditableComponent');
+            if (el) {
+              el.focus();
+            }
+          }}
+        >
+          FORCE FOCUS
+        </button>
+        <LogTable logs={this.state.logs} />
+      </>
+    );
+  }
+}
+
+class WrappedContentEditableComponent extends React.Component<any, any> {
+  private tmp: any;
+
+  constructor(props: any) {
+    super(props);
+
+    this.state = {
+      value: '',
+      logs: [],
+    };
+
+    this.tmp = {
+      ref: React.createRef(),
+      isPressing: false,
+    };
+  }
+
+  public componentDidUpdate(prevProps: any, prevState: any): void {
+    console.log('componentDidUpdate');
+    console.log(prevState, this.state);
+  }
+
+  public shouldComponentUpdate(nextProps: any, nextState: any): boolean {
+    console.log('shouldComponentUpdate');
+    console.log(this.state, nextState);
+
+    if (this.tmp.isPressing) {
+      return false;
+    }
+
+    console.log(this.state.value, this.tmp.ref.current.innerHTML);
+
+    return true;
+  }
+
+  public render(): JSX.Element {
+    return (
+      <>
+        <div
+          className="WrappedContentEditableComponent"
+          contentEditable
+          suppressContentEditableWarning={true}
+          dangerouslySetInnerHTML={{ __html: this.state.value }}
+          ref={this.tmp.ref}
+          onKeyDown={(event: any) => {
+            logger.bind(this)(event);
+            this.tmp.isPressing = true;
+          }}
+          onKeyPress={logger.bind(this)}
+          onInput={(event: any) => {
+            logger.bind(this)(event);
+            this.setState({
+              value: event.currentTarget.innerHTML,
+            });
+          }}
+          onKeyUp={(event: any) => {
+            logger.bind(this)(event);
+            this.tmp.isPressing = false;
+          }}
+          onChange={logger.bind(this)}
+          onFocus={logger.bind(this)}
+          onBlur={logger.bind(this)}
+        />
+        <button onClick={clearLogs.bind(this)}>CLEAR LOG</button>
+        <button
+          onClick={() => {
+            const el: HTMLElement | null = document.querySelector('.WrappedContentEditableComponent');
             if (el) {
               el.focus();
             }
@@ -152,15 +240,69 @@ class InputComponent extends React.Component<any, any> {
   }
 }
 
+class WrappedInputComponent extends React.Component<any, any> {
+  constructor(props: any) {
+    super(props);
+
+    this.state = {
+      value: '',
+      logs: [],
+    };
+  }
+
+  public render(): JSX.Element {
+    return (
+      <>
+        <input
+          className="WrappedInputComponent"
+          onKeyDown={logger.bind(this)}
+          onKeyPress={logger.bind(this)}
+          onKeyUp={logger.bind(this)}
+          onInput={(event: any) => {
+            logger.bind(this)(event);
+            this.setState({
+              value: event.currentTarget.value,
+            });
+          }}
+          onChange={logger.bind(this)}
+          onFocus={logger.bind(this)}
+          onBlur={logger.bind(this)}
+          value={this.state.value}
+        />
+        <button onClick={clearLogs.bind(this)}>CLEAR LOG</button>
+        <button
+          onClick={() => {
+            const el: HTMLElement | null = document.querySelector('.WrappedInputComponent');
+            if (el) {
+              el.focus();
+            }
+          }}
+        >
+          FORCE FOCUS
+        </button>
+        <LogTable logs={this.state.logs} />
+      </>
+    );
+  }
+}
+
 export class WorkaroundPage extends Container<{}, IState> {
   public render(): JSX.Element {
     return (
       <div className="WorkaroundPage">
+        <h2>WORKAROUND - Pure ContentEditable and Input</h2>
         <div className="WorkaroundPage--Column">
           <ContentEditableComponent />
         </div>
         <div className="WorkaroundPage--Column">
           <InputComponent />
+        </div>
+        <h2>WORKAROUND - Wrapped ContentEditable and Input</h2>
+        <div className="WorkaroundPage--Column">
+          <WrappedContentEditableComponent />
+        </div>
+        <div className="WorkaroundPage--Column">
+          <WrappedInputComponent />
         </div>
       </div>
     );
