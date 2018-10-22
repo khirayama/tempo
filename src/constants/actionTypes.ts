@@ -11,6 +11,8 @@ export const actionTypes: {
   UPDATE_ITEM: '__UPDATE_ITEM';
   INDENT_ITEM: '__INDENT_ITEM';
   UNINDENT_ITEM: '__UNINDENT_ITEM';
+
+  BE_BOLD_TEXT: '__BE_BOLD_TEXT';
 } = {
   FOCUS_ITEM: '__FOCUS_ITEM',
   FOCUS_PREV_ITEM: '__FOCUS_PREV_ITEM',
@@ -24,4 +26,6 @@ export const actionTypes: {
   UPDATE_ITEM: '__UPDATE_ITEM',
   INDENT_ITEM: '__INDENT_ITEM',
   UNINDENT_ITEM: '__UNINDENT_ITEM',
+
+  BE_BOLD_TEXT: '__BE_BOLD_TEXT',
 };

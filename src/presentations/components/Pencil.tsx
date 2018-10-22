@@ -6,6 +6,7 @@ import { IItem, IPaper, IPencil, IState, ITextItem, IUI } from 'state/state';
 
 import {
   addAfterItem,
+  beBoldText,
   concatItem,
   focusItem,
   focusNextItem,
@@ -32,6 +33,7 @@ const keyCodes: { [key: string]: number } = {
   ESCAPE: 27,
   UP: 38,
   DOWN: 40,
+  B: 66,
   P: 80,
 };
 
@@ -182,6 +184,7 @@ export class Pencil extends Container<IProps & IContainerProps, IState> {
     // [x] CARET POS 0 + INDENT 0 + DELETE + PREV ITEM HAS NO TEXT : Remove prev item
     // [x] CARET POS 0 + INDENT 0 + DELETE + PREV ITEM HAS TEXT    : Concat text to prev item
     // [x] CARET POS !0 + ENTER                                    : Split line
+    // [ ] CMD + B                                                 : Be bold
     if (focusedId) {
       switch (true) {
         case keyCode === keyCodes.TAB && !meta && !shift: {
@@ -260,6 +263,11 @@ export class Pencil extends Container<IProps & IContainerProps, IState> {
           start <= item.text.length: {
           event.preventDefault();
           splitItem(this.dispatch, { id: focusedId }, start || 0);
+          break;
+        }
+        case keyCode === keyCodes.B && meta && !shift: {
+          event.preventDefault();
+          beBoldText(this.dispatch, { id: focusedId }, start, end);
           break;
         }
         default:
