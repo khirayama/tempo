@@ -142,22 +142,3 @@ export async function updateItem(dispatch: IDispatch, item: { id: string; text?:
 
   return action;
 }
-
-export async function beBoldText(
-  dispatch: IDispatch,
-  item: { id: string },
-  start: number,
-  end: number,
-): Promise<IAction> {
-  const action: IAction = {
-    actionType: actionTypes.BE_BOLD_TEXT,
-    payload: {
-      item,
-      start,
-      end,
-    },
-  };
-  dispatch(action);
-
-  return action;
-}

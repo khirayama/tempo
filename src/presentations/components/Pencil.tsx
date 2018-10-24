@@ -6,7 +6,6 @@ import { IItem, IPaper, IPencil, IState, ITextItem, IUI } from 'state/state';
 
 import {
   addAfterItem,
-  beBoldText,
   concatItem,
   focusItem,
   focusNextItem,
@@ -24,6 +23,46 @@ import { traverse } from 'utils/traverse';
 
 interface IProps {
   item: IItem;
+}
+
+function sanitize(range: Range): void {
+  if (range.startContainer.nodeType === Node.TEXT_NODE) {
+    const latter: Node = (range.startContainer as Text).splitText(range.startOffset);
+    range.setStartBefore(latter);
+  }
+  if (range.endContainer.nodeType === Node.TEXT_NODE) {
+    const latter: Node = (range.endContainer as Text).splitText(range.endOffset);
+    range.setEndBefore(latter);
+  }
+}
+
+// tslint:disable-next-line:no-any
+function checkNode(node: any, range: Range): void {
+  const nodeRange: Range = new Range();
+  nodeRange.selectNode(node);
+
+  if (
+    range.compareBoundaryPoints(Range.START_TO_START, nodeRange) <= 0 &&
+    range.compareBoundaryPoints(Range.END_TO_END, nodeRange) >= 0
+  ) {
+    if (node.nodeType === Node.TEXT_NODE && node.parentNode) {
+      const span: HTMLElement = document.createElement('span');
+      node.parentNode.insertBefore(span, node);
+      span.appendChild(node);
+      span.style.backgroundColor = '#ffff00';
+    } else {
+      node.style.backgroundColor = '#ffff00';
+    }
+  } else if (
+    range.compareBoundaryPoints(Range.START_TO_END, nodeRange) <= 0 ||
+    range.compareBoundaryPoints(Range.END_TO_START, nodeRange) >= 0
+  ) {
+    return;
+  } else {
+    for (const childNode of node.childNodes) {
+      checkNode(childNode, range);
+    }
+  }
 }
 
 const keyCodes: { [key: string]: number } = {
@@ -79,7 +118,7 @@ export class Pencil extends Container<IProps & IContainerProps, IState> {
     const nextPencil: IPencil = nextState.pencil;
     const paper: IPaper = this.state.binders[0].papers[0];
 
-    if (traverse.hasText(nextItem) && nextItem.text !== this.tmp.value) {
+    if (traverse.hasText(nextItem) && nextItem.text !== this.ref.current.innerHTML) {
       return true;
     }
 
@@ -169,7 +208,7 @@ export class Pencil extends Container<IProps & IContainerProps, IState> {
 
     // preventDefault keys
     if (keyCodes.ENTER === keyCode) {
-      event.preventDefault();
+      // event.preventDefault();
     }
     // SHORTCUTS
     // [x] TAB                                                     : Indent (Mobile: Button)
@@ -261,13 +300,20 @@ export class Pencil extends Container<IProps & IContainerProps, IState> {
           traverse.hasText(item) &&
           start !== null &&
           start <= item.text.length: {
-          event.preventDefault();
-          splitItem(this.dispatch, { id: focusedId }, start || 0);
+          // event.preventDefault();
+          const br: HTMLElement | null = el.querySelector('div');
+          console.log(br);
+          // splitItem(this.dispatch, { id: focusedId }, start || 0);
           break;
         }
         case keyCode === keyCodes.B && meta && !shift: {
           event.preventDefault();
-          beBoldText(this.dispatch, { id: focusedId }, start, end);
+          if(selection.rangeCount > 0) {
+            const range: Range = selection.getRangeAt(0);
+            sanitize(range);
+            checkNode(document.body, range);
+          }
+          updateItem(this.dispatch, { id: focusedId, text: event.currentTarget.innerHTML });
           break;
         }
         default:

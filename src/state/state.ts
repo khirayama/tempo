@@ -9,6 +9,16 @@ export type IItem =
   | IQuateItem
   | IDividerItem;
 
+/*
+Text Styling
+  - bold
+  - italic
+  - strike
+  - link
+  - mention
+  - date
+*/
+
 export interface ITextItem {
   id: string;
   style: 'TEXT';
