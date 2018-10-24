@@ -25,6 +25,8 @@ interface IProps {
   item: IItem;
 }
 
+// https://uhyohyo.net/javascript/8_4.html
+// https://qiita.com/Wreulicke/items/4b1b488c166c4d3e5ff0
 function sanitize(range: Range): void {
   if (range.startContainer.nodeType === Node.TEXT_NODE) {
     const latter: Node = (range.startContainer as Text).splitText(range.startOffset);
